@@ -1,0 +1,10 @@
+name: "Luke's Bible study"
+day: "Wednesday"
+time: "18:00"
+frequency: "Every week"
+place: "Turistická 35, Medlánky"
+audience: "All adults 18+"
+contact: "Jane Luke"
+description: "A comparative study of the gospels on the life of Jesus."
+image: "/media/bicf/hall-bw.webp"
+order: 4

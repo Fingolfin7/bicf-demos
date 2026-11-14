@@ -62,6 +62,7 @@ const groups = defineCollection({
     frequency: z.string().default('Every week'),
     place: z.string(),
     audience: z.string(),
+    contact: z.string().optional(),
     description: z.string(),
     image: z.string().optional(),
     page: z.string().optional(),

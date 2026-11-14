@@ -108,7 +108,9 @@ There's no server, database engine or plugins to update. Once it's live, the rou
 
 ## Content to check before going live
 
-The demos use real BICF details where the current site has them: the name, mission, the "Paths that cross" tagline, Sunday at 17:00, Maják, Dusíkova 5, and the denominational links. Everything else is **sample content** and needs checking or replacing: weekly group times and places, events, sign-up sheets, FAQs, reflections, and the `hello@bicf.cz` / `prayer@bicf.cz` addresses.
+The text comes from the current bicf.cz: the welcome, Sunday service, kids and teens, young adults, Worship Circle, what we believe, our story and the privacy policy. The ten weekly groups, the prayer box and the eight "Current thoughts" articles (shown as Going deeper) are real too, and so is the church address `we-are@bicf.cz`. Group leaders are named, but their personal email addresses are left out because this repository is public. Visitors are sent to the contact form instead.
+
+Still **sample content**, there only to show the features: the events, the sign-up sheets, the "meet me at the stop" offer and the car park on Dusíkova. The current site has no events, so these need real ones before launch.
 
 The walking directions and the route map follow the map BICF shows visitors: from Okružní, up Majdalenky past the BILLA, to Dusíkova. Check which tram and bus lines stop there, and whether the car park on Dusíkova is free to use on Sundays.
 

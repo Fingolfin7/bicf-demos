@@ -16,14 +16,14 @@ const quarters = [
   { letter: 'B', word: 'Brno', note: 'The city we live in and pray for, whether we’re here for a semester or for good.', src: '/media/bicf/ya-market.webp', alt: 'Friends from church taking a selfie at the Brno Christmas market', href: L('new-to-bicf'), pos: '50% 40%' },
   { letter: 'I', word: 'International', note: 'People from every continent, worshipping together in English.', src: '/media/bicf/church-family.webp', alt: 'A big group of the BICF family standing together at the front of the hall', href: L('our-story'), pos: '50% 70%' },
   { letter: 'C', word: 'Christian', note: 'Following Jesus together, and helping each other grow deeper in faith.', src: '/media/bicf/congregation-singing.webp', alt: 'The congregation standing and singing during Sunday worship', href: L('what-we-believe'), pos: '50% 45%' },
-  { letter: 'F', word: 'Fellowship', note: 'Tea after the service, small groups during the week, and friends for the road.', src: '/media/bicf/ya-bowling.webp', alt: 'Young adults from church on a bowling night', href: L('week'), pos: '50% 55%' },
+  { letter: 'F', word: 'Fellowship', note: 'Small groups through the week, a young adults community, and friends for the road.', src: '/media/bicf/ya-bowling.webp', alt: 'Young adults from church on a bowling night', href: L('week'), pos: '50% 55%' },
 ];
 
 const facts = [
   { label: 'When', big: `${s.serviceDay}s, ${s.serviceTime}`, text: 'Come a little early if it’s your first time.' },
   { label: 'Where', big: s.venue, text: `${s.address}, ${s.area}.` },
-  { label: 'Language', big: 'English', text: 'Plus plenty of other languages over tea afterwards.' },
-  { label: 'Kids', big: 'Welcome', text: 'There’s a programme for children during the talk.' },
+  { label: 'Language', big: 'English', text: 'And we love to hear many other languages in times of fellowship.' },
+  { label: 'Kids', big: 'Welcome', text: 'A nursery, toddlers’ Sunday school, and a children’s ministry for ages 4 to 15.' },
 ];
 ---
 <Layout>
@@ -146,7 +146,7 @@ const facts = [
     <div class="x-wrap x-prayer__grid">
       <div>
         <h2 id="prayer-title" class="x-prayer__title">Where can we pray for you?</h2>
-        <p>Our prayer team meets every Tuesday morning and prays for every request. Leave your name, or don’t.</p>
+        <p>Fill in the prayer box and our team will be praying for you. Your name and email are optional.</p>
         <a class="x-btn x-btn--white" href={L('prayer-box')}>Open the prayer box</a>
       </div>
     </div>

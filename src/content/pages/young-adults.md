@@ -1,11 +1,15 @@
 ---
-title: Young adults
-summary: For students and anyone in their twenties. Food, questions, and friends who will still be around after your exchange ends.
-section: join-in
+title: "Young adults"
+summary: "20 to 35 years old? Join us!"
+section: "join-in"
 order: 4
-image: /media/bicf/ya-night-out.webp
+image: "/media/bicf/ya-dam.webp"
 ---
 
-Brno is full of students, and many of them are far from home for the first time. Our young adults group meets on Friday evenings to eat together, read the Bible and talk about whatever comes up.
+Our Young Adult Ministry is a vibrant community for everyone aged 20 to 35. We offer a space to connect with other young people from church and build lasting friendships.
 
-Once a month we head out of the city: a hike in the Moravian Karst, a day at the reservoir, a trip to the wine villages in the south.
+Join us for monthly events where we engage in fun activities, and support one another in our life journeys. Whether you're new to the area or just looking to get involved, you're welcome here!
+
+There is also a young adults Bible study every Thursday at 19:00 in the centre of Brno.
+
+Feel free to reach out on [Instagram](https://www.instagram.com/bicf_yam/), or come and say hello to us in person on Sunday.

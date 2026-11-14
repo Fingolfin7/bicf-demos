@@ -12,7 +12,7 @@ const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 const week = DAYS.map((day) => ({ day, groups: groups.filter((g) => g.day === day) })).filter((d) => d.groups.length);
 ---
 <Layout title="During the week" description="Weekly groups, upcoming events and sign-up sheets at BICF.">
-  <PageHead title="During the week" lead="Sunday is when the whole church is together. The rest of the week happens around kitchen tables, in cafés and on walks outside Brno." image="/media/bicf/ya-christmas-room.webp" />
+  <PageHead title="During the week" lead="Sunday is when the whole church is together. During the week we meet in smaller groups: at Maják, in homes, online, and over early-morning coffee in town." image="/media/bicf/ya-christmas-room.webp" />
 
   <section class="g-section g-section--tight">
     <div class="g-days">
@@ -22,10 +22,10 @@ const week = DAYS.map((day) => ({ day, groups: groups.filter((g) => g.day === da
           <ul role="list">
             {groups.map((g) => (
               <li>
-                <p class="g-when">{g.time}, {g.frequency.toLowerCase()}</p>
+                <p class="g-when">{g.time}, {g.frequency.charAt(0).toLowerCase() + g.frequency.slice(1)}</p>
                 <h4>{g.name}</h4>
                 <p>{g.description}</p>
-                <p class="g-meta">{g.place}. {g.audience}.{g.page && <> <a href={L(g.page)}>More about this</a></>}</p>
+                <p class="g-meta">{g.place}. {g.audience}.{g.contact && <> Contact: <a href={L('contact')}>{g.contact}</a>.</>}{g.page && <> <a href={L(g.page)}>More about this</a></>}</p>
               </li>
             ))}
           </ul>

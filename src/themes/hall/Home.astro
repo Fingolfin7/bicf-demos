@@ -6,7 +6,7 @@ import { link } from '../../lib/themes';
 import { img } from '../../lib/img';
 
 const s = await getSettings();
-const groups = await getGroups();
+const groups = (await getGroups()).filter((g) => g.day !== 'Sunday');
 const events = await getUpcomingEvents(4);
 const [thought] = await getThoughts();
 const L = (p = '') => link('hall', p);
@@ -114,7 +114,7 @@ const L = (p = '') => link('hall', p);
       <a class="h-pair__card h-pair__card--warm" href={L('prayer-box')}>
         <p class="h-eyebrow">The prayer box</p>
         <h2 class="h-h3">Can we pray for you?</h2>
-        <p>Our prayer team meets every Tuesday morning and prays for every request. Leave your name, or don’t.</p>
+        <p>Fill in the prayer box and our team will be praying for you. Your name and email are optional.</p>
         <span class="h-link">Leave a prayer request</span>
       </a>
     </div>

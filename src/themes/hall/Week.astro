@@ -12,7 +12,7 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 const ordered = days.flatMap((d) => groups.filter((g) => g.day === d));
 ---
 <Layout title="This week" description="Weekly groups, upcoming events and sign-up sheets at BICF.">
-  <PageHead title="This week" lead="Sunday is when the whole church is together. The rest of the week happens around kitchen tables, on video calls and on walks outside Brno." />
+  <PageHead title="This week" lead="Sunday is when the whole church is together. During the week we meet in smaller groups: at Maják, in homes, online, and over early-morning coffee in town." />
 
   <section class="h-section h-section--top">
     <div class="h-wrap">
@@ -24,7 +24,7 @@ const ordered = days.flatMap((d) => groups.filter((g) => g.day === d));
               <p class="h-groups__when">{g.day}s, {g.time}</p>
               <h3>{g.name}</h3>
               <p>{g.description}</p>
-              <p class="h-groups__where">{g.place} · {g.frequency}</p>
+              <p class="h-groups__where">{g.place} · {g.frequency}{g.contact && ` · Contact: ${g.contact}`}</p>
             </a>
           </li>
         ))}

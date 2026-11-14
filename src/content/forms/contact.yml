@@ -1,9 +1,9 @@
 title: Send us a message
-intro: We'll reply by email, usually within two days.
+intro: We'll reply by email.
 submitLabel: Send message
 successTitle: Message sent
 successMessage: Thank you for getting in touch. Someone from the team will reply by email soon.
-sendTo: hello@bicf.cz
+sendTo: we-are@bicf.cz
 storeEntries: true
 consent: I agree that BICF may use my name and email address to reply to this message.
 fields:

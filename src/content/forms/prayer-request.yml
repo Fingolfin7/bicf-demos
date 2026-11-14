@@ -1,30 +1,22 @@
-title: Share a prayer request
-intro: Only our prayer team sees this. It is emailed to them and not stored on the website.
-submitLabel: Send to the prayer team
+title: Prayer box
+intro: If you have need of prayer, fill in this form and our team will be praying for you. Your name and email are optional.
+submitLabel: Send prayer request
 successTitle: We'll be praying
-successMessage: Your request has gone to the prayer team. You are not alone.
-sendTo: prayer@bicf.cz
+successMessage: Your request has gone to our prayer team. They will be praying for you.
+sendTo: we-are@bicf.cz
 storeEntries: false
 consent: I agree that the BICF prayer team may read this request. It will not be shared with anyone else.
 fields:
-  - label: What would you like us to pray for?
+  - label: Your prayer request
     name: request
     type: textarea
     required: true
-  - label: First name
+  - label: Name
     name: name
     type: text
-    help: Leave blank to stay anonymous.
     width: half
   - label: Email
     name: email
     type: email
-    help: Only if you'd like us to follow up.
+    help: Only if you'd like us to get back to you.
     width: half
-  - label: May we mention this at the Tuesday prayer meeting?
-    name: share
-    type: radio
-    required: true
-    options:
-      - Yes, without my name
-      - No, prayer team only

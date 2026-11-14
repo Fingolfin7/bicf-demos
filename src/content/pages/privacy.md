@@ -19,4 +19,4 @@ When you sign up for something, we keep your name and email address until the ev
 
 ## Your rights
 
-You can ask to see, correct or delete anything we hold about you. Write to hello@bicf.cz.
+You can ask to see, correct or delete anything we hold about you. Write to we-are@bicf.cz. The full policy is on our [organizational information](../organizational-information/) page.

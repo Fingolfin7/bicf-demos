@@ -1,10 +1,10 @@
-name: Teens afternoon
-day: Saturday
-time: "15:00"
-frequency: Second Saturday of the month
-place: Maják Center
-audience: Ages 12 to 17
-description: Food, games, and an honest conversation about faith and life.
-image: /media/bicf/youth-choir.webp
-page: kids-and-teens
-order: 5
+name: "Teens for Christ (TFC)"
+day: "Friday"
+time: "16:00–18:00"
+frequency: "Every week"
+place: "Ask us for the location"
+audience: "Teenagers, 12 and up"
+description: "Focused Bible study, games, prayer, food and fun. Our goal is to equip teens to put Christ first in their lives and learn to share their faith."
+image: "/media/bicf/youth-choir.webp"
+page: "kids-and-teens"
+order: 8

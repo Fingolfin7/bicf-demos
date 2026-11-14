@@ -115,10 +115,11 @@ collections:
     fields:
       - { label: Name, name: name, widget: string }
       - { label: Day, name: day, widget: select, options: [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday] }
-      - { label: Time, name: time, widget: string, hint: "24-hour time, for example 19:00." }
+      - { label: Time, name: time, widget: string, hint: "24-hour time, for example 19:00 or 19:00–20:30." }
       - { label: How often, name: frequency, widget: string, default: Every week }
       - { label: Where, name: place, widget: string }
       - { label: Who it is for, name: audience, widget: string }
+      - { label: Contact person, name: contact, widget: string, required: false, hint: "First name is enough. Visitors write to the church email, which is passed on." }
       - { label: Description, name: description, widget: text }
       - { label: Photo, name: image, widget: image, required: false }
       - label: Page with more information

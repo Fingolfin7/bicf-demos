@@ -11,7 +11,7 @@ const L = (p = '') => link('five', p);
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 ---
 <Layout title="This week" description="Weekly groups, upcoming events and sign-up sheets at BICF.">
-  <PageHero title="During the week" lead="Sunday is the centre, but church life happens all week: around kitchen tables, on video calls and on the trails outside Brno." />
+  <PageHero title="During the week" lead="Sunday is when the whole church is together. During the week we meet in smaller groups: at Maják, in homes, online, and over early-morning coffee in town." />
 
   <section class="d-section d-section--top">
     <div class="d-wrap">
@@ -25,7 +25,7 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
                 {today.map((g) => (
                   <a href={g.page ? L(g.page) : L('contact')}>
                     <strong>{g.name}</strong>
-                    <span>{g.time}, {g.frequency.toLowerCase()}</span>
+                    <span>{g.time}, {g.frequency.charAt(0).toLowerCase() + g.frequency.slice(1)}</span>
                   </a>
                 ))}
               </div>

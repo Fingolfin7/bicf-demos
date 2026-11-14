@@ -1,10 +1,10 @@
-name: Sunday service
-day: Sunday
+name: "Sunday service"
+day: "Sunday"
 time: "17:00"
-frequency: Every week
-place: Maják Center
-audience: Everyone, with a kids programme
-description: Worship, a talk from the Bible, prayer, and tea afterwards.
-image: /media/bicf/congregation-singing.webp
-page: sunday-service
+frequency: "Every week"
+place: "Maják Center, Dusíkova 5"
+audience: "Everyone, with programmes for children"
+description: "We sing a few songs, share what's happening in the weeks ahead, pray together and look at the lessons for our lives that we can gain from the Bible."
+image: "/media/bicf/congregation-singing.webp"
+page: "sunday-service"
 order: 0

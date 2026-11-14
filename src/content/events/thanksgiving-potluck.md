@@ -1,7 +1,7 @@
 ---
 title: Thanksgiving potluck
 date: 2026-11-29
-time: "After the service"
+time: "after the service"
 location: Maják Center, after the service
 summary: Our biggest meal of the year. Bring a dish from your home country and we'll provide the turkey.
 image: /media/bicf/hall-games-night.webp

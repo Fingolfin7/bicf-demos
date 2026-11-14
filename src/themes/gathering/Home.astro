@@ -68,7 +68,7 @@ const stamp = `Every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} + ${s.ven
   <section class="g-section" id="week" aria-labelledby="week-title">
     <div class="g-head">
       <h2 id="week-title">There is a table for you during the week</h2>
-      <p>Small groups meet in homes, cafés and at Maják. Pick one and come along, or <a class="g-link" href={L('contact')}>ask us</a> where to find it.</p>
+      <p>We encourage everyone to pick one of these times that works for you and jump in! Not sure where to go? <a class="g-link" href={L('contact')}>Ask us</a>.</p>
     </div>
     <div class="g-days">
       {week.map(({ day, groups }) => (
@@ -77,10 +77,10 @@ const stamp = `Every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} + ${s.ven
           <ul role="list">
             {groups.map((g) => (
               <li>
-                <p class="g-when">{g.time}, {g.frequency.toLowerCase()}</p>
+                <p class="g-when">{g.time}, {g.frequency.charAt(0).toLowerCase() + g.frequency.slice(1)}</p>
                 <h4>{g.name}</h4>
                 <p>{g.description}</p>
-                <p class="g-meta">{g.place}.{g.page && <> <a href={L(g.page)}>More about this</a></>}</p>
+                <p class="g-meta">{g.place}.{g.contact && <> Contact: <a href={L('contact')}>{g.contact}</a>.</>}{g.page && <> <a href={L(g.page)}>More about this</a></>}</p>
               </li>
             ))}
           </ul>

@@ -1,10 +1,11 @@
-name: Worship circle session
-day: Thursday
-time: "19:30"
-frequency: First Thursday of the month
-place: Maják Center
-audience: Everyone
-description: Guitars, a circle of chairs and an unhurried evening of singing and prayer.
-image: /media/bicf/rehearsal-bw.webp
-page: worship-circle
-order: 4
+name: "Worship circle sessions"
+day: "Friday"
+time: "18:00–20:00"
+frequency: "Every two weeks"
+place: "Maják Center"
+audience: "Singers, musicians and anyone with a heart for worship"
+contact: "Martin and Sarah"
+description: "We worship God together: play, sing, share, pray and learn together, and prepare music for special Sundays and events."
+image: "/media/bicf/rehearsal-bw.webp"
+page: "worship-circle"
+order: 9

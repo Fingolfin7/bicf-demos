@@ -1,10 +1,11 @@
-name: Young adults
-day: Friday
-time: "18:30"
-frequency: Every week
-place: Maják Center
-audience: Students and twenty-somethings
-description: Dinner, a short Bible reading and a long conversation. Once a month we leave the city for the day.
-image: /media/bicf/ya-bowling.webp
-page: young-adults
-order: 3
+name: "Young adults Bible study"
+day: "Thursday"
+time: "19:00"
+frequency: "Every week"
+place: "Central Brno"
+audience: "Ages 20–35"
+contact: "Keren and Bryn"
+description: "Part of our young adults ministry, alongside a monthly event where we do something fun together."
+image: "/media/bicf/ya-bowling.webp"
+page: "young-adults"
+order: 6

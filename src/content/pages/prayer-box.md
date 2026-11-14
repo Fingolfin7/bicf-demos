@@ -1,10 +1,10 @@
 ---
-title: Prayer box
-summary: Tell us what you'd like us to pray for. Requests go only to our small prayer team and are never published.
-section: none
+title: "Prayer box"
+summary: "“Then you will call upon me and come and pray to me, and I will hear you.” (Jeremiah 29:12)"
+section: "none"
 order: 90
-image: /media/bicf/hall-string-lights.webp
-form: prayer-request
+image: "/media/bicf/hall-string-lights.webp"
+form: "prayer-request"
 ---
 
-Whatever is on your mind, big or small, you don't have to carry it alone. Our prayer team meets every week and will pray for you by name, or anonymously if you prefer.
+If you have need of prayer, fill in this form and our team will be praying for you. Your name and email are optional.
