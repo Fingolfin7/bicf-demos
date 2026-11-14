@@ -11,6 +11,12 @@ Four complete, working design directions for the new Brno International Christia
 
 All four use BICF's real logo (redrawn as SVG in `src/components/Logo.astro`) and the church's own photos.
 
+## Live preview
+
+**https://fingolfin7.github.io/bicf-demos/** (GitHub Pages). Every push to `main` rebuilds it automatically through `.github/workflows/pages.yml`, which takes about two minutes. The pages are marked `noindex`, so search engines leave them alone. Forms and sign-up sheets work there in demo mode, so entries stay in each visitor's own browser. The CMS link opens the editor's sign-in page, but editing needs the church's own GitHub setup (see below).
+
+To build for a sub-folder yourself, set `BASE_PATH=/bicf-demos` and `SITE_URL=https://fingolfin7.github.io`.
+
 ## Run it locally
 
 You need [Node.js](https://nodejs.org) 22.23 or newer (24 LTS is fine).
