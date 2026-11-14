@@ -1,0 +1,151 @@
+---
+import Layout from './Layout.astro';
+import NetworkMap from './NetworkMap.astro';
+import DepartureBoard from './DepartureBoard.astro';
+import { getSettings, getGroups, getUpcomingEvents, getThoughts, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+import { LINES, lineForGroup } from './lines';
+
+const s = await getSettings();
+const groups = (await getGroups()).sort((a, b) => a.order - b.order);
+const events = await getUpcomingEvents(5);
+const thoughts = (await getThoughts()).slice(0, 3);
+const L = (p = '') => link('interchange', p);
+---
+<Layout>
+  <section class="i-hero" aria-labelledby="hero-title">
+    <div class="i-hero__text">
+      <h1 id="hero-title" class="i-hero__title">Paths that cross in Brno.</h1>
+      <p class="i-hero__lead">{s.intro}</p>
+
+      <div class="i-sign" data-countdown data-time={s.serviceTime}>
+        <div class="i-sign__main">
+          <p class="i-sign__label">Next stop</p>
+          <p class="i-sign__stop">Maják</p>
+          <p class="i-sign__addr">{s.address}, {s.area}</p>
+        </div>
+        <div class="i-sign__side">
+          <p class="i-sign__time">{s.serviceDay} {s.serviceTime}</p>
+          <p class="i-sign__eta" data-countdown-text>Every week</p>
+          <div class="i-sign__badges" aria-label="Lines serving Maják">
+            {Object.values(LINES).map((l) => <span class="i-badge i-badge--sm" style={`--c:${l.color}`} title={l.name}>{l.code}</span>)}
+          </div>
+        </div>
+      </div>
+
+      <div class="i-hero__actions">
+        <a class="i-btn i-btn--red" href={L('visit')}>Plan your route</a>
+        <a class="i-btn i-btn--outline" href={L('week')}>See the timetable</a>
+      </div>
+    </div>
+    <div class="i-hero__map">
+      <NetworkMap serviceLabel={`${s.serviceDay}s ${s.serviceTime}`} />
+    </div>
+  </section>
+
+  <section class="i-section" aria-labelledby="lines-title">
+    <div class="i-wrap">
+      <div class="i-head">
+        <h2 id="lines-title" class="i-h2">Find your line</h2>
+        <p class="i-head__lead">Every part of church life runs on its own line. They all meet at Maják on Sunday.</p>
+      </div>
+      <ul class="i-lines" role="list">
+        {groups.map((g) => {
+          const line = lineForGroup(g.id);
+          return (
+            <li class="i-line" style={`--c:${line.color}`}>
+              <a href={g.page ? L(g.page) : L('week')}>
+                <span class="i-badge i-badge--lg" style={`--c:${line.color}`}>{line.code}</span>
+                <span class="i-line__body">
+                  <span class="i-line__name">{g.name}</span>
+                  <span class="i-line__meta">{g.day}s {g.time}, {g.place}</span>
+                  <span class="i-line__desc">{g.description}</span>
+                </span>
+                <span class="i-line__freq">{g.frequency}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+
+  <section class="i-section i-section--panel" aria-labelledby="dep-title">
+    <div class="i-wrap">
+      <div class="i-head">
+        <h2 id="dep-title" class="i-h2">Departures</h2>
+        <p class="i-head__lead">Coming up at BICF. Sign up where you see a green light.</p>
+      </div>
+      <DepartureBoard events={events} theme="interchange" />
+      <p class="i-after"><a class="i-link" href={L('week')}>Full timetable</a></p>
+    </div>
+  </section>
+
+  <section class="i-section" aria-labelledby="mission-title">
+    <div class="i-wrap i-mission">
+      <figure class="i-mission__img">
+        <img {...img('/media/stock/tram.webp', '(min-width: 900px) 45vw, 100vw')} alt="A red and cream Brno tram on a curve of track between trees" loading="lazy" />
+      </figure>
+      <div class="i-mission__text">
+        <h2 id="mission-title" class="i-h2">Why we’re here</h2>
+        <p class="i-mission__statement">{s.mission}</p>
+        <p>We started as a Bible study in someone’s home. Today people from all over the world meet here, many of them a long way from where they started.</p>
+        <a class="i-link" href={L('our-story')}>Our story</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="i-section i-section--tight" aria-labelledby="thoughts-title">
+    <div class="i-wrap">
+      <div class="i-head i-head--row">
+        <h2 id="thoughts-title" class="i-h2">Going deeper</h2>
+        <a class="i-link" href={L('thoughts')}>All reflections</a>
+      </div>
+      <div class="i-tickets">
+        {thoughts.map((t) => (
+          <a class="i-ticket" href={L(`thoughts/${t.id}`)}>
+            <span class="i-ticket__top">
+              <span>{formatDate(t.data.date, 'short')}</span>
+              <span>{t.data.author}</span>
+            </span>
+            <span class="i-ticket__title">{t.data.title}</span>
+            <span class="i-ticket__text">{t.data.excerpt}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="i-section i-section--tight" aria-labelledby="help-title">
+    <div class="i-wrap">
+      <div class="i-help">
+        <span class="i-help__icon" aria-hidden="true">?</span>
+        <div>
+          <h2 id="help-title" class="i-help__title">Help point</h2>
+          <p>Something on your mind? Our prayer team meets every Tuesday and will pray for you, by name or anonymously.</p>
+        </div>
+        <div class="i-help__actions">
+          <a class="i-btn i-btn--light" href={L('prayer-box')}>Send a prayer request</a>
+          <a class="i-btn i-btn--ghost-light" href={L('contact')}>Ask a question</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { minutesToService, splitMinutes } from '../../lib/clock';
+  const el = document.querySelector<HTMLElement>('[data-countdown]');
+  if (el) {
+    const out = el.querySelector<HTMLElement>('[data-countdown-text]')!;
+    const tick = () => {
+      const m = minutesToService(el.dataset.time);
+      if (m <= 0) { out.textContent = 'Now boarding'; el.dataset.live = ''; return; }
+      const { days, hours, minutes } = splitMinutes(m);
+      out.textContent = days ? `in ${days} d ${hours} h` : hours ? `in ${hours} h ${minutes} min` : `in ${minutes} min`;
+    };
+    tick();
+    setInterval(tick, 30_000);
+  }
+</script>

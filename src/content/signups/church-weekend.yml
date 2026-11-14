@@ -1,0 +1,16 @@
+title: Church weekend away
+intro: Reserve your place now. We'll confirm room details and payment by email in January.
+date: 2027-03-19
+closes: 2027-02-28
+image: /media/bicf/kids-games.webp
+slots:
+  - label: Family room
+    note: Up to 4 people
+    capacity: 8
+    taken: 5
+  - label: Shared dorm bed
+    capacity: 24
+    taken: 9
+  - label: Day visit on Saturday only
+    capacity: 20
+    taken: 2

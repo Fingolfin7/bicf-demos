@@ -1,0 +1,154 @@
+---
+import Layout from './Layout.astro';
+import DateCross from './DateCross.astro';
+import { getSettings, getGroups, getUpcomingEvents, getThoughts, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+
+const s = await getSettings();
+const groups = (await getGroups()).filter((g) => g.day !== 'Sunday');
+const events = await getUpcomingEvents(3);
+const [thought] = await getThoughts();
+const L = (p = '') => link('crossroads', p);
+
+// The four quarters of the logo, each one a part of who BICF is.
+const quarters = [
+  { letter: 'B', word: 'Brno', note: 'The city we live in and pray for, whether we’re here for a semester or for good.', src: '/media/bicf/ya-market.webp', alt: 'Friends from church taking a selfie at the Brno Christmas market', href: L('new-to-bicf'), pos: '50% 40%' },
+  { letter: 'I', word: 'International', note: 'People from every continent, worshipping together in English.', src: '/media/bicf/church-family.webp', alt: 'A big group of the BICF family standing together at the front of the hall', href: L('our-story'), pos: '50% 70%' },
+  { letter: 'C', word: 'Christian', note: 'Following Jesus together, and helping each other grow deeper in faith.', src: '/media/bicf/congregation-singing.webp', alt: 'The congregation standing and singing during Sunday worship', href: L('what-we-believe'), pos: '50% 45%' },
+  { letter: 'F', word: 'Fellowship', note: 'Tea after the service, small groups during the week, and friends for the road.', src: '/media/bicf/ya-bowling.webp', alt: 'Young adults from church on a bowling night', href: L('week'), pos: '50% 55%' },
+];
+
+const facts = [
+  { label: 'When', big: `${s.serviceDay}s, ${s.serviceTime}`, text: 'Come a little early if it’s your first time.' },
+  { label: 'Where', big: s.venue, text: `${s.address}, ${s.area}.` },
+  { label: 'Language', big: 'English', text: 'Plus plenty of other languages over tea afterwards.' },
+  { label: 'Kids', big: 'Welcome', text: 'There’s a programme for children during the talk.' },
+];
+---
+<Layout>
+  <section class="x-hero" aria-labelledby="hero-title">
+    <div class="x-wrap x-hero__intro">
+      <h1 id="hero-title" class="x-hero__title">Paths that cross <span>in&nbsp;Brno.</span></h1>
+      <div class="x-hero__aside">
+        <p>{s.intro}</p>
+        <div class="x-actions">
+          <a class="x-btn" href={L('visit')}>Plan your first Sunday</a>
+          <a class="x-btn x-btn--line" href={L('week')}>What’s on</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="x-quads">
+      {quarters.map((q, i) => (
+        <a class={`x-quad x-quad--${i + 1}`} href={q.href}>
+          <img {...img(q.src, '(min-width: 800px) 50vw, 100vw')} alt={q.alt} style={`object-position:${q.pos}`} fetchpriority={i < 2 ? 'high' : undefined} />
+          <span class="x-quad__letter" aria-hidden="true">{q.letter}</span>
+          <span class="x-quad__text">
+            <span class="x-quad__word">{q.word}</span>
+            <span class="x-quad__note">{q.note}</span>
+          </span>
+        </a>
+      ))}
+      <div class="x-quads__centre" aria-hidden="true">
+        <span class="x-quads__badge"><b>{s.serviceTime}</b> {s.serviceDay}s</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="x-section" aria-labelledby="facts-title">
+    <div class="x-wrap">
+      <h2 id="facts-title" class="x-kicker">Your first Sunday, in four parts</h2>
+      <dl class="x-crossgrid x-facts">
+        {facts.map((f) => (
+          <div>
+            <dt class="x-label">{f.label}</dt>
+            <dd><span class="x-facts__big">{f.big}</span>{f.text}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="x-facts__more"><a class="x-arrow" href={L('visit')}>Directions and a map</a></p>
+    </div>
+  </section>
+
+  <section class="x-section x-section--blue" aria-labelledby="mission-title">
+    <div class="x-wrap x-mission">
+      <h2 id="mission-title" class="x-label">Why we’re here</h2>
+      <p class="x-mission__text">{s.mission}</p>
+      <ul class="x-mission__list" role="list">
+        <li><span class="x-plus" aria-hidden="true"></span>Grow deeper</li>
+        <li><span class="x-plus" aria-hidden="true"></span>Share the good news</li>
+        <li><span class="x-plus" aria-hidden="true"></span>Serve the community</li>
+      </ul>
+      <a class="x-arrow x-arrow--light" href={L('what-we-believe')}>What we believe</a>
+    </div>
+  </section>
+
+  <section class="x-section" aria-labelledby="week-title">
+    <div class="x-wrap">
+      <div class="x-head">
+        <h2 id="week-title" class="x-h2">During the week</h2>
+        <a class="x-arrow" href={L('week')}>Full schedule</a>
+      </div>
+      <ul class="x-rows" role="list">
+        {groups.map((g) => (
+          <li>
+            <a href={g.page ? L(g.page) : L('week')}>
+              <span class="x-plus" aria-hidden="true"></span>
+              <span class="x-rows__day">{g.day}</span>
+              <span class="x-rows__name">{g.name}</span>
+              <span class="x-rows__meta">{g.time} · {g.place}<br />{g.frequency}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="x-section x-section--tint" aria-labelledby="events-title">
+    <div class="x-wrap">
+      <div class="x-head">
+        <h2 id="events-title" class="x-h2">Coming up</h2>
+        <a class="x-arrow" href={L('week')}>All events</a>
+      </div>
+      <div class="x-events">
+        {events.map((e) => (
+          <article class="x-event">
+            <div class="x-event__img">
+              {e.image && <img {...img(e.image, '(min-width: 900px) 30vw, 90vw')} alt="" loading="lazy" />}
+              <DateCross date={e.date} time={e.time} />
+            </div>
+            <h3 class="x-event__title">{e.title}</h3>
+            <p class="x-event__meta">{e.location}</p>
+            <p>{e.summary}</p>
+            {e.signup && <a class="x-arrow" href={L(`signup/${e.signup}`)}>Sign up</a>}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {thought && (
+    <section class="x-section" aria-labelledby="thought-title">
+      <div class="x-wrap x-thought">
+        {thought.data.scripture && <blockquote class="x-thought__verse">{thought.data.scripture}</blockquote>}
+        <div>
+          <p class="x-label">From Going deeper</p>
+          <h2 id="thought-title" class="x-h3"><a href={L(`thoughts/${thought.id}`)}>{thought.data.title}</a></h2>
+          <p>{thought.data.excerpt}</p>
+          <a class="x-arrow" href={L('thoughts')}>More reflections</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="x-prayer" aria-labelledby="prayer-title">
+    <div class="x-wrap x-prayer__grid">
+      <div>
+        <h2 id="prayer-title" class="x-prayer__title">Where can we pray for you?</h2>
+        <p>Our prayer team meets every Tuesday morning and prays for every request. Leave your name, or don’t.</p>
+        <a class="x-btn x-btn--white" href={L('prayer-box')}>Open the prayer box</a>
+      </div>
+    </div>
+  </section>
+</Layout>

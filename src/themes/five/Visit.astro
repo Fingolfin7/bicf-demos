@@ -1,0 +1,42 @@
+---
+import Layout from './Layout.astro';
+import PageHero from './PageHero.astro';
+import { getSettings, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+import { FAQS } from '../../lib/faqs';
+const s = await getSettings();
+const L = (p = '') => link('five', p);
+---
+<Layout title="Plan a visit" description={`Visit BICF: every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at ${s.venue}, ${s.address}.`} image="/media/bicf/hall-wide.webp">
+  <PageHero title="Your first Sunday" lead={`Every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at the ${s.venue} in ${s.area}. Here’s everything you need to know before you come.`} image="/media/bicf/congregation-singing.webp" alt="The congregation standing and singing in the hall at Maják" />
+
+  <section class="d-section">
+    <div class="d-wrap">
+      <h2 class="d-h2">Finding Maják</h2>
+      <ol class="d-steps">
+        {s.directions.map((d) => <li><h3>{d.step}</h3><p>{d.detail}</p></li>)}
+      </ol>
+      <p class="d-muted d-after-steps">{s.venue}, {s.address}. <a class="d-link" href={s.mapUrl} rel="noopener">Open in Mapy.cz</a></p>
+    </div>
+  </section>
+
+  <section class="d-section d-section--tight">
+    <div class="d-wrap d-story__grid">
+      <figure class="d-arch d-story__img"><img {...img('/media/bicf/hall-games-night.webp', '40vw')} alt="The hall at Maják packed with people watching a games night" loading="lazy" /></figure>
+      <div>
+        <p class="d-statement">First visits can be a little tricky. Tell us when you’re coming and someone will meet you at the Haškova stop and walk over with you.</p>
+        <a class="d-btn d-btn--sun" href={L('contact')}>Ask someone to meet me</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="d-section d-section--tight">
+    <div class="d-wrap">
+      <h2 class="d-h2">Good questions</h2>
+      <div class="d-faq">
+        {FAQS.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </div>
+  </section>
+</Layout>

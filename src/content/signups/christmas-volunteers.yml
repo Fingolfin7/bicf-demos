@@ -1,0 +1,20 @@
+title: Carols by candlelight helpers
+intro: The Christmas service is our busiest evening. These are the jobs we need covered.
+date: 2026-12-20
+closes: 2026-12-18
+image: /media/bicf/christmas-band.webp
+slots:
+  - label: Read the Christmas story in your language
+    note: About one minute of reading
+    capacity: 12
+    taken: 7
+  - label: Welcome team at the door
+    capacity: 4
+    taken: 2
+  - label: Bake cukroví
+    note: Any Christmas cookies count
+    capacity: 10
+    taken: 3
+  - label: Mulled wine and punch
+    capacity: 2
+    taken: 0

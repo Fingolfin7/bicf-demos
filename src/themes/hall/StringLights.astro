@@ -1,0 +1,119 @@
+---
+/* Festoon lights like the ones strung across the hall at Maják.
+   Two strands at different depths hang in sagging curves between uneven
+   anchor points and cross each other. Each bulb is a small glass globe on
+   a short drop, with a hot centre, a socket and a soft halo. It is all
+   generated here at build time, so the page ships plain SVG.
+   Purely decorative. Colours: --wire (cable) and --halo (glow). */
+interface Props { swags?: number; class?: string }
+const { swags = 4, class: cls } = Astro.props;
+
+const W = 1600, H = 150;
+const uid = Math.random().toString(36).slice(2, 8);
+
+// Small seeded random, so every build draws the same lights.
+let seed = 7 + swags * 101;
+const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+
+type Bulb = { x: number; y: number; drop: number; d: number; s: number };
+
+function strand(spans: number, y0: number, sagMin: number, sagMax: number, spacing: number, offset: number) {
+  // Anchors run past both edges so the strand never ends inside the view.
+  const left = -120 + offset, right = W + 120;
+  const step = (right - left) / spans;
+  const anchors = Array.from({ length: spans + 1 }, (_, i) => ({
+    x: left + i * step + (i > 0 && i < spans ? (rand() - 0.5) * step * 0.35 : 0),
+    y: y0 + rand() * 14,
+  }));
+  const pts: [number, number][] = [];
+  for (let i = 0; i < spans; i++) {
+    const a = anchors[i], b = anchors[i + 1];
+    const sag = sagMin + rand() * (sagMax - sagMin);
+    const n = 40;
+    for (let k = i === 0 ? 0 : 1; k <= n; k++) {
+      const t = k / n;
+      // A hanging cable: a catenary-like dip on top of the straight line between anchors.
+      const dip = sag * (1 - Math.cosh((t - 0.5) * 2.2) / Math.cosh(1.1)) / (1 - 1 / Math.cosh(1.1));
+      pts.push([a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t + dip]);
+    }
+  }
+  const path = 'M' + pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(' L');
+
+  // Bulbs evenly spaced along the cable's length.
+  const bulbs: Bulb[] = [];
+  let since = spacing * 0.5;
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0p] = pts[i - 1], [x1, y1] = pts[i];
+    since += Math.hypot(x1 - x0, y1 - y0p);
+    if (since >= spacing) {
+      since = 0;
+      if (x1 > -30 && x1 < W + 30) bulbs.push({ x: x1, y: y1, drop: 5 + rand() * 5, d: rand() * 5, s: 0.92 + rand() * 0.16 });
+    }
+  }
+  return { path, bulbs };
+}
+
+const back = strand(swags + 1, 2, 26, 40, 46, -60);
+const front = strand(swags, 6, 58, 86, 64, 0);
+const layers = [
+  { cls: 'is-back', scale: 0.62, ...back },
+  { cls: 'is-front', scale: 1, ...front },
+];
+---
+<svg class:list={['h-lights', cls]} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMin slice" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id={`glass-${uid}`} cx="0.45" cy="0.42" r="0.62" fx="0.42" fy="0.36">
+      <stop offset="0" stop-color="#fffdf2" />
+      <stop offset="0.28" stop-color="#ffe7a6" />
+      <stop offset="0.7" stop-color="#ffb653" />
+      <stop offset="1" stop-color="#d9822c" />
+    </radialGradient>
+    <radialGradient id={`halo-${uid}`}>
+      <stop offset="0" stop-color="var(--halo, #ffc768)" stop-opacity="0.75" />
+      <stop offset="0.35" stop-color="var(--halo, #ffc768)" stop-opacity="0.32" />
+      <stop offset="1" stop-color="var(--halo, #ffc768)" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  {layers.map((l) => (
+    <g class:list={['h-lights__strand', l.cls]}>
+      <path class="h-lights__cable" d={l.path} />
+      {l.bulbs.map((b) => {
+        const k = l.scale * b.s;
+        return (
+          <g transform={`translate(${b.x.toFixed(1)} ${b.y.toFixed(1)}) scale(${k.toFixed(3)})`}>
+            <g class="h-lights__sway" style={`--d:${b.d.toFixed(2)}s`}>
+              <line class="h-lights__drop" x1="0" y1="0" x2="0" y2={b.drop.toFixed(1)} />
+              <g transform={`translate(0 ${b.drop.toFixed(1)})`}>
+                <circle class="h-lights__halo" cy="14" r="34" fill={`url(#halo-${uid})`} />
+                <rect class="h-lights__socket" x="-3.6" y="0" width="7.2" height="7.5" rx="1.6" />
+                <path class="h-lights__neck" d="M-2.6 7 h5.2 l0.6 2.4 h-6.4 z" />
+                <circle class="h-lights__glass" cy="16" r="8" fill={`url(#glass-${uid})`} />
+                <ellipse class="h-lights__shine" cx="-2.9" cy="12.4" rx="1.7" ry="2.6" transform="rotate(-24 -2.9 12.4)" />
+              </g>
+            </g>
+          </g>
+        );
+      })}
+    </g>
+  ))}
+</svg>
+<style>
+  .h-lights { display: block; width: 100%; height: clamp(64px, 8vw, 120px); pointer-events: none; overflow: visible; }
+  .h-lights__cable { fill: none; stroke: var(--wire, #4a3526); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .h-lights__drop { stroke: var(--wire, #4a3526); stroke-width: 1.4; }
+  .h-lights__socket, .h-lights__neck { fill: var(--wire, #4a3526); }
+  .h-lights__shine { fill: #fff; opacity: 0.75; }
+  .is-back { opacity: 0.6; }
+  :global(.h-footer) .is-back { opacity: 0.85; }
+  .is-back .h-lights__cable { stroke-width: 1.1; }
+  .h-lights { --ho: 0.55; }
+  .h-lights__halo { mix-blend-mode: multiply; opacity: var(--ho); }
+  :global(.h-footer) .h-lights { --ho: 0.95; }
+  :global(.h-footer) .h-lights__halo { mix-blend-mode: screen; }
+  @media (prefers-reduced-motion: no-preference) {
+    .h-lights__halo { animation: h-flicker 5s ease-in-out infinite; animation-delay: calc(var(--d) * -1); }
+    .h-lights__sway { animation: h-sway 7s ease-in-out infinite; animation-delay: calc(var(--d) * -1.4); transform-origin: 0 0; }
+    @keyframes h-flicker { 0%, 100% { opacity: var(--ho); } 45% { opacity: calc(var(--ho) * 0.7); } 52% { opacity: calc(var(--ho) * 1.08); } }
+    @keyframes h-sway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+  }
+</style>

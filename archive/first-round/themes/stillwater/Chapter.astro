@@ -1,0 +1,19 @@
+---
+/* Page opener, like the first page of a book chapter. */
+import { img } from '../../lib/img';
+interface Props { title: string; lead?: string; image?: string; alt?: string; kicker?: { label: string; href?: string } }
+const { title, lead, image, alt = '', kicker } = Astro.props;
+---
+<header class:list={['w-chapter', { 'w-chapter--solo': !image }]}>
+  <div>
+    {kicker && (kicker.href ? <a class="w-chapter__kicker" href={kicker.href}>{kicker.label}</a> : <p class="w-chapter__kicker">{kicker.label}</p>)}
+    <h1>{title}</h1>
+    {lead && <p class="w-chapter__standfirst">{lead}</p>}
+    <slot />
+  </div>
+  {image && (
+    <figure class="w-chapter__plate">
+      <img {...img(image, '(min-width: 900px) 60vw, 100vw')} alt={alt} fetchpriority="high" />
+    </figure>
+  )}
+</header>

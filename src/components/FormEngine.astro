@@ -1,0 +1,195 @@
+---
+import { withBase } from '../lib/base';
+/**
+ * Renders any form defined in the CMS (src/content/forms/*.yml).
+ * Markup only uses neutral .bf-* classes; each theme styles them.
+ *
+ * DEMO MODE: submissions are validated and kept in this browser only.
+ * In production the form posts to /api/forms/<id> (a Cloudflare Pages
+ * Function) which emails `sendTo` and, if `storeEntries`, saves the entry.
+ */
+interface Field {
+  label: string;
+  name: string;
+  type: string;
+  required: boolean;
+  help?: string;
+  options?: string[];
+  width: 'full' | 'half';
+}
+interface Props {
+  form: {
+    id: string;
+    title: string;
+    intro?: string;
+    submitLabel: string;
+    successTitle: string;
+    successMessage: string;
+    consent: string;
+    fields: Field[];
+  };
+  showTitle?: boolean;
+  privacyHref?: string;
+}
+const { form, showTitle = true, privacyHref = withBase('/privacy/') } = Astro.props;
+const uid = `bf-${form.id}`;
+---
+
+<div class="bf" data-bf={form.id}>
+  {showTitle && (
+    <div class="bf-head">
+      <h2 class="bf-title">{form.title}</h2>
+      {form.intro && <p class="bf-intro">{form.intro}</p>}
+    </div>
+  )}
+  <form class="bf-form" novalidate data-bf-form>
+    <div class="bf-grid">
+      {form.fields.map((f) => {
+        const id = `${uid}-${f.name}`;
+        const describedBy = [f.help ? `${id}-help` : '', `${id}-err`].filter(Boolean).join(' ');
+        const optional = !f.required && <span class="bf-optional">(optional)</span>;
+        if (f.type === 'radio' || (f.type === 'checkbox' && f.options?.length)) {
+          return (
+            <fieldset class:list={['bf-field', 'bf-choice', `bf-${f.width}`]} data-required={f.required ? '' : undefined} data-name={f.name} aria-describedby={describedBy}>
+              <legend class="bf-label">{f.label} {optional}</legend>
+              {f.help && <p class="bf-help" id={`${id}-help`}>{f.help}</p>}
+              <div class="bf-options">
+                {f.options?.map((o, i) => (
+                  <label class="bf-option">
+                    <input type={f.type} name={f.name} value={o} id={`${id}-${i}`} />
+                    <span>{o}</span>
+                  </label>
+                ))}
+              </div>
+              <p class="bf-error" id={`${id}-err`} hidden>Choose one of the options.</p>
+            </fieldset>
+          );
+        }
+        if (f.type === 'checkbox') {
+          return (
+            <div class:list={['bf-field', 'bf-check', `bf-${f.width}`]}>
+              <label class="bf-option">
+                <input type="checkbox" name={f.name} id={id} required={f.required} aria-describedby={describedBy} />
+                <span>{f.label}</span>
+              </label>
+              {f.help && <p class="bf-help" id={`${id}-help`}>{f.help}</p>}
+              <p class="bf-error" id={`${id}-err`} hidden>Tick this box to continue.</p>
+            </div>
+          );
+        }
+        return (
+          <div class:list={['bf-field', `bf-${f.width}`]}>
+            <label class="bf-label" for={id}>{f.label} {optional}</label>
+            {f.help && <p class="bf-help" id={`${id}-help`}>{f.help}</p>}
+            {f.type === 'textarea' ? (
+              <textarea class="bf-input" id={id} name={f.name} rows="5" required={f.required} aria-describedby={describedBy} />
+            ) : f.type === 'select' ? (
+              <select class="bf-input" id={id} name={f.name} required={f.required} aria-describedby={describedBy}>
+                <option value="">Choose…</option>
+                {f.options?.map((o) => <option>{o}</option>)}
+              </select>
+            ) : (
+              <input class="bf-input" id={id} name={f.name} type={f.type} required={f.required} aria-describedby={describedBy}
+                autocomplete={f.type === 'email' ? 'email' : f.name === 'name' ? 'given-name' : undefined} />
+            )}
+            <p class="bf-error" id={`${id}-err`} hidden>
+              {f.type === 'email' ? 'Enter an email address like name@example.com.' : 'Fill in this field.'}
+            </p>
+          </div>
+        );
+      })}
+
+      <div class="bf-field bf-full bf-consent">
+        <label class="bf-option">
+          <input type="checkbox" name="consent" id={`${uid}-consent`} required aria-describedby={`${uid}-consent-err`} />
+          <span>{form.consent} <a href={privacyHref}>How we handle your data</a></span>
+        </label>
+        <p class="bf-error" id={`${uid}-consent-err`} hidden>Tick this box so we're allowed to read your message.</p>
+      </div>
+
+      <!-- Spam trap: people never see this field, bots fill it in. -->
+      <div class="bf-trap" aria-hidden="true">
+        <label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+      </div>
+    </div>
+
+    <div class="bf-actions">
+      <button class="bf-submit" type="submit">{form.submitLabel}</button>
+      <p class="bf-status" role="status" aria-live="polite"></p>
+    </div>
+  </form>
+
+  <div class="bf-success" hidden tabindex="-1">
+    <h3 class="bf-success-title">{form.successTitle}</h3>
+    <p>{form.successMessage}</p>
+    <p class="bf-demo-note">This is a demo site, so nothing was actually sent.</p>
+  </div>
+</div>
+
+<script>
+  const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function setError(el: HTMLElement | null, show: boolean) {
+    if (!el) return;
+    el.hidden = !show;
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-bf]').forEach((root) => {
+    const form = root.querySelector<HTMLFormElement>('[data-bf-form]')!;
+    const success = root.querySelector<HTMLElement>('.bf-success')!;
+    const status = root.querySelector<HTMLElement>('.bf-status')!;
+    const button = root.querySelector<HTMLButtonElement>('.bf-submit')!;
+
+    const validate = () => {
+      let firstBad: HTMLElement | null = null;
+      form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('.bf-input, .bf-check input, .bf-consent input').forEach((input) => {
+        const err = document.getElementById(`${input.id}-err`);
+        let bad = false;
+        if (input instanceof HTMLInputElement && input.type === 'checkbox') bad = input.required && !input.checked;
+        else bad = (input.required && !input.value.trim()) || (input.type === 'email' && !!input.value.trim() && !EMAIL.test(input.value.trim()));
+        input.setAttribute('aria-invalid', String(bad));
+        setError(err, bad);
+        if (bad && !firstBad) firstBad = input;
+      });
+      form.querySelectorAll<HTMLFieldSetElement>('fieldset[data-required]').forEach((fs) => {
+        const ok = !!fs.querySelector('input:checked');
+        const err = fs.querySelector<HTMLElement>('.bf-error');
+        setError(err, !ok);
+        fs.toggleAttribute('data-invalid', !ok);
+        if (!ok && !firstBad) firstBad = fs.querySelector('input');
+      });
+      return firstBad as HTMLElement | null;
+    };
+
+    form.addEventListener('input', (e) => {
+      const t = e.target as HTMLElement;
+      if (t.getAttribute('aria-invalid') === 'true' || t.closest('fieldset[data-invalid]')) validate();
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const bad = validate();
+      if (bad) {
+        status.textContent = 'Some fields need attention.';
+        bad.focus();
+        return;
+      }
+      const data = Object.fromEntries(new FormData(form).entries());
+      if (data.website) return; // bot
+      button.disabled = true;
+      button.dataset.busy = '';
+      status.textContent = 'Sending…';
+      await new Promise((r) => setTimeout(r, 650));
+      try {
+        const key = 'bicf-demo-form-entries';
+        const all = JSON.parse(localStorage.getItem(key) || '[]');
+        all.push({ form: root.dataset.bf, at: new Date().toISOString() });
+        localStorage.setItem(key, JSON.stringify(all));
+      } catch {}
+      form.hidden = true;
+      root.querySelector<HTMLElement>('.bf-head')?.setAttribute('hidden', '');
+      success.hidden = false;
+      success.focus();
+    });
+  });
+</script>

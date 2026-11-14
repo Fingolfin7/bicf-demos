@@ -1,0 +1,19 @@
+---
+import Layout from './Layout.astro';
+import Chapter from './Chapter.astro';
+import SignupEngine from '../../components/SignupEngine.astro';
+import { formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+const { signup } = Astro.props;
+const d = signup.data;
+const L = (p = '') => link('stillwater', p);
+---
+<Layout title={d.title} description={d.intro} image={d.image}>
+  <Chapter title={d.title} lead={d.intro} image={d.image} kicker={{ label: 'The week', href: L('week') }}>
+    <p style="margin:20px 0 0;font-size:1.3rem">{formatDate(d.date, 'weekday')}</p>
+  </Chapter>
+  <div class="w-page">
+    <aside><p class="w-muted" style="font-style:italic;max-width:28ch;margin:0">Choose a line and add your name. The organiser will be in touch by email.</p></aside>
+    <SignupEngine id={signup.id} slots={d.slots} closes={d.closes} privacyHref={L('privacy')} />
+  </div>
+</Layout>

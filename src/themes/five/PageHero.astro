@@ -1,0 +1,14 @@
+---
+import { img } from '../../lib/img';
+interface Props { title: string; lead?: string; image?: string; alt?: string; crumb?: { href: string; label: string } }
+const { title, lead, image, alt = '', crumb } = Astro.props;
+---
+<section class:list={['d-pagehero', { 'd-pagehero--plain': !image }]}>
+  {image && <img {...img(image)} alt={alt} fetchpriority="high" />}
+  <div class="d-wrap d-pagehero__body">
+    {crumb && <a class="d-crumb" href={crumb.href}>{crumb.label}</a>}
+    <h1>{title}</h1>
+    {lead && <p>{lead}</p>}
+    <slot />
+  </div>
+</section>

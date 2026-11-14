@@ -1,0 +1,257 @@
+# =====================================================================
+#  BICF website editor (Sveltia CMS)
+#  Every collection below maps to a folder in src/content. Editors fill
+#  in forms; the CMS saves Markdown/YAML files; the site rebuilds itself.
+#  Field names must match src/content.config.ts.
+# =====================================================================
+
+backend:
+  name: github
+  repo: bicf-church/website        # TODO: the church's GitHub repository
+  branch: main
+  # Editors sign in with GitHub through the free Sveltia CMS Authenticator
+  # on Cloudflare Workers. Uncomment once it is deployed (see README).
+  # base_url: https://sveltia-cms-auth.YOUR-ACCOUNT.workers.dev
+
+site_url: https://www.bicf.cz
+display_url: https://www.bicf.cz
+logo_url: /favicon.svg
+
+# Uploaded photos and files go here. Photos are converted to WebP and
+# shrunk on upload, so volunteers can drop in phone photos as they are.
+media_folder: public/media/uploads
+public_folder: /media/uploads
+media_libraries:
+  default:
+    config:
+      transformations:
+        raster_image:
+          format: webp
+          quality: 80
+          width: 2000
+          height: 2000
+
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  # ---------------------------------------------------------------- pages
+  - name: pages
+    label: Pages
+    label_singular: Page
+    description: Ordinary pages such as "What we believe" or "Kids and teens". Add a page here and it appears on the site.
+    folder: src/content/pages
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{title}}"
+    sortable_fields: [title, order]
+    summary: "{{title}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Short summary, name: summary, widget: text, hint: "One or two sentences. Shown under the title and in search results." }
+      - label: Show in the menu under
+        name: section
+        widget: select
+        default: none
+        options:
+          - { label: "Join in", value: join-in }
+          - { label: "Who we are", value: who-we-are }
+          - { label: "Not in the menu", value: none }
+      - { label: Order in the menu, name: order, widget: number, value_type: int, default: 50, hint: "Lower numbers come first." }
+      - { label: Main photo, name: image, widget: image, required: false }
+      - label: Form at the bottom of the page
+        name: form
+        widget: relation
+        collection: forms
+        value_field: "{{slug}}"
+        search_fields: [title]
+        display_fields: [title]
+        required: false
+      - { label: Page text, name: body, widget: markdown }
+
+  # --------------------------------------------------------------- events
+  - name: events
+    label: Events
+    label_singular: Event
+    description: One-off events. Past events disappear from the site automatically.
+    folder: src/content/events
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{title}}"
+    sortable_fields: [date, title]
+    summary: "{{date}}  {{title}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime, time_format: false, format: "YYYY-MM-DD" }
+      - { label: Time, name: time, widget: string, hint: "For example 18:15, or Friday 18:00 to Sunday 14:00." }
+      - { label: Where, name: location, widget: string }
+      - { label: Short description, name: summary, widget: text }
+      - { label: Photo, name: image, widget: image, required: false }
+      - label: Sign-up sheet
+        name: signup
+        widget: relation
+        collection: signups
+        value_field: "{{slug}}"
+        search_fields: [title]
+        display_fields: [title]
+        required: false
+      - { label: More details, name: body, widget: markdown, required: false }
+
+  # --------------------------------------------------------------- groups
+  - name: groups
+    label: Weekly schedule
+    label_singular: Weekly group
+    description: Things that happen every week or every month.
+    folder: src/content/groups
+    extension: yml
+    format: yaml
+    create: true
+    identifier_field: name
+    slug: "{{name}}"
+    summary: "{{day}} {{time}}  {{name}}"
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: Day, name: day, widget: select, options: [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday] }
+      - { label: Time, name: time, widget: string, hint: "24-hour time, for example 19:00." }
+      - { label: How often, name: frequency, widget: string, default: Every week }
+      - { label: Where, name: place, widget: string }
+      - { label: Who it is for, name: audience, widget: string }
+      - { label: Description, name: description, widget: text }
+      - { label: Photo, name: image, widget: image, required: false }
+      - label: Page with more information
+        name: page
+        widget: relation
+        collection: pages
+        value_field: "{{slug}}"
+        search_fields: [title]
+        display_fields: [title]
+        required: false
+      - { label: Order, name: order, widget: number, value_type: int, default: 50 }
+
+  # -------------------------------------------------------------- signups
+  - name: signups
+    label: Sign-up sheets
+    label_singular: Sign-up sheet
+    description: Lists where people claim a place, like a potluck or a volunteer rota.
+    folder: src/content/signups
+    extension: yml
+    format: yaml
+    create: true
+    slug: "{{title}}"
+    summary: "{{title}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Introduction, name: intro, widget: text }
+      - { label: Date of the event, name: date, widget: datetime, time_format: false, format: "YYYY-MM-DD" }
+      - { label: Sign-ups close on, name: closes, widget: datetime, time_format: false, format: "YYYY-MM-DD", required: false }
+      - { label: Photo, name: image, widget: image, required: false }
+      - label: Slots
+        name: slots
+        widget: list
+        label_singular: slot
+        summary: "{{fields.label}} ({{fields.capacity}} places)"
+        fields:
+          - { label: What is needed, name: label, widget: string }
+          - { label: Note, name: note, widget: string, required: false }
+          - { label: Number of places, name: capacity, widget: number, value_type: int, min: 1, default: 4 }
+          - { label: "Places already taken (demo only)", name: taken, widget: number, value_type: int, min: 0, default: 0, hint: "On the live site this is counted automatically." }
+
+  # ---------------------------------------------------------------- forms
+  - name: forms
+    label: Forms
+    label_singular: Form
+    description: Build a form here, then attach it to any page.
+    folder: src/content/forms
+    extension: yml
+    format: yaml
+    create: true
+    slug: "{{title}}"
+    summary: "{{title}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Introduction, name: intro, widget: text, required: false }
+      - { label: Send replies to (email), name: sendTo, widget: string }
+      - { label: Keep a copy of each reply, name: storeEntries, widget: boolean, default: true, hint: "Turn this off for sensitive forms such as prayer requests. They are emailed and never stored." }
+      - { label: Button text, name: submitLabel, widget: string, default: Send }
+      - { label: Thank-you heading, name: successTitle, widget: string, default: Thank you }
+      - { label: Thank-you message, name: successMessage, widget: text }
+      - { label: Consent sentence, name: consent, widget: text, hint: "Required by GDPR. Say what the information will be used for." }
+      - label: Questions
+        name: fields
+        widget: list
+        label_singular: question
+        summary: "{{fields.label}} ({{fields.type}})"
+        fields:
+          - { label: Question, name: label, widget: string }
+          - { label: Internal name, name: name, widget: string, pattern: ["^[a-z0-9_]+$", "Lowercase letters, numbers and _ only"], hint: "A short code such as phone or dietary_needs." }
+          - label: Answer type
+            name: type
+            widget: select
+            default: text
+            options:
+              - { label: Short text, value: text }
+              - { label: Long text, value: textarea }
+              - { label: Email, value: email }
+              - { label: Phone, value: tel }
+              - { label: Number, value: number }
+              - { label: Date, value: date }
+              - { label: Drop-down list, value: select }
+              - { label: Pick one (radio buttons), value: radio }
+              - { label: Pick several (tick boxes), value: checkbox }
+          - { label: Choices, name: options, widget: list, required: false, hint: "For drop-down lists, pick one and pick several. Leave a single tick box without choices." }
+          - { label: Required, name: required, widget: boolean, default: false }
+          - { label: Help text, name: help, widget: string, required: false }
+          - { label: Width, name: width, widget: select, default: full, options: [{ label: Full width, value: full }, { label: Half width, value: half }] }
+
+  # ------------------------------------------------------------- thoughts
+  - name: thoughts
+    label: Going deeper
+    label_singular: Reflection
+    description: Short reflections and articles.
+    folder: src/content/thoughts
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{title}}"
+    sortable_fields: [date, title]
+    summary: "{{date}}  {{title}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime, time_format: false, format: "YYYY-MM-DD" }
+      - { label: Author, name: author, widget: string }
+      - { label: Short summary, name: excerpt, widget: text }
+      - { label: Bible verse, name: scripture, widget: string, required: false }
+      - { label: Photo, name: image, widget: image, required: false }
+      - { label: Text, name: body, widget: markdown }
+
+  # ------------------------------------------------------------- settings
+  - name: settings
+    label: Church details
+    files:
+      - name: site
+        label: Service time, address and contacts
+        file: src/content/settings.json
+        format: json
+        fields:
+          - { label: Full name, name: name, widget: string }
+          - { label: Short name, name: shortName, widget: string }
+          - { label: Tagline, name: tagline, widget: string }
+          - { label: Welcome text, name: intro, widget: text }
+          - { label: Mission statement, name: mission, widget: text }
+          - { label: Service day, name: serviceDay, widget: select, options: [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday] }
+          - { label: Service time, name: serviceTime, widget: string, hint: "24-hour time, for example 17:00." }
+          - { label: Venue, name: venue, widget: string }
+          - { label: Address, name: address, widget: string }
+          - { label: Area, name: area, widget: string }
+          - { label: Map link, name: mapUrl, widget: string }
+          - { label: Email, name: email, widget: string }
+          - { label: Facebook page, name: facebook, widget: string }
+          - label: How to find us
+            name: directions
+            widget: list
+            fields:
+              - { label: Step, name: step, widget: string }
+              - { label: Detail, name: detail, widget: text }

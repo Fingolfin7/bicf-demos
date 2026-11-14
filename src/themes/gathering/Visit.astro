@@ -1,0 +1,51 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import RouteMap from '../../components/RouteMap.astro';
+import { getSettings, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+import { FAQS } from '../../lib/faqs';
+const s = await getSettings();
+const L = (p = '') => link('gathering', p);
+---
+<Layout title="Plan a visit" description={`Visit BICF: every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at ${s.venue}, ${s.address}.`} image="/media/bicf/hall-wide.webp">
+  <PageHead title="Your first Sunday" lead={`Every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at the ${s.venue} in ${s.area}. Come as you are: no dress code, and no Czech required.`} image="/media/bicf/worship-joy.webp" />
+
+  <section class="g-section g-section--tight">
+    <div class="g-find">
+      <div>
+        <h2>Look for the yellow building</h2>
+        <p class="g-lead">It's easy once you know it, but the first time can be a little tricky.</p>
+        <ol>
+          {s.directions.map((d) => <li><strong>{d.step}.</strong> {d.detail}</li>)}
+        </ol>
+        <p class="g-find-address">{s.venue}, {s.address}</p>
+        <a class="g-btn" href={s.mapUrl} rel="noopener">Open in Mapy.cz</a>
+      </div>
+      <div class="g-mapcard"><RouteMap /></div>
+    </div>
+  </section>
+
+  <div class="g-wide">
+    <img {...img('/media/bicf/hall-wide.webp')} alt="The timber-panelled hall at Maják with chandeliers, as the band gets ready" loading="lazy" />
+  </div>
+
+  <section class="g-section g-inset g-band" style="margin-top: clamp(0.5rem, 1.5vw, 1.25rem)">
+    <div class="g-meet">
+      <img {...img('/media/bicf/church-family.webp', '(max-width: 860px) 16rem, 35vw')} alt="A big group of the BICF family standing together in the hall" loading="lazy" />
+      <div>
+        <h2>Rather not walk in alone?</h2>
+        <p class="g-welcome-big" style="font-size: clamp(1.3rem, 2.4vw, 1.8rem); margin-bottom: 1.5rem">Tell us when you're coming and someone will meet you at the stop and walk over with you. We'll save you a seat.</p>
+        <a class="g-btn g-btn--light" href={L('contact')}>Ask someone to meet me</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="g-section">
+    <div class="g-faq">
+      <h2>Good questions</h2>
+      {FAQS.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+    </div>
+  </section>
+</Layout>

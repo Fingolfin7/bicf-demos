@@ -1,0 +1,72 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import { getGroups, getUpcomingEvents, getSignups, slotsSummary, dayNumber, monthShort, weekdayShort } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const groups = await getGroups();
+const events = await getUpcomingEvents();
+const signups = await getSignups();
+const L = (p = '') => link('gathering', p);
+const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const week = DAYS.map((day) => ({ day, groups: groups.filter((g) => g.day === day) })).filter((d) => d.groups.length);
+---
+<Layout title="During the week" description="Weekly groups, upcoming events and sign-up sheets at BICF.">
+  <PageHead title="During the week" lead="Sunday is when the whole church is together. The rest of the week happens around kitchen tables, in cafés and on walks outside Brno." image="/media/bicf/ya-christmas-room.webp" />
+
+  <section class="g-section g-section--tight">
+    <div class="g-days">
+      {week.map(({ day, groups }) => (
+        <div class="g-day">
+          <h3>{day}</h3>
+          <ul role="list">
+            {groups.map((g) => (
+              <li>
+                <p class="g-when">{g.time}, {g.frequency.toLowerCase()}</p>
+                <h4>{g.name}</h4>
+                <p>{g.description}</p>
+                <p class="g-meta">{g.place}. {g.audience}.{g.page && <> <a href={L(g.page)}>More about this</a></>}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="g-section g-section--tight" aria-labelledby="events-title">
+    <div class="g-head"><h2 id="events-title">Coming up</h2><p>Everything outside the usual week, soonest first.</p></div>
+    <ul class="g-events" role="list">
+      {events.map((e) => (
+        <li class="g-event">
+          {e.image && <img {...img(e.image, '(max-width: 860px) 100vw, 33vw')} alt="" loading="lazy" />}
+          <div class="g-event__body">
+            <p class="g-event__date"><b>{dayNumber(e.date)}</b> {monthShort(e.date)} · {weekdayShort(e.date)}, {e.time}</p>
+            <h3>{e.title}</h3>
+            <p>{e.location}</p>
+            <p>{e.summary}</p>
+            {e.signup ? <a class="g-btn g-btn--small" href={L(`signup/${e.signup}`)}>Sign up</a> : <span class="g-event__spacer"></span>}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="g-section g-inset g-peri" aria-labelledby="sheets-title">
+    <div class="g-head"><h2 id="sheets-title">Sign-up sheets</h2><p>Bring a dish, pour the coffee, or save a place. Pick a slot and add your name.</p></div>
+    <div class="g-sheets">
+      {signups.map((su) => {
+        const sum = slotsSummary(su.data.slots);
+        return (
+          <a class="g-sheet" href={L(`signup/${su.id}`)}>
+            <h3>{su.data.title}</h3>
+            <p>{su.data.intro}</p>
+            <div class="bs-meter"><span style={`--fill:${(sum.taken / sum.capacity) * 100}%`}></span></div>
+            <p class="g-sheet__left">{sum.open} places left</p>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+  <div style="height: clamp(3rem, 7vw, 6rem)"></div>
+</Layout>

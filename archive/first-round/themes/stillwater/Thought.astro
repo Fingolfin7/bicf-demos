@@ -1,0 +1,20 @@
+---
+import Layout from './Layout.astro';
+import Chapter from './Chapter.astro';
+import { render, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+const { thought } = Astro.props;
+const { Content } = await render(thought);
+const d = thought.data;
+const L = (p = '') => link('stillwater', p);
+---
+<Layout title={d.title} description={d.excerpt} image={d.image}>
+  <Chapter title={d.title} lead={d.excerpt} image={d.image} kicker={{ label: 'Reflections', href: L('thoughts') }} />
+  <div class="w-page">
+    <aside>
+      <p class="w-muted" style="font-style:italic;margin:0 0 24px">{formatDate(d.date)}<br />{d.author}</p>
+      {d.scripture && <p style="font-style:italic;color:var(--moss);max-width:28ch">{d.scripture}</p>}
+    </aside>
+    <article class="w-prose w-prose--dropcap"><Content /></article>
+  </div>
+</Layout>

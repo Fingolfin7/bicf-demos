@@ -1,0 +1,8 @@
+---
+import Thought from '../../../themes/five/Thought.astro';
+import { getThoughts } from '../../../lib/data';
+export async function getStaticPaths() {
+  return (await getThoughts()).map((thought) => ({ params: { slug: thought.id }, props: { thought } }));
+}
+---
+<Thought thought={Astro.props.thought} />

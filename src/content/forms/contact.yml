@@ -1,0 +1,32 @@
+title: Send us a message
+intro: We'll reply by email, usually within two days.
+submitLabel: Send message
+successTitle: Message sent
+successMessage: Thank you for getting in touch. Someone from the team will reply by email soon.
+sendTo: hello@bicf.cz
+storeEntries: true
+consent: I agree that BICF may use my name and email address to reply to this message.
+fields:
+  - label: Your name
+    name: name
+    type: text
+    required: true
+    width: half
+  - label: Email address
+    name: email
+    type: email
+    required: true
+    width: half
+  - label: What's it about?
+    name: topic
+    type: select
+    required: true
+    options:
+      - I'm planning to visit
+      - Please meet me outside and show me in
+      - Kids and teens
+      - Something else
+  - label: Message
+    name: message
+    type: textarea
+    required: true

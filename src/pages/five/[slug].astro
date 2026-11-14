@@ -1,0 +1,9 @@
+---
+/* Every page made in the CMS "Pages" collection. */
+import Page from '../../themes/five/Page.astro';
+import { getPages } from '../../lib/data';
+export async function getStaticPaths() {
+  return (await getPages()).map((page) => ({ params: { slug: page.id }, props: { page } }));
+}
+---
+<Page page={Astro.props.page} />

@@ -1,0 +1,33 @@
+{
+  "name": "Brno International Christian Fellowship",
+  "shortName": "BICF",
+  "tagline": "Paths that cross in Brno",
+  "intro": "We are an English-speaking church made up of people from all over the world. Whoever you are and wherever you're from, you're welcome to join us.",
+  "mission": "The mission of BICF is to honor God by helping people grow deeper in their spiritual walk, sharing the good news of Jesus Christ, and equipping people to serve the community.",
+  "serviceDay": "Sunday",
+  "serviceTime": "17:00",
+  "venue": "Maják Center",
+  "address": "Dusíkova 5, 638 00 Brno",
+  "area": "Brno-Lesná",
+  "mapUrl": "https://mapy.cz/zakladni?q=Dus%C3%ADkova%205%2C%20Brno",
+  "email": "hello@bicf.cz",
+  "facebook": "https://www.facebook.com/BrnoInternationalChristianFellowship",
+  "directions": [
+    {
+      "step": "Get to the Haškova stop",
+      "detail": "The stop to look up is Haškova, in Lesná. IDOS will show you the best connection from where you are."
+    },
+    {
+      "step": "Walk up Majdalenky",
+      "detail": "Take the path in front of the BILLA supermarket, heading north up Majdalenky."
+    },
+    {
+      "step": "Keep straight on to Dusíkova",
+      "detail": "Follow the path past the Infinit wellness centre until it meets Dusíkova. It's about a five-minute walk."
+    },
+    {
+      "step": "Maják is on your left",
+      "detail": "It's the yellow building at Dusíkova 5. If you're driving, there's a car park on Dusíkova."
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+---
+import Layout from './Layout.astro';
+import StringLights from './StringLights.astro';
+import { getSettings, getGroups, getUpcomingEvents, getThoughts, formatDate, friendlyTime, dayNumber, monthShort } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+
+const s = await getSettings();
+const groups = await getGroups();
+const events = await getUpcomingEvents(4);
+const [thought] = await getThoughts();
+const L = (p = '') => link('hall', p);
+
+---
+<Layout>
+  <section class="h-hero" aria-labelledby="hero-title">
+    <StringLights class="h-hero__lights" />
+    <div class="h-wrap h-hero__grid">
+      <div class="h-hero__text">
+        <p class="h-eyebrow">{s.name}</p>
+        <h1 id="hero-title" class="h-hero__title">Come in. <em>There’s a seat for&nbsp;you.</em></h1>
+        <p class="h-lead">{s.intro}</p>
+        <div class="h-actions">
+          <a class="h-btn" href={L('visit')}>Plan your first Sunday</a>
+          <a class="h-btn h-btn--line" href={L('week')}>What’s on this week</a>
+        </div>
+      </div>
+      <div class="h-hero__photos">
+        <figure class="h-photo h-hero__main">
+          <img {...img('/media/bicf/congregation-singing.webp', '(min-width: 900px) 50vw, 100vw')} alt="The congregation standing and singing in the hall at Maják" fetchpriority="high" />
+        </figure>
+        <figure class="h-photo h-hero__small">
+          <img {...img('/media/bicf/ya-christmas-room.webp', '(min-width: 900px) 22vw, 45vw')} alt="People talking in a circle in a cosy room with a Christmas tree" />
+        </figure>
+        <div class="h-sign" role="note">
+          <p class="h-sign__day">Every {s.serviceDay}</p>
+          <p class="h-sign__time">{friendlyTime(s.serviceTime)}</p>
+          <p class="h-sign__where">{s.venue}<br />{s.address.replace(/, \d{3} \d{2} Brno$/, '')}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="h-family" aria-labelledby="family-title">
+    <figure class="h-family__photo">
+      <img {...img('/media/bicf/church-family.webp')} alt="A big group of the BICF family standing together at the front of the hall" loading="lazy" />
+    </figure>
+    <div class="h-wrap">
+      <div class="h-family__card">
+        <h2 id="family-title" class="h-h2">From all over the world, and from just down the road.</h2>
+        <p>{s.mission}</p>
+        <a class="h-link" href={L('our-story')}>Our story</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="h-section" aria-labelledby="week-title">
+    <div class="h-wrap">
+      <div class="h-head">
+        <h2 id="week-title" class="h-h2">During the week</h2>
+        <a class="h-link" href={L('week')}>The full week</a>
+      </div>
+      <ul class="h-groups" role="list">
+        {groups.map((g) => (
+          <li>
+            <a href={g.page ? L(g.page) : L('week')}>
+              <figure class="h-photo">{g.image && <img {...img(g.image, '(min-width: 900px) 30vw, 90vw')} alt="" loading="lazy" />}</figure>
+              <p class="h-groups__when">{g.day}s, {g.time}</p>
+              <h3>{g.name}</h3>
+              <p>{g.description}</p>
+              <p class="h-groups__where">{g.place} · {g.frequency}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="h-section h-section--planks" aria-labelledby="events-title">
+    <div class="h-wrap">
+      <div class="h-board">
+        <div class="h-head">
+          <h2 id="events-title" class="h-h2">Coming up</h2>
+          <a class="h-link" href={L('week')}>All events</a>
+        </div>
+        <ul class="h-events" role="list">
+          {events.map((e) => (
+            <li>
+              <p class="h-events__date"><span>{dayNumber(e.date)}</span>{monthShort(e.date)}</p>
+              <div>
+                <h3>{e.title}</h3>
+                <p class="h-events__meta">{formatDate(e.date, 'weekday')}, {e.time} · {e.location}</p>
+                <p>{e.summary}</p>
+              </div>
+              {e.signup ? <a class="h-btn h-btn--small h-btn--line" href={L(`signup/${e.signup}`)}>Sign up</a> : <span></span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="h-section" aria-label="Reflection and prayer">
+    <div class="h-wrap h-pair">
+      {thought && (
+        <a class="h-pair__card" href={L(`thoughts/${thought.id}`)}>
+          <p class="h-eyebrow">From Going deeper</p>
+          <h2 class="h-h3">{thought.data.title}</h2>
+          {thought.data.scripture && <blockquote>{thought.data.scripture}</blockquote>}
+          <p>{thought.data.excerpt}</p>
+          <span class="h-link">Read it</span>
+        </a>
+      )}
+      <a class="h-pair__card h-pair__card--warm" href={L('prayer-box')}>
+        <p class="h-eyebrow">The prayer box</p>
+        <h2 class="h-h3">Can we pray for you?</h2>
+        <p>Our prayer team meets every Tuesday morning and prays for every request. Leave your name, or don’t.</p>
+        <span class="h-link">Leave a prayer request</span>
+      </a>
+    </div>
+  </section>
+</Layout>

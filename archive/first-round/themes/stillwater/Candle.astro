@@ -1,0 +1,26 @@
+---
+/* A candle you can light. Purely a small gesture: nothing is sent or counted. */
+---
+<div class="w-candle" data-candle>
+  <button type="button" class="w-candle__btn" aria-pressed="false">
+    <span class="w-candle__glow" aria-hidden="true"></span>
+    <span class="w-candle__flame" aria-hidden="true"></span>
+    <span class="w-candle__wick" aria-hidden="true"></span>
+    <span class="w-candle__wax" aria-hidden="true"></span>
+    <span class="w-candle__label">Light the candle</span>
+  </button>
+  <p class="w-candle__note" aria-live="polite"></p>
+</div>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-candle]').forEach((root) => {
+    const btn = root.querySelector<HTMLButtonElement>('button')!;
+    const label = root.querySelector<HTMLElement>('.w-candle__label')!;
+    const note = root.querySelector<HTMLElement>('.w-candle__note')!;
+    btn.addEventListener('click', () => {
+      const lit = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(lit));
+      label.textContent = lit ? 'Put the candle out' : 'Light the candle';
+      note.textContent = lit ? 'Take a moment. You’re not praying alone.' : '';
+    });
+  });
+</script>

@@ -1,0 +1,21 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import { render, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+const { thought } = Astro.props;
+const { Content } = await render(thought);
+const d = thought.data;
+const L = (p = '') => link('interchange', p);
+---
+<Layout title={d.title} description={d.excerpt} image={d.image}>
+  <PageHead title={d.title} lead={d.excerpt} image={d.image} crumb={{ href: L('thoughts'), label: 'Going deeper' }}>
+    <p style="margin:16px 0 0;font-weight:700">{formatDate(d.date)}, {d.author}</p>
+  </PageHead>
+  <div class="i-wrap i-body i-body--solo">
+    <article class="i-prose">
+      {d.scripture && <blockquote>{d.scripture}</blockquote>}
+      <Content />
+    </article>
+  </div>
+</Layout>

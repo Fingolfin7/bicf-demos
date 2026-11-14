@@ -1,0 +1,45 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import FormEngine from '../../components/FormEngine.astro';
+import { getSettings, getForm, getNavPages, render } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { lineForPage } from './lines';
+const { page } = Astro.props;
+const { Content } = await render(page);
+const form = await getForm(page.data.form);
+const s = await getSettings();
+const siblings = page.data.section === 'none' ? [] : await getNavPages(page.data.section);
+const line = lineForPage(page.id);
+const L = (p = '') => link('interchange', p);
+---
+<Layout title={page.data.title} description={page.data.summary} image={page.data.image}>
+  <PageHead title={page.data.title} lead={page.data.summary} image={page.data.image} line={line} />
+  <div class:list={['i-wrap', 'i-body', { 'i-body--solo': !!form }]}>
+    <div>
+      <div class="i-prose"><Content /></div>
+      {form && <div style="margin-top:36px"><FormEngine form={form} privacyHref={L('privacy')} /></div>}
+    </div>
+    {!form && (
+      <aside style={line ? `--c:${line.color}` : undefined}>
+        {siblings.length > 1 && (
+          <nav class="i-route" aria-label="In this section">
+            <p class="i-route__title">{page.data.section === 'join-in' ? 'Join in' : 'Who we are'}</p>
+            <ol>
+              {siblings.map((p) => (
+                <li data-current={p.id === page.id ? '' : undefined}>
+                  <a href={L(p.id)} aria-current={p.id === page.id ? 'page' : undefined}>{p.data.title}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
+        <div class="i-card">
+          <h3>Every {s.serviceDay}, {s.serviceTime}</h3>
+          <p>{s.venue}, {s.address}</p>
+          <a class="i-btn i-btn--red" href={L('visit')}>Plan your route</a>
+        </div>
+      </aside>
+    )}
+  </div>
+</Layout>

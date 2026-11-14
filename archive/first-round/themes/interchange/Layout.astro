@@ -1,0 +1,128 @@
+---
+import '@fontsource-variable/overpass';
+import './interchange.css';
+import BaseHead from '../../components/BaseHead.astro';
+import DemoSwitcher from '../../components/DemoSwitcher.astro';
+import { getSettings, getNavPages, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { LINES } from './lines';
+
+interface Props { title?: string; description?: string; image?: string }
+const s = await getSettings();
+const { title, description = s.intro, image } = Astro.props;
+const joinIn = await getNavPages('join-in');
+const whoWeAre = await getNavPages('who-we-are');
+const L = (p = '') => link('interchange', p);
+const path = Astro.url.pathname;
+const nav = [
+  { href: L('visit'), label: 'Visit' },
+  { href: L('week'), label: 'Timetable' },
+  { href: L('thoughts'), label: 'Going deeper' },
+  { href: L('our-story'), label: 'About' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title ? `${title} | ${s.shortName}` : `${s.name} | ${s.tagline}`} description={description} themeColor="#ffffff" image={image} />
+  </head>
+  <body>
+    <a class="i-skip" href="#main">Skip to content</a>
+    <header class="i-header">
+      <div class="i-header__bar">
+        <a class="i-brand" href={L()} aria-label={`${s.name}, home`}>
+          <svg class="i-brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+            <path d="M4 30 H16 L28 10 H36" stroke="#e2231a" />
+            <path d="M4 10 H12 L24 30 H36" stroke="#0071c1" />
+            <rect x="13" y="13" width="14" height="14" rx="7" fill="#fff" stroke="#0e1b3d" stroke-width="3.5" />
+          </svg>
+          <span class="i-brand__text"><strong>BICF</strong><span>Brno International Christian Fellowship</span></span>
+        </a>
+        <nav class="i-nav" aria-label="Main">
+          <ul>
+            {nav.map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>)}
+          </ul>
+          <a class="i-btn i-btn--ink" href={L('contact')}>Contact</a>
+        </nav>
+        <button class="i-menu-btn" type="button" aria-expanded="false" aria-controls="i-menu">
+          <span class="i-menu-btn__bars" aria-hidden="true"></span><span class="i-menu-btn__text">Menu</span>
+        </button>
+      </div>
+      <div class="i-stripe" aria-hidden="true">
+        {Object.values(LINES).map((l) => <span style={`background:${l.color}`}></span>)}
+      </div>
+      <div class="i-menu" id="i-menu" hidden>
+        <div class="i-menu__grid">
+          <div>
+            <p class="i-menu__head">Start here</p>
+            <ul>
+              <li><a href={L()}>Home</a></li>
+              {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+              <li><a href={L('prayer-box')}>Prayer box</a></li>
+              <li><a href={L('contact')}>Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="i-menu__head">Join in</p>
+            <ul>{joinIn.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}</ul>
+          </div>
+          <div>
+            <p class="i-menu__head">Who we are</p>
+            <ul>{whoWeAre.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}</ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="main"><slot /></main>
+
+    <footer class="i-footer">
+      <div class="i-wrap">
+        <div class="i-footer__top">
+          <div class="i-footer__sign">
+            <p class="i-footer__stop">Maják</p>
+            <p>{s.address}, {s.area}<br />{s.serviceDay}s at {s.serviceTime}</p>
+            <a class="i-btn i-btn--light" href={s.mapUrl} rel="noopener">Open map</a>
+          </div>
+          <nav class="i-footer__cols" aria-label="Footer">
+            <div>
+              <p class="i-footer__head">Join in</p>
+              <ul>{joinIn.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}</ul>
+            </div>
+            <div>
+              <p class="i-footer__head">Who we are</p>
+              <ul>{whoWeAre.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}</ul>
+            </div>
+            <div>
+              <p class="i-footer__head">Get in touch</p>
+              <ul>
+                <li><a href={`mailto:${s.email}`}>{s.email}</a></li>
+                <li><a href={L('contact')}>Contact form</a></li>
+                <li><a href={L('prayer-box')}>Prayer box</a></li>
+                <li><a href={s.facebook} rel="noopener">Facebook</a></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+        <div class="i-footer__legend" aria-label="Line key">
+          {Object.values(LINES).map((l) => <span class="i-legend"><span class="i-badge" style={`--c:${l.color}`}>{l.code}</span>{l.name.replace(' line', '')}</span>)}
+        </div>
+        <p class="i-footer__legal">© {new Date().getFullYear()} {s.name}. <a href={L('privacy')}>Privacy</a>. No cookies, no tracking. <a href="/credits/">Photo credits</a>.</p>
+      </div>
+    </footer>
+    <DemoSwitcher current="interchange" />
+
+    <script>
+      const btn = document.querySelector<HTMLButtonElement>('.i-menu-btn')!;
+      const menu = document.getElementById('i-menu')!;
+      const label = btn.querySelector('.i-menu-btn__text')!;
+      const setOpen = (open: boolean) => {
+        btn.setAttribute('aria-expanded', String(open));
+        label.textContent = open ? 'Close' : 'Menu';
+        menu.hidden = !open;
+      };
+      btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { setOpen(false); btn.focus(); } });
+    </script>
+  </body>
+</html>

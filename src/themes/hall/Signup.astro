@@ -1,0 +1,20 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import SignupEngine from '../../components/SignupEngine.astro';
+import { formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+const { signup } = Astro.props;
+const d = signup.data;
+const L = (p = '') => link('hall', p);
+---
+<Layout title={d.title} description={d.intro} image={d.image}>
+  <PageHead title={d.title} lead={d.intro} image={d.image} crumb={{ href: L('week'), label: 'This week' }}>
+    <p class="h-pagehead__date">{formatDate(d.date, 'weekday')}</p>
+  </PageHead>
+  <section class="h-section h-section--top">
+    <div class="h-wrap h-wrap--narrow">
+      <SignupEngine id={signup.id} slots={d.slots} closes={d.closes} privacyHref={L('privacy')} />
+    </div>
+  </section>
+</Layout>

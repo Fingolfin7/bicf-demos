@@ -1,0 +1,28 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import { getThoughts, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const thoughts = await getThoughts();
+const L = (p = '') => link('hall', p);
+---
+<Layout title="Going deeper" description="Short reflections from the BICF community.">
+  <PageHead title="Going deeper" lead="Short reflections from people in our church. Best read with a cup of tea." />
+  <section class="h-section h-section--top">
+    <div class="h-wrap">
+      <ul class="h-groups" role="list">
+        {thoughts.map((t) => (
+          <li>
+            <a href={L(`thoughts/${t.id}`)}>
+              <figure class="h-photo">{t.data.image && <img {...img(t.data.image, '(min-width: 900px) 30vw, 90vw')} alt="" loading="lazy" />}</figure>
+              <p class="h-groups__when">{formatDate(t.data.date)} · {t.data.author}</p>
+              <h3>{t.data.title}</h3>
+              <p>{t.data.excerpt}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Layout>

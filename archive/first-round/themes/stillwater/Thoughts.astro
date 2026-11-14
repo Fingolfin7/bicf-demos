@@ -1,0 +1,29 @@
+---
+import Layout from './Layout.astro';
+import Chapter from './Chapter.astro';
+import { getThoughts, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const thoughts = await getThoughts();
+const L = (p = '') => link('stillwater', p);
+---
+<Layout title="Reflections" description="Short reflections from the BICF community.">
+  <Chapter title="Going deeper" lead="Short reflections from our community, to read slowly and come back to." kicker={{ label: 'Reflections' }} />
+  <div class="w-page">
+    <aside><p class="w-muted" style="font-style:italic;margin:0">A new reflection most weeks.</p></aside>
+    <ul class="w-entries" role="list">
+      {thoughts.map((t) => (
+        <li>
+          <a href={L(`thoughts/${t.id}`)}>
+            <div>
+              <p class="w-meta">{formatDate(t.data.date)}</p>
+              <h2>{t.data.title}</h2>
+              <p>{t.data.excerpt}</p>
+            </div>
+            {t.data.image && <img {...img(t.data.image, '260px')} alt="" loading="lazy" />}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Layout>

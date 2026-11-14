@@ -1,0 +1,21 @@
+title: Sunday tea and coffee rota
+intro: Tea after the service is where friendships start. Pick a Sunday to set it up.
+date: 2027-01-31
+image: /media/bicf/hall-wide.webp
+slots:
+  - label: Sunday 22 November
+    capacity: 2
+    taken: 2
+  - label: Sunday 29 November
+    note: Thanksgiving, extra help welcome
+    capacity: 3
+    taken: 1
+  - label: Sunday 6 December
+    capacity: 2
+    taken: 0
+  - label: Sunday 13 December
+    capacity: 2
+    taken: 1
+  - label: Sunday 27 December
+    capacity: 2
+    taken: 0

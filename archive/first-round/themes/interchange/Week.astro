@@ -1,0 +1,66 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import DepartureBoard from './DepartureBoard.astro';
+import { getGroups, getUpcomingEvents, getSignups, slotsSummary, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { lineForGroup } from './lines';
+const groups = await getGroups();
+const events = await getUpcomingEvents();
+const signups = await getSignups();
+const L = (p = '') => link('interchange', p);
+---
+<Layout title="Timetable" description="Weekly groups, upcoming events and sign-up sheets at BICF.">
+  <PageHead title="Timetable" lead="Everything that runs regularly, plus the special services coming up. Times are Brno local time." />
+
+  <section class="i-section" style="padding-top:clamp(40px,6vw,72px)">
+    <div class="i-wrap">
+      <h2 class="i-h2" style="margin-bottom:24px">Regular services</h2>
+      <table class="i-table">
+        <thead><tr><th>Line</th><th>Day</th><th>Time</th><th>From</th><th>Runs</th></tr></thead>
+        <tbody>
+          {groups.map((g) => {
+            const line = lineForGroup(g.id);
+            return (
+              <tr>
+                <td><span class="i-table__name"><span class="i-badge" style={`--c:${line.color}`}>{line.code}</span>{g.page ? <a href={L(g.page)}>{g.name}</a> : g.name}</span></td>
+                <td class="i-table__day">{g.day}</td>
+                <td class="i-table__time">{g.time}</td>
+                <td>{g.place}</td>
+                <td>{g.frequency}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="i-section i-section--panel">
+    <div class="i-wrap">
+      <h2 class="i-h2" style="margin-bottom:24px">Special departures</h2>
+      <DepartureBoard events={events} theme="interchange" />
+    </div>
+  </section>
+
+  <section class="i-section">
+    <div class="i-wrap">
+      <h2 class="i-h2" style="margin-bottom:24px">Reserve a place</h2>
+      <ul class="i-list" role="list">
+        {signups.map((su) => {
+          const sum = slotsSummary(su.data.slots);
+          return (
+            <li>
+              <a href={L(`signup/${su.id}`)} class="i-card" style="margin:0;height:100%">
+                <p class="i-list__meta" style="margin:0">{formatDate(su.data.date, 'weekday')}</p>
+                <h3>{su.data.title}</h3>
+                <p>{su.data.intro}</p>
+                <p style="font-weight:800;color:#00965e;margin:0">{sum.open} of {sum.capacity} places free</p>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+</Layout>

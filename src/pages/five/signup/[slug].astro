@@ -1,0 +1,8 @@
+---
+import Signup from '../../../themes/five/Signup.astro';
+import { getSignups } from '../../../lib/data';
+export async function getStaticPaths() {
+  return (await getSignups()).map((signup) => ({ params: { slug: signup.id }, props: { signup } }));
+}
+---
+<Signup signup={Astro.props.signup} />

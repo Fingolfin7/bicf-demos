@@ -1,0 +1,14 @@
+---
+/* An event date set in the four quarters of the BICF cross:
+   day | month over weekday | time. */
+import { dayNumber, monthShort, weekdayShort } from '../../lib/data';
+interface Props { date: Date; time?: string; class?: string }
+const { date, time, class: cls } = Astro.props;
+const t = time?.match(/\d{1,2}:\d{2}/)?.[0];
+---
+<p class:list={['x-datecross', cls]}>
+  <span class="x-datecross__day">{dayNumber(date)}</span>
+  <span class="x-datecross__month">{monthShort(date)}</span>
+  <span class="x-datecross__wd">{weekdayShort(date)}</span>
+  <span class="x-datecross__time">{t ?? ''}</span>
+</p>

@@ -1,0 +1,28 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import { getThoughts, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const thoughts = await getThoughts();
+const L = (p = '') => link('crossroads', p);
+---
+<Layout title="Going deeper" description="Short reflections from the BICF community.">
+  <PageHead title="Going deeper" lead="Short reflections from people in our church, on faith, Brno and life in between." />
+  <section class="x-section x-section--top">
+    <div class="x-wrap">
+      <ul class="x-thoughts" role="list">
+        {thoughts.map((t) => (
+          <li>
+            <a href={L(`thoughts/${t.id}`)}>
+              <div class="x-thoughts__img">{t.data.image && <img {...img(t.data.image, '(min-width: 900px) 30vw, 90vw')} alt="" loading="lazy" />}</div>
+              <p class="x-label">{formatDate(t.data.date)} · {t.data.author}</p>
+              <h2>{t.data.title}</h2>
+              <p>{t.data.excerpt}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Layout>

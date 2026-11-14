@@ -1,0 +1,103 @@
+---
+/* Gathering: warm and photo-led, in BICF's own blues.
+   First made in the earlier demo set, now on the shared content and engines. */
+import '@fontsource/young-serif';
+import '@fontsource-variable/hanken-grotesk';
+import './gathering.css';
+import BaseHead from '../../components/BaseHead.astro';
+import DemoSwitcher from '../../components/DemoSwitcher.astro';
+import Logo from '../../components/Logo.astro';
+import { getSettings, getNavPages, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+
+interface Props { title?: string; description?: string; image?: string }
+const s = await getSettings();
+const { title, description = s.intro, image } = Astro.props;
+const joinIn = await getNavPages('join-in');
+const whoWeAre = await getNavPages('who-we-are');
+const L = (p = '') => link('gathering', p);
+const path = Astro.url.pathname;
+const nav = [
+  { href: L('visit'), label: 'Visit' },
+  { href: L('week'), label: 'During the week' },
+  { href: L('kids-and-teens'), label: 'Kids and teens' },
+  { href: L('what-we-believe'), label: 'What we believe' },
+  { href: L('thoughts'), label: 'Going deeper' },
+  { href: L('prayer-box'), label: 'Prayer box' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title ? `${title} | ${s.shortName}` : `${s.name} | From near and far`} description={description} themeColor="#f3f5fa" image={image} />
+  </head>
+  <body class="ga">
+    <a class="g-skip" href="#main">Skip to content</a>
+    <header class="g-top">
+      <a class="g-brand" href={L()} aria-label={`${s.name}, home`}>
+        <Logo />
+        <span>Brno International<br />Christian Fellowship</span>
+      </a>
+      <nav class="g-nav" aria-label="Main">
+        <ul>
+          {nav.slice(1).map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>)}
+        </ul>
+      </nav>
+      <a class="g-btn g-btn--small g-top-cta" href={L('visit')}>New here?</a>
+      <details class="g-menu">
+        <summary>Menu</summary>
+        <div class="g-menu-panel">
+          <a href={L()}>Home</a>
+          {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+          <a href={L('our-story')}>Our story</a>
+          <a href={L('contact')}>Contact</a>
+        </div>
+      </details>
+    </header>
+
+    <main id="main"><slot /></main>
+
+    <footer class="g-foot">
+      <p class="g-foot-big">See you on <span>{s.serviceDay}.</span></p>
+      <div class="g-foot-grid">
+        <div>
+          <Logo />
+          <p><strong>{s.name}</strong><br />An English-speaking church in Brno.</p>
+          <p><strong>{s.serviceDay}s at {friendlyTime(s.serviceTime)}</strong><br />{s.venue}, {s.address}<br /><a href={s.mapUrl} rel="noopener">Open in Mapy.cz</a></p>
+        </div>
+        <div>
+          <p><strong>Join in</strong></p>
+          <ul>{joinIn.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}</ul>
+        </div>
+        <div>
+          <p><strong>Who we are</strong></p>
+          <ul>{whoWeAre.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}</ul>
+        </div>
+        <div>
+          <p><strong>Say hello</strong></p>
+          <ul>
+            <li><a href={`mailto:${s.email}`}>{s.email}</a></li>
+            <li><a href={L('contact')}>Contact form</a></li>
+            <li><a href={L('prayer-box')}>Prayer box</a></li>
+            <li><a href={s.facebook} rel="noopener">Facebook</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="g-foot-small">© {new Date().getFullYear()} {s.name}. <a href={L('privacy')}>Privacy</a>. No cookies, no tracking. Photos by the BICF family.</p>
+    </footer>
+    <DemoSwitcher current="gathering" />
+
+    <script>
+      // Close the small-screen menu with Escape or after choosing a link.
+      const menu = document.querySelector<HTMLDetailsElement>('.g-menu');
+      if (menu) {
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && menu.open) { menu.open = false; menu.querySelector('summary')?.focus(); }
+        });
+        document.addEventListener('click', (e) => {
+          if (menu.open && !menu.contains(e.target as Node)) menu.open = false;
+        });
+      }
+    </script>
+  </body>
+</html>

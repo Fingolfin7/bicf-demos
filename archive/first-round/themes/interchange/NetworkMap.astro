@@ -1,0 +1,65 @@
+---
+/**
+ * The hero map: every ministry is a line, and they all cross at Maják.
+ * Hand-drawn on a 45° grid like a real transit diagram.
+ */
+import { LINES } from './lines';
+interface Props { serviceLabel: string }
+const { serviceLabel } = Astro.props;
+const H = { x: 520, y: 500 };
+
+// Lines run well past the edges so the map can be cropped to any shape.
+const routes = [
+  { line: LINES.sunday, d: 'M -400 500 H 1400', stations: [
+    { x: 150, y: 500, label: 'Hlavní nádraží', pos: 'below', minor: true },
+    { x: 350, y: 500, label: 'Halasovo náměstí', pos: 'below' },
+    { x: 820, y: 500, label: 'Čertova rokle', pos: 'below' },
+  ] },
+  { line: LINES['bible-study'], d: 'M 120 -400 V 100 L 520 500 L 640 620 V 1400', stations: [
+    { x: 200, y: 180, label: 'Královo Pole', pos: 'right' },
+    { x: 640, y: 790, label: 'Lužánky', pos: 'right' },
+  ] },
+  { line: LINES['young-adults'], d: 'M 1400 180 H 840 L 520 500 L 260 760 H -400', stations: [
+    { x: 950, y: 180, label: 'Moravian Karst', pos: 'above' },
+    { x: 130, y: 760, label: 'Brno reservoir', pos: 'below' },
+  ] },
+  { line: LINES.teens, d: 'M 520 500 V 640 L 720 840 H 1400', stations: [
+    { x: 900, y: 840, label: 'Teens Saturday', pos: 'above' },
+  ] },
+  { line: LINES['worship-circle'], d: 'M 520 -400 V 500', stations: [
+    { x: 520, y: 300, label: 'First Thursday', pos: 'left' },
+  ] },
+  { line: LINES.prayer, d: 'M 1400 700 H 720 L 520 500', dashed: true, stations: [
+    { x: 890, y: 700, label: 'Online prayer', pos: 'below' },
+  ] },
+];
+const anchor = (pos: string) => (pos === 'left' ? 'end' : pos === 'right' ? 'start' : 'middle');
+const dx = (pos: string) => (pos === 'left' ? -18 : pos === 'right' ? 18 : 0);
+const dy = (pos: string) => (pos === 'above' ? -20 : pos === 'below' ? 32 : 5);
+---
+<svg class="i-map" viewBox="0 0 1000 1000" role="img" aria-labelledby="map-title map-desc" preserveAspectRatio="xMidYMid slice">
+  <title id="map-title">The BICF network</title>
+  <desc id="map-desc">A transit-style map where six coloured lines, one for each part of church life, all cross at the Maják Center in Brno-Lesná.</desc>
+  <g class="i-map__lines">
+    {routes.map((r, i) => (
+      <path d={r.d} pathLength="1" stroke={r.line.color} class:list={['i-map__line', { 'i-map__line--dashed': r.dashed }]} style={`--i:${i}`} />
+    ))}
+  </g>
+  <g class="i-map__stations">
+    {routes.map((r, i) => r.stations.map((st) => (
+      <g style={`--i:${i}`} class:list={['i-map__station', { 'st-minor': (st as { minor?: boolean }).minor }]}>
+        <circle cx={st.x} cy={st.y} r="9" stroke={r.line.color} />
+        <text class="st-label" x={st.x + dx(st.pos)} y={st.y + dy(st.pos)} text-anchor={anchor(st.pos)}>{st.label}</text>
+      </g>
+    )))}
+  </g>
+  <g class="i-map__hub">
+    <rect x={H.x - 34} y={H.y - 34} width="68" height="68" rx="34" />
+    <circle cx={H.x} cy={H.y} r="12" />
+    <g class="i-map__sign">
+      <rect x={H.x + 50} y={H.y - 128} width="230" height="84" rx="12" />
+      <text class="hub-name" x={H.x + 70} y={H.y - 82}>Maják</text>
+      <text class="hub-sub" x={H.x + 70} y={H.y - 58}>{serviceLabel}</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,42 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import FormEngine from '../../components/FormEngine.astro';
+import { getSettings, getForm, getNavPages, render, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+const { page } = Astro.props;
+const { Content } = await render(page);
+const form = await getForm(page.data.form);
+const s = await getSettings();
+const siblings = page.data.section === 'none' ? [] : await getNavPages(page.data.section);
+const L = (p = '') => link('crossroads', p);
+---
+<Layout title={page.data.title} description={page.data.summary} image={page.data.image}>
+  <PageHead title={page.data.title} lead={page.data.summary} image={page.data.image} />
+  <section class="x-section x-section--top">
+    <div class:list={['x-wrap', 'x-body', { 'x-body--single': !!form }]}>
+      <div>
+        <div class="x-prose"><Content /></div>
+        {form && <div class="x-formwrap"><FormEngine form={form} privacyHref={L('privacy')} /></div>}
+      </div>
+      {!form && (
+        <aside class="x-aside">
+          <div class="x-card x-card--blue">
+            <p class="x-label">Join us</p>
+            <p class="x-card__big">{s.serviceDay}s, {s.serviceTime}</p>
+            <p>{s.venue}, {s.address}</p>
+            <a class="x-btn x-btn--white" href={L('visit')}>Plan a visit</a>
+          </div>
+          {siblings.length > 1 && (
+            <nav class="x-card" aria-label="In this section">
+              <p class="x-label">{page.data.section === 'join-in' ? 'Join in' : 'Who we are'}</p>
+              <ul>
+                {siblings.map((p) => <li><a href={L(p.id)} aria-current={p.id === page.id ? 'page' : undefined}>{p.data.title}</a></li>)}
+              </ul>
+            </nav>
+          )}
+        </aside>
+      )}
+    </div>
+  </section>
+</Layout>

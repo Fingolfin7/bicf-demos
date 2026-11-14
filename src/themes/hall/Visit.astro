@@ -1,0 +1,49 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import RouteMap from '../../components/RouteMap.astro';
+import { getSettings, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+import { FAQS } from '../../lib/faqs';
+const s = await getSettings();
+const L = (p = '') => link('hall', p);
+---
+<Layout title="Plan a visit" description={`Visit BICF: every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at ${s.venue}, ${s.address}.`} image="/media/bicf/hall-wide.webp">
+  <PageHead title="Your first Sunday" lead={`Every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at the ${s.venue} in ${s.area}. No dress code, and no Czech required.`} image="/media/bicf/hall-wide.webp" />
+
+  <section class="h-section">
+    <div class="h-wrap h-visit">
+      <div>
+        <h2 class="h-h2">Finding Maják</h2>
+        <ol class="h-steps">
+          {s.directions.map((d) => <li><h3>{d.step}</h3><p>{d.detail}</p></li>)}
+        </ol>
+        <p class="h-muted">{s.venue}, {s.address}. <a class="h-link" href={s.mapUrl} rel="noopener">Open in Mapy.cz</a></p>
+      </div>
+      <div class="h-mapcard"><RouteMap class="h-map" /></div>
+    </div>
+  </section>
+
+  <section class="h-section h-section--planks">
+    <div class="h-wrap">
+      <div class="h-board h-meet">
+        <figure class="h-photo"><img {...img('/media/bicf/church-family.webp', '(min-width: 900px) 45vw, 100vw')} alt="A big group of the BICF family standing together in the hall" loading="lazy" /></figure>
+        <div>
+          <h2 class="h-h2">Rather not walk in alone?</h2>
+          <p>Tell us when you’re coming and someone will meet you at the Haškova stop and walk over with you. We’ll save you a seat.</p>
+          <a class="h-btn" href={L('contact')}>Ask someone to meet me</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="h-section">
+    <div class="h-wrap h-wrap--narrow">
+      <h2 class="h-h2">Good questions</h2>
+      <div class="h-faq">
+        {FAQS.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </div>
+  </section>
+</Layout>

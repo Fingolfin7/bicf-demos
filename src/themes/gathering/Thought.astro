@@ -1,0 +1,23 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import { render, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const { thought } = Astro.props;
+const { Content } = await render(thought);
+const d = thought.data;
+const L = (p = '') => link('gathering', p);
+---
+<Layout title={d.title} description={d.excerpt} image={d.image}>
+  <PageHead title={d.title} lead={d.excerpt} crumb={{ href: L('thoughts'), label: 'Going deeper' }}>
+    <p class="g-date">{formatDate(d.date)} · {d.author}</p>
+  </PageHead>
+  <div class="g-page-body">
+    <article class="g-prose">
+      {d.scripture && <blockquote>{d.scripture}</blockquote>}
+      <Content />
+    </article>
+    {d.image && <aside class="g-page-side"><img {...img(d.image, '(max-width: 860px) 100vw, 45vw')} alt="" loading="lazy" /></aside>}
+  </div>
+</Layout>

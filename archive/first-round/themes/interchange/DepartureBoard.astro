@@ -1,0 +1,40 @@
+---
+/** Upcoming events laid out like a station departure board. */
+import { link } from '../../lib/themes';
+import { dayNumber, monthShort, weekdayShort } from '../../lib/data';
+interface Props {
+  events: { id: string; title: string; date: Date; time: string; location: string; signup?: string }[];
+  theme: string;
+}
+const { events, theme } = Astro.props;
+const L = (p = '') => link(theme, p);
+const now = Date.now();
+const status = (e: Props['events'][number]) => {
+  const days = (e.date.getTime() - now) / 86_400_000;
+  if (e.signup) return { text: 'Sign-up open', kind: 'go' };
+  if (days < 10) return { text: 'Soon', kind: 'soon' };
+  return { text: 'On time', kind: 'ok' };
+};
+const shortTime = (t: string) => /\d{1,2}:\d{2}/.exec(t)?.[0] ?? t;
+---
+<div class="i-board" role="table" aria-label="Upcoming events">
+  <div class="i-board__row i-board__row--head" role="row">
+    <span role="columnheader">Date</span>
+    <span role="columnheader">Time</span>
+    <span role="columnheader">Destination</span>
+    <span role="columnheader">From</span>
+    <span role="columnheader">Status</span>
+  </div>
+  {events.map((e, i) => {
+    const st = status(e);
+    return (
+      <a class="i-board__row" role="row" href={e.signup ? L(`signup/${e.signup}`) : L('week')} style={`--i:${i}`}>
+        <span role="cell" class="i-board__date">{weekdayShort(e.date)} {dayNumber(e.date)} {monthShort(e.date)}</span>
+        <span role="cell" class="i-board__time">{shortTime(e.time)}</span>
+        <span role="cell" class="i-board__dest">{e.title}</span>
+        <span role="cell" class="i-board__from">{e.location}</span>
+        <span role="cell" class:list={['i-board__status', `is-${st.kind}`]}>{st.text}</span>
+      </a>
+    );
+  })}
+</div>

@@ -1,0 +1,18 @@
+---
+import StringLights from './StringLights.astro';
+import { img } from '../../lib/img';
+interface Props { title: string; lead?: string; image?: string; crumb?: { href: string; label: string } }
+const { title, lead, image, crumb } = Astro.props;
+---
+<section class:list={['h-pagehead', { 'h-pagehead--image': !!image }]}>
+  <StringLights swags={3} class="h-pagehead__lights" />
+  <div class="h-wrap h-pagehead__grid">
+    <div>
+      {crumb && <a class="h-crumb" href={crumb.href}>{crumb.label}</a>}
+      <h1>{title}</h1>
+      {lead && <p class="h-lead">{lead}</p>}
+      <slot />
+    </div>
+    {image && <figure class="h-photo h-pagehead__img"><img {...img(image, '(min-width: 900px) 45vw, 100vw')} alt="" fetchpriority="high" /></figure>}
+  </div>
+</section>

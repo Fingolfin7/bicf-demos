@@ -1,0 +1,20 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import SignupEngine from '../../components/SignupEngine.astro';
+import { formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+const { signup } = Astro.props;
+const d = signup.data;
+const L = (p = '') => link('interchange', p);
+---
+<Layout title={d.title} description={d.intro} image={d.image}>
+  <PageHead title={d.title} lead={d.intro} image={d.image} crumb={{ href: L('week'), label: 'Timetable' }}>
+    <p style="margin:16px 0 0;font-weight:800">{formatDate(d.date, 'weekday')}</p>
+  </PageHead>
+  <div class="i-wrap" style="padding-block:clamp(40px,6vw,80px)">
+    <h2 class="i-h2" style="margin-bottom:8px">Choose your place</h2>
+    <p style="color:var(--ink-2);margin:0 0 28px">Each square is one place. Dark squares are already taken.</p>
+    <SignupEngine id={signup.id} slots={d.slots} closes={d.closes} privacyHref={L('privacy')} seats />
+  </div>
+</Layout>

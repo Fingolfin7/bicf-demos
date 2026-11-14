@@ -1,0 +1,23 @@
+---
+import { withBase } from '../lib/base';
+interface Props {
+  title: string;
+  description: string;
+  themeColor: string;
+  image?: string;
+}
+const { title, description, themeColor, image = '/media/bicf/congregation-singing.webp' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="theme-color" content={themeColor} />
+<link rel="canonical" href={canonical} />
+<link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={new URL(withBase(image), Astro.site)} />
+<meta name="robots" content="noindex" />

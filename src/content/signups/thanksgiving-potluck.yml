@@ -1,0 +1,27 @@
+title: Thanksgiving potluck
+intro: Tell us what you'll bring so the table is balanced. One dish feeds about eight people.
+date: 2026-11-29
+closes: 2026-11-27
+image: /media/bicf/hall-games-night.webp
+slots:
+  - label: Main dish
+    note: Anything warm and filling
+    capacity: 8
+    taken: 5
+  - label: Side or salad
+    capacity: 10
+    taken: 4
+  - label: Dessert
+    capacity: 6
+    taken: 6
+  - label: Drinks
+    note: Juice, lemonade, sparkling water
+    capacity: 4
+    taken: 1
+  - label: Setting up tables
+    note: Before the service starts
+    capacity: 5
+    taken: 2
+  - label: Washing up
+    capacity: 6
+    taken: 1

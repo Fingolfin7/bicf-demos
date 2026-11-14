@@ -1,0 +1,14 @@
+---
+import { img } from '../../lib/img';
+interface Props { title: string; lead?: string; image?: string; crumb?: { href: string; label: string } }
+const { title, lead, image, crumb } = Astro.props;
+---
+<div class="g-page-head">
+  <div>
+    {crumb && <a class="g-crumb" href={crumb.href}>{crumb.label}</a>}
+    <h1>{title}</h1>
+    {lead && <p>{lead}</p>}
+    <slot />
+  </div>
+  {image && <img class="g-page-head__img" {...img(image, '15rem')} alt="" />}
+</div>

@@ -1,0 +1,49 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import RouteMap from '../../components/RouteMap.astro';
+import { getSettings, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+import { FAQS } from '../../lib/faqs';
+const s = await getSettings();
+const L = (p = '') => link('crossroads', p);
+---
+<Layout title="Plan a visit" description={`Visit BICF: every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at ${s.venue}, ${s.address}.`} image="/media/bicf/hall-wide.webp">
+  <PageHead title="Your first Sunday" lead={`Every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at the ${s.venue}, ${s.address}. Here’s how to find us and what to expect.`} image="/media/bicf/hall-wide.webp" />
+
+  <section class="x-section">
+    <div class="x-wrap x-visit">
+      <div>
+        <h2 class="x-h2">Finding Maják</h2>
+        <ol class="x-crossgrid x-steps">
+          {s.directions.map((d, i) => (
+            <li><span class="x-steps__n">{i + 1}</span><h3>{d.step}</h3><p>{d.detail}</p></li>
+          ))}
+        </ol>
+        <p class="x-muted">{s.venue}, {s.address}. <a class="x-arrow" href={s.mapUrl} rel="noopener">Open in Mapy.cz</a></p>
+      </div>
+      <RouteMap class="x-map" />
+    </div>
+  </section>
+
+  <section class="x-section x-section--blue">
+    <div class="x-wrap x-meet">
+      <div class="x-meet__img"><img {...img('/media/bicf/worship-joy.webp', '(min-width: 900px) 45vw, 100vw')} alt="People singing and smiling together during worship" loading="lazy" /></div>
+      <div>
+        <h2 class="x-h2">Rather not walk in alone?</h2>
+        <p>Tell us when you’re coming and someone will meet you at the Haškova stop and walk over with you.</p>
+        <a class="x-btn x-btn--white" href={L('contact')}>Ask someone to meet me</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="x-section">
+    <div class="x-wrap x-wrap--narrow">
+      <h2 class="x-h2">Good questions</h2>
+      <div class="x-faq">
+        {FAQS.map((f) => <details><summary><span class="x-plus" aria-hidden="true"></span>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,38 @@
+---
+import Layout from './Layout.astro';
+import Chapter from './Chapter.astro';
+import FormEngine from '../../components/FormEngine.astro';
+import { getSettings, getForm, getNavPages, render, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+const { page } = Astro.props;
+const { Content } = await render(page);
+const form = await getForm(page.data.form);
+const s = await getSettings();
+const siblings = page.data.section === 'none' ? [] : await getNavPages(page.data.section);
+const sectionName = page.data.section === 'join-in' ? 'Join in' : page.data.section === 'who-we-are' ? 'Who we are' : undefined;
+const L = (p = '') => link('stillwater', p);
+---
+<Layout title={page.data.title} description={page.data.summary} image={page.data.image}>
+  <Chapter title={page.data.title} lead={page.data.summary} image={page.data.image} kicker={sectionName ? { label: sectionName } : undefined} />
+  <div class="w-page">
+    <aside>
+      <div class="w-toc">
+        {siblings.length > 1 && (
+          <nav aria-label="In this section">
+            <p class="w-toc__head">{sectionName}</p>
+            <ol>{siblings.map((p) => <li><a href={L(p.id)} aria-current={p.id === page.id ? 'page' : undefined}>{p.data.title}</a></li>)}</ol>
+          </nav>
+        )}
+        <div class="w-aside-note">
+          <h2>{s.serviceDay}s at {friendlyTime(s.serviceTime)}</h2>
+          <p>{s.venue}, {s.address}</p>
+          <a class="w-link" href={L('visit')}>Plan a visit</a>
+        </div>
+      </div>
+    </aside>
+    <div>
+      <div class="w-prose w-prose--dropcap"><Content /></div>
+      {form && <div style="margin-top:56px"><FormEngine form={form} privacyHref={L('privacy')} /></div>}
+    </div>
+  </div>
+</Layout>

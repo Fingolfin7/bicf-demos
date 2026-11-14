@@ -1,0 +1,160 @@
+---
+import Layout from './Layout.astro';
+import { getSettings, getGroups, getUpcomingEvents, getThoughts, formatDate, friendlyTime, dayNumber, monthShort } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+
+const s = await getSettings();
+const groups = (await getGroups()).filter((g) => g.day !== 'Sunday');
+const events = await getUpcomingEvents(3);
+const [thought] = await getThoughts();
+const L = (p = '') => link('five', p);
+
+const voices = [
+  { src: '/media/bicf/worship-joy.webp', title: 'Sunday worship', text: 'Songs old and new, led by a band from many countries.', alt: 'Three men singing with joy during worship, one holding a microphone' },
+  { src: '/media/bicf/christmas-choir.webp', title: 'The Christmas choir', text: 'Rehearsals start in November. No audition needed.', alt: 'The BICF choir in Christmas colours singing to a conductor' },
+  { src: '/media/bicf/youth-choir.webp', title: 'Kids and teens', text: 'Our young people sing too, and they often steal the show.', alt: 'Children and teenagers singing in front of the timber wall of the hall' },
+  { src: '/media/bicf/worship-leader.webp', title: 'The band', text: 'Guitars, keys, drums and a lot of voices.', alt: 'A worship leader singing into a microphone, with the band behind him' },
+  { src: '/media/bicf/carol-guitar.webp', title: 'Carols', text: 'Every December we sing the story of Christmas together.', alt: 'A guitarist and singers performing carols, lyrics on the screen behind them' },
+];
+
+---
+<Layout>
+  <section class="d-hero" aria-labelledby="hero-title">
+    <img class="d-hero__img" {...img('/media/bicf/stage-purple.webp')} alt="The BICF worship team singing on a stage washed in purple light" fetchpriority="high" />
+    <div class="d-hero__sky" aria-hidden="true"></div>
+    <div class="d-beams" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="d-hero__body">
+      <h1 id="hero-title" class="d-hero__title">Sunday<br />at five.</h1>
+      <div class="d-hero__aside">
+        <p class="d-hero__lead">{s.intro}</p>
+        <p class="d-hero__when" data-countdown data-time={s.serviceTime}>
+          <span class="d-pulse" aria-hidden="true"></span>
+          <span data-countdown-text>Every Sunday at {friendlyTime(s.serviceTime)}, {s.venue}, {s.area}.</span>
+        </p>
+        <div class="d-hero__actions">
+          <a class="d-btn d-btn--sun" href={L('visit')}>Plan your first Sunday</a>
+          <a class="d-btn d-btn--ghost" href={L('week')}>See what’s on</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="d-section d-voices" aria-labelledby="voices-title">
+    <div class="d-wrap d-voices__head">
+      <h2 id="voices-title" class="d-h2">Many voices, one song</h2>
+      <p>Music is a big part of Sunday at BICF. Voices from Africa, the Americas, Asia and all over Europe sing together. Bring yours.</p>
+    </div>
+    <ul class="d-reel" role="list">
+      {voices.map((v) => (
+        <li>
+          <figure>
+            <div class="d-arch"><img {...img(v.src, '(min-width: 900px) 30vw, 70vw')} alt={v.alt} loading="lazy" /></div>
+            <figcaption><strong>{v.title}</strong>{v.text}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+    <div class="d-wrap d-voices__cta"><a class="d-link" href={L('worship-circle')}>Join the worship circle</a></div>
+  </section>
+
+  <section class="d-section d-story">
+    <div class="d-wrap d-story__grid">
+      <figure class="d-arch d-story__img">
+        <img {...img('/media/bicf/church-family.webp', '(min-width: 900px) 40vw, 90vw')} alt="A big group of the BICF family standing together at the front of the hall" loading="lazy" />
+      </figure>
+      <div class="d-story__text">
+        <p class="d-statement">{s.mission}</p>
+        <p class="d-muted">We’re a church family from all over the world, meeting every Sunday evening at the Maják Center in Lesná, on the north side of Brno.</p>
+        <a class="d-link" href={L('our-story')}>Read our story</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="d-section" aria-labelledby="week-title">
+    <div class="d-wrap">
+      <div class="d-split-head">
+        <h2 id="week-title" class="d-h2">During the week</h2>
+        <a class="d-link" href={L('week')}>Full schedule</a>
+      </div>
+      <ul class="d-rows" role="list">
+        {groups.map((g) => (
+          <li class="d-row">
+            <a href={g.page ? L(g.page) : L('week')}>
+              <span class="d-row__day">{g.day}</span>
+              <span class="d-row__name">{g.name}</span>
+              <span class="d-row__meta">{g.time}, {g.place}<br /><span class="d-muted">{g.frequency}</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="d-section" aria-labelledby="events-title">
+    <div class="d-wrap">
+      <div class="d-split-head">
+        <h2 id="events-title" class="d-h2">Coming up</h2>
+        <a class="d-link" href={L('week')}>All events</a>
+      </div>
+      <div class="d-events">
+        {events.map((e) => (
+          <article class="d-event">
+            <div class="d-arch d-event__img">
+              {e.image && <img {...img(e.image, '(min-width: 900px) 30vw, 90vw')} alt="" loading="lazy" />}
+              <p class="d-event__date"><span>{dayNumber(e.date)}</span>{monthShort(e.date)}</p>
+            </div>
+            <h3 class="d-event__title">{e.title}</h3>
+            <p class="d-event__meta">{formatDate(e.date, 'weekday')}, {e.time}<br />{e.location}</p>
+            <p class="d-event__text">{e.summary}</p>
+            {e.signup && <a class="d-btn d-btn--ghost d-btn--sm" href={L(`signup/${e.signup}`)}>Sign up</a>}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {thought && (
+    <section class="d-section d-thought" aria-labelledby="thought-title">
+      <div class="d-wrap d-thought__grid">
+        <div>
+          <p class="d-kicker">From Going deeper</p>
+          <h2 id="thought-title" class="d-h2"><a href={L(`thoughts/${thought.id}`)}>{thought.data.title}</a></h2>
+          <p class="d-thought__excerpt">{thought.data.excerpt}</p>
+          <a class="d-link" href={L('thoughts')}>More reflections</a>
+        </div>
+        {thought.data.scripture && <blockquote class="d-thought__verse">{thought.data.scripture}</blockquote>}
+      </div>
+    </section>
+  )}
+
+  <section class="d-prayer" aria-labelledby="prayer-title">
+    <img {...img('/media/bicf/hall-string-lights.webp')} alt="" loading="lazy" />
+    <div class="d-wrap d-prayer__body">
+      <h2 id="prayer-title" class="d-prayer__title">You don’t have to carry it alone.</h2>
+      <p>Our prayer team meets every Tuesday morning. Tell us what’s on your mind, with your name or without it.</p>
+      <a class="d-btn d-btn--sun" href={L('prayer-box')}>Leave a prayer request</a>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { minutesToService, untilSentence } from '../../lib/clock';
+  const el = document.querySelector<HTMLElement>('[data-countdown]');
+  if (el) {
+    const text = el.querySelector<HTMLElement>('[data-countdown-text]')!;
+    const tick = () => {
+      const m = minutesToService(el.dataset.time);
+      if (m <= 0) {
+        el.dataset.live = '';
+        text.textContent = 'We’re gathered right now. Come in, you’re not late.';
+      } else {
+        delete el.dataset.live;
+        text.textContent = `We meet again in ${untilSentence(m)}.`;
+      }
+    };
+    tick();
+    setInterval(tick, 30_000);
+  }
+</script>

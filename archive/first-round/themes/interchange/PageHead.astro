@@ -1,0 +1,25 @@
+---
+import { img } from '../../lib/img';
+interface Props {
+  title: string;
+  lead?: string;
+  image?: string;
+  alt?: string;
+  line?: { code: string; name: string; color: string };
+  crumb?: { href: string; label: string };
+}
+const { title, lead, image, alt = '', line, crumb } = Astro.props;
+---
+<header class="i-pagehead" style={line ? `--c:${line.color}` : undefined}>
+  <div class:list={['i-wrap', 'i-pagehead__inner', { 'i-pagehead__inner--solo': !image }]}>
+    <div>
+      {crumb && <a class="i-crumb" href={crumb.href}>{crumb.label}</a>}
+      {line && <p class="i-pagehead__line"><span class="i-badge" style={`--c:${line.color}`}>{line.code}</span>{line.name}</p>}
+      <h1>{title}</h1>
+      {lead && <p class="i-pagehead__lead">{lead}</p>}
+      <slot />
+    </div>
+    {image && <div class="i-pagehead__img"><img {...img(image, '(min-width: 860px) 45vw, 100vw')} alt={alt} fetchpriority="high" /></div>}
+  </div>
+  <div class="i-pagehead__bar" aria-hidden="true"></div>
+</header>

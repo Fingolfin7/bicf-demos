@@ -1,0 +1,30 @@
+---
+import Layout from './Layout.astro';
+import PageHero from './PageHero.astro';
+import { getThoughts, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const thoughts = await getThoughts();
+const L = (p = '') => link('five', p);
+---
+<Layout title="Going deeper" description="Short reflections from the BICF community.">
+  <PageHero title="Going deeper" lead="Short reflections from our community, written to be read with a cup of tea." />
+  <section class="d-section d-section--top">
+    <div class="d-wrap">
+      <ul class="d-list" role="list">
+        {thoughts.map((t) => (
+          <li>
+            <a href={L(`thoughts/${t.id}`)}>
+              <div class="d-list__img">{t.data.image && <img {...img(t.data.image, '220px')} alt="" loading="lazy" />}</div>
+              <div>
+                <p class="d-list__meta">{formatDate(t.data.date)}, {t.data.author}</p>
+                <h2>{t.data.title}</h2>
+                <p>{t.data.excerpt}</p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Layout>

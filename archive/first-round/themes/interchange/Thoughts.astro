@@ -1,0 +1,28 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import { getThoughts, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const thoughts = await getThoughts();
+const L = (p = '') => link('interchange', p);
+---
+<Layout title="Going deeper" description="Short reflections from the BICF community.">
+  <PageHead title="Going deeper" lead="Short reflections from our community. Long enough for a tram ride across town." />
+  <section class="i-section" style="padding-top:clamp(40px,6vw,72px)">
+    <div class="i-wrap">
+      <ul class="i-list" role="list">
+        {thoughts.map((t) => (
+          <li>
+            <a href={L(`thoughts/${t.id}`)}>
+              <div class="i-list__img">{t.data.image && <img {...img(t.data.image, '(min-width: 900px) 33vw, 100vw')} alt="" loading="lazy" />}</div>
+              <p class="i-list__meta">{formatDate(t.data.date)}</p>
+              <h2>{t.data.title}</h2>
+              <p>{t.data.excerpt}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Layout>

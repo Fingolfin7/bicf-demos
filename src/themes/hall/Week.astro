@@ -1,0 +1,74 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import { getGroups, getUpcomingEvents, getSignups, formatDate, slotsSummary, dayNumber, monthShort } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const groups = await getGroups();
+const events = await getUpcomingEvents();
+const signups = await getSignups();
+const L = (p = '') => link('hall', p);
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const ordered = days.flatMap((d) => groups.filter((g) => g.day === d));
+---
+<Layout title="This week" description="Weekly groups, upcoming events and sign-up sheets at BICF.">
+  <PageHead title="This week" lead="Sunday is when the whole church is together. The rest of the week happens around kitchen tables, on video calls and on walks outside Brno." />
+
+  <section class="h-section h-section--top">
+    <div class="h-wrap">
+      <ul class="h-groups" role="list">
+        {ordered.map((g) => (
+          <li>
+            <a href={g.page ? L(g.page) : L('contact')}>
+              <figure class="h-photo">{g.image && <img {...img(g.image, '(min-width: 900px) 30vw, 90vw')} alt="" loading="lazy" />}</figure>
+              <p class="h-groups__when">{g.day}s, {g.time}</p>
+              <h3>{g.name}</h3>
+              <p>{g.description}</p>
+              <p class="h-groups__where">{g.place} · {g.frequency}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="h-section h-section--planks">
+    <div class="h-wrap">
+      <div class="h-board">
+        <h2 class="h-h2">Events</h2>
+        <ul class="h-events" role="list">
+          {events.map((e) => (
+            <li>
+              <p class="h-events__date"><span>{dayNumber(e.date)}</span>{monthShort(e.date)}</p>
+              <div>
+                <h3>{e.title}</h3>
+                <p class="h-events__meta">{formatDate(e.date, 'weekday')}, {e.time} · {e.location}</p>
+                <p>{e.summary}</p>
+              </div>
+              {e.signup ? <a class="h-btn h-btn--small h-btn--line" href={L(`signup/${e.signup}`)}>Sign up</a> : <span></span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="h-section">
+    <div class="h-wrap">
+      <h2 class="h-h2">Sign-up sheets</h2>
+      <div class="h-sheets">
+        {signups.map((su) => {
+          const sum = slotsSummary(su.data.slots);
+          return (
+            <a class="h-sheet" href={L(`signup/${su.id}`)}>
+              <h3>{su.data.title}</h3>
+              <p>{su.data.intro}</p>
+              <div class="bs-meter"><span style={`--fill:${(sum.taken / sum.capacity) * 100}%`}></span></div>
+              <p class="h-sheet__left">{sum.open} places left</p>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Layout>

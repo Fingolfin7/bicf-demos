@@ -1,0 +1,129 @@
+---
+import Layout from './Layout.astro';
+import Candle from './Candle.astro';
+import { getSettings, getGroups, getUpcomingEvents, getThoughts, formatDate, friendlyTime, render } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+
+const s = await getSettings();
+const groups = (await getGroups()).sort((a, b) => a.order - b.order);
+const events = await getUpcomingEvents(4);
+const [featured, ...more] = await getThoughts();
+const { Content: FeaturedBody } = await render(featured);
+const L = (p = '') => link('stillwater', p);
+
+const plates = [
+  { src: '/media/stock/park-fog.webp', caption: 'Morning fog in the park on Kraví hora, Brno' },
+  { src: '/media/stock/rooftops-pink.webp', caption: 'Rooftops of the old town at dawn' },
+  { src: '/media/stock/bible-pews.webp', caption: 'An open Bible on a wooden pew' },
+];
+---
+<Layout>
+  <section class="w-hero" aria-labelledby="hero-title">
+    <div class="w-hero__text">
+      <h1 id="hero-title" class="w-hero__title">However far you’ve come, there’s room for you here.</h1>
+      <p class="w-hero__lead">{s.intro}</p>
+      <p class="w-hero__when">{s.serviceDay}s at {friendlyTime(s.serviceTime)}<br /><span>{s.venue}, {s.area}</span></p>
+      <a class="w-btn" href={L('visit')}>Plan your first visit</a>
+    </div>
+    <figure class="w-hero__plate" data-plates>
+      {plates.map((p, i) => (
+        <img {...img(p.src, '(min-width: 900px) 55vw, 100vw')} alt="" class:list={{ 'is-on': i === 0 }} fetchpriority={i === 0 ? 'high' : 'low'} loading={i === 0 ? 'eager' : 'lazy'} data-caption={p.caption} />
+      ))}
+      <figcaption data-plate-caption>{plates[0].caption}</figcaption>
+    </figure>
+  </section>
+
+  <section class="w-section" aria-labelledby="week-title">
+    <div class="w-wrap w-columns">
+      <div class="w-columns__side">
+        <h2 id="week-title" class="w-h2">The shape of a week</h2>
+        <p class="w-muted">Sunday is the heart of it. The rest of the week is for going deeper, in smaller rooms.</p>
+      </div>
+      <ol class="w-contents" role="list">
+        {groups.map((g) => (
+          <li>
+            <a href={g.page ? L(g.page) : L('week')}>
+              <span class="w-contents__name">{g.name}</span>
+              <span class="w-contents__dots" aria-hidden="true"></span>
+              <span class="w-contents__when">{g.day}, {g.time}</span>
+            </a>
+            <p>{g.description}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <figure class="w-plate">
+    <img {...img('/media/stock/petrov-day.webp')} alt="The twin spires of Petrov Cathedral rising above the rooftops of Brno" loading="lazy" />
+    <figcaption class="w-wrap">Petrov Cathedral and the city we pray for.</figcaption>
+  </figure>
+
+  <section class="w-section" aria-labelledby="reading-title">
+    <div class="w-wrap w-columns">
+      <div class="w-columns__side">
+        <h2 id="reading-title" class="w-h2">This week’s reflection</h2>
+        <p class="w-muted">{formatDate(featured.data.date)}<br />{featured.data.author}</p>
+        <a class="w-link" href={L('thoughts')}>All reflections</a>
+      </div>
+      <article class="w-reading">
+        <h3 class="w-reading__title"><a href={L(`thoughts/${featured.id}`)}>{featured.data.title}</a></h3>
+        {featured.data.scripture && <p class="w-reading__verse">{featured.data.scripture}</p>}
+        <div class="w-prose w-prose--dropcap w-reading__body"><FeaturedBody /></div>
+        {more.length > 0 && (
+          <ul class="w-reading__more" role="list">
+            {more.map((t) => <li><a href={L(`thoughts/${t.id}`)}>{t.data.title}</a> <span class="w-muted">{formatDate(t.data.date, 'short')}</span></li>)}
+          </ul>
+        )}
+      </article>
+    </div>
+  </section>
+
+  <section class="w-section w-section--stone" aria-labelledby="dates-title">
+    <div class="w-wrap w-columns">
+      <div class="w-columns__side">
+        <h2 id="dates-title" class="w-h2">Dates to keep</h2>
+        <a class="w-link" href={L('week')}>The full calendar</a>
+      </div>
+      <ul class="w-dates" role="list">
+        {events.map((e) => (
+          <li>
+            <p class="w-dates__when">{formatDate(e.date, 'weekday')}<br /><span>{e.time}</span></p>
+            <div>
+              <h3>{e.title}</h3>
+              <p>{e.summary}</p>
+              {e.signup && <a class="w-link" href={L(`signup/${e.signup}`)}>Add your name</a>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="w-section w-section--lake" aria-labelledby="candle-title">
+    <div class="w-wrap w-candle-grid">
+      <Candle />
+      <div>
+        <h2 id="candle-title" class="w-h2">Light a candle, and tell us what’s on your heart.</h2>
+        <p>Our prayer team meets every Tuesday morning and prays through every request, by name or anonymously. Nothing you send is published.</p>
+        <a class="w-btn w-btn--light" href={L('prayer-box')}>Write to the prayer team</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const fig = document.querySelector<HTMLElement>('[data-plates]');
+  if (fig && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const imgs = [...fig.querySelectorAll<HTMLImageElement>('img')];
+    const cap = fig.querySelector<HTMLElement>('[data-plate-caption]')!;
+    let i = 0;
+    setInterval(() => {
+      imgs[i].classList.remove('is-on');
+      i = (i + 1) % imgs.length;
+      imgs[i].classList.add('is-on');
+      cap.textContent = imgs[i].dataset.caption || '';
+    }, 7000);
+  }
+</script>

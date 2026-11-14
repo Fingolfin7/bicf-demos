@@ -1,0 +1,18 @@
+---
+/* The BICF mark, redrawn from the logo on bicf.cz: a slate-blue cross
+   that divides the four letters into quarters. Colours come from CSS
+   custom properties so each design can tint it:
+   --logo-cross (default #54699f) and --logo-ink (default currentColor). */
+interface Props { class?: string; title?: string }
+const { class: cls, title = 'BICF' } = Astro.props;
+---
+<svg class:list={['bicf-logo', cls]} viewBox="0 0 80 120" role="img" aria-label={title}>
+  <rect x="35" y="0" width="9" height="120" fill="var(--logo-cross, #54699f)" />
+  <rect x="0" y="43" width="80" height="8" fill="var(--logo-cross, #54699f)" />
+  <g fill="var(--logo-ink, currentColor)" font-family="Arial, Helvetica, 'Liberation Sans', sans-serif" font-size="42" text-anchor="middle">
+    <text x="17" y="35.5">B</text>
+    <text x="60" y="35.5">I</text>
+    <text x="16" y="95.5">C</text>
+    <text x="61" y="96">F</text>
+  </g>
+</svg>

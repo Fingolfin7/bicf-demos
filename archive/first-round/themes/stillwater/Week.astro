@@ -1,0 +1,67 @@
+---
+import Layout from './Layout.astro';
+import Chapter from './Chapter.astro';
+import { getGroups, getUpcomingEvents, getSignups, slotsSummary, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+const groups = await getGroups();
+const events = await getUpcomingEvents();
+const signups = await getSignups();
+const L = (p = '') => link('stillwater', p);
+---
+<Layout title="The week" description="Weekly groups, upcoming events and sign-up sheets at BICF.">
+  <Chapter title="The week, and the weeks ahead" lead="What happens regularly, what’s coming up, and where you can lend a hand." kicker={{ label: 'Calendar' }} />
+
+  <section class="w-section">
+    <div class="w-wrap w-columns">
+      <div class="w-columns__side"><h2 class="w-h2">Every week</h2></div>
+      <ol class="w-contents" role="list">
+        {groups.map((g) => (
+          <li>
+            <a href={g.page ? L(g.page) : L('contact')}>
+              <span class="w-contents__name">{g.name}</span>
+              <span class="w-contents__dots" aria-hidden="true"></span>
+              <span class="w-contents__when">{g.day}, {g.time}</span>
+            </a>
+            <p>{g.place}. {g.frequency}.</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="w-section w-section--stone">
+    <div class="w-wrap w-columns">
+      <div class="w-columns__side"><h2 class="w-h2">Dates to keep</h2></div>
+      <ul class="w-dates" role="list">
+        {events.map((e) => (
+          <li>
+            <p class="w-dates__when">{formatDate(e.date, 'weekday')}<br /><span>{e.time}</span></p>
+            <div>
+              <h3>{e.title}</h3>
+              <p>{e.summary} <em>{e.location}.</em></p>
+              {e.signup && <a class="w-link" href={L(`signup/${e.signup}`)}>Add your name</a>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="w-section">
+    <div class="w-wrap w-columns">
+      <div class="w-columns__side"><h2 class="w-h2">Lend a hand</h2><p class="w-muted">Each list shows how many places are still free.</p></div>
+      <ol class="w-contents" role="list">
+        {signups.map((su) => (
+          <li>
+            <a href={L(`signup/${su.id}`)}>
+              <span class="w-contents__name">{su.data.title}</span>
+              <span class="w-contents__dots" aria-hidden="true"></span>
+              <span class="w-contents__when">{slotsSummary(su.data.slots).open} places free</span>
+            </a>
+            <p>{su.data.intro}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</Layout>

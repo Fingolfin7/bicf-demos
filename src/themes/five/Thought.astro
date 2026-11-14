@@ -1,0 +1,23 @@
+---
+import Layout from './Layout.astro';
+import PageHero from './PageHero.astro';
+import { render, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+const { thought } = Astro.props;
+const { Content } = await render(thought);
+const d = thought.data;
+const L = (p = '') => link('five', p);
+---
+<Layout title={d.title} description={d.excerpt} image={d.image}>
+  <PageHero title={d.title} lead={d.excerpt} image={d.image} crumb={{ href: L('thoughts'), label: 'Going deeper' }}>
+    <p class="d-pagehero__date">{formatDate(d.date)}, {d.author}</p>
+  </PageHero>
+  <section class="d-section d-section--body">
+    <div class="d-wrap d-body d-body--single">
+      <article class="d-prose">
+        {d.scripture && <blockquote>{d.scripture}</blockquote>}
+        <Content />
+      </article>
+    </div>
+  </section>
+</Layout>

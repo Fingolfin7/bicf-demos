@@ -1,0 +1,164 @@
+---
+import { withBase } from '../lib/base';
+/**
+ * A sign-up sheet with limited places per slot (src/content/signups/*.yml).
+ * Neutral .bs-* classes; each theme styles them.
+ *
+ * DEMO MODE: places you take are remembered in this browser only.
+ * In production the counts come from, and are saved to, a small database
+ * (Cloudflare D1) through /api/signups/<id>, so everyone sees the same numbers.
+ */
+interface Props {
+  id: string;
+  slots: { label: string; note?: string; capacity: number; taken: number }[];
+  closes?: Date;
+  privacyHref?: string;
+  /** Also draw one dot per place, like a seat map. */
+  seats?: boolean;
+}
+const { id, slots, closes, privacyHref = withBase('/privacy/'), seats = false } = Astro.props;
+const closesText = closes
+  ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', timeZone: 'Europe/Prague' }).format(closes)
+  : undefined;
+---
+
+<div class="bs" data-bs={id}>
+  <ul class="bs-slots" role="list">
+    {slots.map((s, i) => {
+      const taken = Math.min(s.taken, s.capacity);
+      const left = s.capacity - taken;
+      return (
+        <li class="bs-slot" data-index={i} data-capacity={s.capacity} data-taken={taken} data-full={left === 0 ? '' : undefined}>
+          <div class="bs-info">
+            <h3 class="bs-label">{s.label}</h3>
+            {s.note && <p class="bs-note">{s.note}</p>}
+          </div>
+          <div class="bs-meter" aria-hidden="true"><span style={`--fill:${(taken / s.capacity) * 100}%`}></span></div>
+          {seats && (
+            <span class="bs-seats" aria-hidden="true">
+              {Array.from({ length: s.capacity }, (_, k) => <i class={k < taken ? 'on' : undefined}></i>)}
+            </span>
+          )}
+          <p class="bs-count"><span class="bs-left">{left === 0 ? 'Full' : `${left} of ${s.capacity} places left`}</span></p>
+          <button class="bs-take" type="button" disabled={left === 0} aria-label={`Sign up: ${s.label}`}>
+            {left === 0 ? 'Full' : 'Sign up'}
+          </button>
+        </li>
+      );
+    })}
+  </ul>
+  {closesText && <p class="bs-closes">Sign-ups close on {closesText}.</p>}
+
+  <form class="bs-form" hidden novalidate>
+    <p class="bs-form-title">Signing up for <strong class="bs-form-slot"></strong></p>
+    <div class="bs-form-fields">
+      <label class="bs-field">
+        <span>Your name</span>
+        <input name="name" type="text" required autocomplete="name" />
+      </label>
+      <label class="bs-field">
+        <span>Email</span>
+        <input name="email" type="email" required autocomplete="email" />
+      </label>
+    </div>
+    <label class="bs-consent">
+      <input type="checkbox" name="consent" required />
+      <span>The organiser may email me about this. <a href={privacyHref}>Privacy</a></span>
+    </label>
+    <p class="bs-form-error" role="alert" hidden>Add your name, a valid email and tick the box.</p>
+    <div class="bs-form-actions">
+      <button class="bs-confirm" type="submit">Confirm my place</button>
+      <button class="bs-cancel" type="button">Cancel</button>
+    </div>
+  </form>
+  <p class="bs-live" role="status" aria-live="polite"></p>
+</div>
+
+<script>
+  const KEY = 'bicf-demo-signups';
+  const load = (): Record<string, number[]> => {
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { return {}; }
+  };
+  const save = (v: Record<string, number[]>) => {
+    try { localStorage.setItem(KEY, JSON.stringify(v)); } catch {}
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-bs]').forEach((root) => {
+    const id = root.dataset.bs!;
+    const form = root.querySelector<HTMLFormElement>('.bs-form')!;
+    const live = root.querySelector<HTMLElement>('.bs-live')!;
+    const error = root.querySelector<HTMLElement>('.bs-form-error')!;
+    let current: HTMLLIElement | null = null;
+
+    const paint = (li: HTMLLIElement, mine: boolean) => {
+      const cap = Number(li.dataset.capacity);
+      const taken = Number(li.dataset.taken);
+      const left = cap - taken;
+      li.querySelector<HTMLElement>('.bs-meter span')!.style.setProperty('--fill', `${(taken / cap) * 100}%`);
+      li.querySelectorAll('.bs-seats i').forEach((seat, k) => {
+        seat.classList.toggle('on', k < taken);
+        seat.classList.toggle('me', mine && k === taken - 1);
+      });
+      li.querySelector<HTMLElement>('.bs-left')!.textContent = mine
+        ? `You're signed up. ${left === 0 ? 'Now full' : `${left} left`}`
+        : left === 0 ? 'Full' : `${left} of ${cap} places left`;
+      const btn = li.querySelector<HTMLButtonElement>('.bs-take')!;
+      btn.disabled = mine || left === 0;
+      btn.textContent = mine ? 'Signed up' : left === 0 ? 'Full' : 'Sign up';
+      li.toggleAttribute('data-full', left === 0);
+      li.toggleAttribute('data-mine', mine);
+    };
+
+    // Restore places taken earlier in this browser.
+    const mine = load()[id] || [];
+    root.querySelectorAll<HTMLLIElement>('.bs-slot').forEach((li) => {
+      if (mine.includes(Number(li.dataset.index))) {
+        li.dataset.taken = String(Math.min(Number(li.dataset.taken) + 1, Number(li.dataset.capacity)));
+        paint(li, true);
+      }
+    });
+
+    const close = () => {
+      form.hidden = true;
+      current?.removeAttribute('data-active');
+      current?.querySelector<HTMLButtonElement>('.bs-take')?.focus();
+      current = null;
+    };
+
+    root.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.bs-take');
+      if (!btn || btn.disabled) return;
+      current?.removeAttribute('data-active');
+      current = btn.closest('li')!;
+      current.setAttribute('data-active', '');
+      root.querySelector('.bs-form-slot')!.textContent = current.querySelector('.bs-label')!.textContent;
+      current.after(form);
+      form.hidden = false;
+      error.hidden = true;
+      form.querySelector<HTMLInputElement>('input[name=name]')!.focus();
+    });
+
+    form.querySelector('.bs-cancel')!.addEventListener('click', close);
+    form.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = form.querySelector<HTMLInputElement>('input[name=name]')!;
+      const email = form.querySelector<HTMLInputElement>('input[name=email]')!;
+      const consent = form.querySelector<HTMLInputElement>('input[name=consent]')!;
+      const ok = name.value.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim()) && consent.checked;
+      if (!ok || !current) { error.hidden = false; return; }
+      const li = current;
+      li.dataset.taken = String(Number(li.dataset.taken) + 1);
+      paint(li, true);
+      const store = load();
+      store[id] = [...new Set([...(store[id] || []), Number(li.dataset.index)])];
+      save(store);
+      live.textContent = `Thanks ${name.value.trim().split(' ')[0]}, you're signed up for ${li.querySelector('.bs-label')!.textContent}. (Demo: saved in this browser only.)`;
+      form.reset();
+      li.classList.add('bs-just');
+      setTimeout(() => li.classList.remove('bs-just'), 1200);
+      close();
+    });
+  });
+</script>

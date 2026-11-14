@@ -1,0 +1,192 @@
+---
+import Layout from './Layout.astro';
+import FormEngine from '../../components/FormEngine.astro';
+import { getSettings, getGroups, getUpcomingEvents, getThoughts, getForm, formatDate, friendlyTime, dayNumber, monthShort } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+
+const s = await getSettings();
+const groups = await getGroups();
+const events = await getUpcomingEvents(3);
+const thoughts = (await getThoughts()).slice(0, 3);
+const prayer = await getForm('prayer-request');
+const L = (p = '') => link('gathering', p);
+
+const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const week = DAYS.map((day) => ({ day, groups: groups.filter((g) => g.day === day) })).filter((d) => d.groups.length);
+const stamp = `Every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} + ${s.venue} + ${s.area} + `;
+---
+<Layout>
+  <section class="g-section g-hero" aria-labelledby="hero-title">
+    <div>
+      <h1 id="hero-title">From near and far, <em>at home in Brno</em></h1>
+      <p class="g-lead">{s.intro} Come and sit with us on {s.serviceDay}.</p>
+      <div class="g-actions">
+        <a class="g-btn" href={L('visit')}>Plan a first visit</a>
+        <a class="g-btn g-btn--plain" href="#find">How to find us</a>
+      </div>
+      <p class="g-next">
+        <strong data-next-service data-time={s.serviceTime} data-label={friendlyTime(s.serviceTime).replace(' ', ' ')}>Every {s.serviceDay} at {friendlyTime(s.serviceTime)}</strong>
+        <span>{s.venue}, {s.address}</span>
+      </p>
+    </div>
+    <div class="g-collage">
+      <img class="g-collage__main" {...img('/media/bicf/worship-joy.webp', '(max-width: 860px) 100vw, 55vw')} alt="Three men singing and laughing together during a service" fetchpriority="high" />
+      <img class="g-collage__round" {...img('/media/bicf/ya-market.webp', '(max-width: 860px) 40vw, 18vw')} alt="Friends in winter coats in front of the Christmas tree on a Brno square" />
+      <svg class="g-stamp" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="100"></circle>
+        <defs><path id="g-ring" d="M100 100m-74 0a74 74 0 1 1 148 0a74 74 0 1 1-148 0"></path></defs>
+        <text><textPath href="#g-ring" textLength="462" lengthAdjust="spacing">{stamp}</textPath></text>
+        <rect x="95.5" y="60" width="9" height="80"></rect>
+        <rect x="70" y="88" width="60" height="8"></rect>
+      </svg>
+    </div>
+  </section>
+
+  <section class="g-section g-inset g-band" aria-label="What to expect">
+    <p class="g-welcome-big">Many nationalities share one room here. English is the language we gather in, and you will hear plenty of others afterwards.</p>
+    <ul class="g-points" role="list">
+      <li>
+        <h3>Come as you are</h3>
+        <p>We are an informal group, so wear whatever is comfortable.</p>
+      </li>
+      <li>
+        <h3>Take part as you like</h3>
+        <p>A Sunday has singing, news, prayer and a lesson from the Bible for daily life. Join in as much or as little as you want.</p>
+      </li>
+      <li>
+        <h3>Questions are welcome</h3>
+        <p>Don't feel like you need to agree or be a Christian to come. The goal isn't conformity.</p>
+      </li>
+    </ul>
+  </section>
+
+  <div class="g-wide">
+    <img {...img('/media/bicf/congregation-singing.webp')} alt="A full hall singing together, seen from behind the band" loading="lazy" />
+  </div>
+
+  <section class="g-section" id="week" aria-labelledby="week-title">
+    <div class="g-head">
+      <h2 id="week-title">There is a table for you during the week</h2>
+      <p>Small groups meet in homes, cafés and at Maják. Pick one and come along, or <a class="g-link" href={L('contact')}>ask us</a> where to find it.</p>
+    </div>
+    <div class="g-days">
+      {week.map(({ day, groups }) => (
+        <div class="g-day">
+          <h3>{day}</h3>
+          <ul role="list">
+            {groups.map((g) => (
+              <li>
+                <p class="g-when">{g.time}, {g.frequency.toLowerCase()}</p>
+                <h4>{g.name}</h4>
+                <p>{g.description}</p>
+                <p class="g-meta">{g.place}.{g.page && <> <a href={L(g.page)}>More about this</a></>}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="g-section g-section--tight g-ages" aria-labelledby="ages-title">
+    <h2 id="ages-title">Every age has a place</h2>
+    <div class="g-ages-grid">
+      <a class="g-age g-age--kids" href={L('kids-and-teens')}>
+        <img {...img('/media/bicf/kids-games.webp', '(max-width: 860px) 100vw, 55vw')} alt="Children playing a blindfold game on the grass" loading="lazy" />
+        <h3>Kids and teens</h3>
+        <p>A nursery where parents can stay, Sunday school from age 1, and Teens for Christ on Fridays.</p>
+      </a>
+      <a class="g-age g-age--young" href={L('young-adults')}>
+        <img {...img('/media/bicf/ya-dam.webp', '(max-width: 860px) 100vw, 40vw')} alt="Young adults on a wooden lookout above the Brno reservoir on a sunny day" loading="lazy" />
+        <h3>Young adults</h3>
+        <p>A lively community for ages 20 to 35, with a weekly study and an outing every month.</p>
+      </a>
+      <a class="g-age g-age--worship" href={L('worship-circle')}>
+        <img {...img('/media/bicf/christmas-duet.webp', '(max-width: 860px) 100vw, 65vw')} alt="The choir and band leading singing beside a Christmas tree in the hall" loading="lazy" />
+        <h3>Worship circle</h3>
+        <p>You do not have to be perfect. You need a willing heart and a desire to worship God and serve the church.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="g-section g-section--tight" aria-labelledby="events-title">
+    <div class="g-head">
+      <h2 id="events-title">Coming up</h2>
+      <p>Dinners, carols and days out. Some need a sign-up so we know how many chairs to set out. <a class="g-link" href={L('week')}>Everything on</a></p>
+    </div>
+    <ul class="g-events" role="list">
+      {events.map((e) => (
+        <li class="g-event">
+          {e.image && <img {...img(e.image, '(max-width: 860px) 100vw, 33vw')} alt="" loading="lazy" />}
+          <div class="g-event__body">
+            <p class="g-event__date"><b>{dayNumber(e.date)}</b> {monthShort(e.date)} · {e.time}</p>
+            <h3>{e.title}</h3>
+            <p>{e.location}</p>
+            <p>{e.summary}</p>
+            {e.signup ? <a class="g-btn g-btn--small" href={L(`signup/${e.signup}`)}>Sign up</a> : <span class="g-event__spacer"></span>}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="g-section g-inset g-peri" id="find" aria-labelledby="find-title">
+    <div class="g-find">
+      <div>
+        <h2 id="find-title">Look for the yellow building</h2>
+        <p class="g-lead">It's easy once you know it, but the first time can be a little tricky.</p>
+        <ol>
+          {s.directions.map((d) => <li><strong>{d.step}.</strong> {d.detail}</li>)}
+        </ol>
+        <p class="g-find-address">{s.venue}, {s.address}</p>
+        <div class="g-actions">
+          <a class="g-btn" href={L('visit')}>Plan your visit</a>
+          <a class="g-btn g-btn--plain" href={s.mapUrl} rel="noopener">Open in Mapy.cz</a>
+        </div>
+      </div>
+      <img class="g-find-img" {...img('/media/bicf/church-family.webp', '(max-width: 860px) 90vw, 45vw')} alt="Around thirty members of the church standing together in the hall" loading="lazy" />
+    </div>
+  </section>
+
+  <section class="g-section g-more" aria-label="Going deeper and prayer">
+    <div class="g-thoughts">
+      <h2>Going deeper</h2>
+      <ul role="list">
+        {thoughts.map((t) => (
+          <li>
+            <a href={L(`thoughts/${t.id}`)}>
+              <p class="g-by">{t.data.author} · {formatDate(t.data.date, 'short')}</p>
+              <h3>{t.data.title}</h3>
+              <p>{t.data.excerpt}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p><a class="g-link" href={L('thoughts')}>All reflections</a></p>
+    </div>
+    {prayer && <div class="g-panel"><FormEngine form={prayer} privacyHref={L('privacy')} /></div>}
+  </section>
+</Layout>
+
+<script>
+  import { pragueNow } from '../../lib/clock';
+  // Replace "Every Sunday at 5 pm" with the date of the coming service, in Brno time.
+  const el = document.querySelector<HTMLElement>('[data-next-service]');
+  if (el) {
+    const [h, m] = (el.dataset.time ?? '17:00').split(':').map(Number);
+    const label = el.dataset.label ?? '';
+    const now = pragueNow(); // day: Monday = 0 … Sunday = 6
+    const start = h * 60 + m;
+    const nowMin = now.hour * 60 + now.minute;
+    let text: string;
+    if (now.day === 6 && nowMin < start + 90) {
+      text = nowMin < start ? `Today at ${label}` : 'Happening now';
+    } else {
+      const ahead = (6 - now.day + 7) % 7 || 7;
+      const date = new Date(Date.now() + ahead * 864e5).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: 'Europe/Prague' });
+      text = `${ahead === 1 ? 'Tomorrow' : 'Sunday'}, ${date} at ${label}`;
+    }
+    el.textContent = text;
+  }
+</script>

@@ -1,0 +1,73 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import DateCross from './DateCross.astro';
+import { getGroups, getUpcomingEvents, getSignups, slotsSummary } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const groups = await getGroups();
+const events = await getUpcomingEvents();
+const signups = await getSignups();
+const L = (p = '') => link('crossroads', p);
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+---
+<Layout title="This week" description="Weekly groups, upcoming events and sign-up sheets at BICF.">
+  <PageHead title="This week" lead="Sunday is where everyone meets. During the week, paths cross in smaller groups, in homes, online and out on the trails." />
+
+  <section class="x-section x-section--top">
+    <div class="x-wrap">
+      <h2 class="x-h2">Every week</h2>
+      <ul class="x-rows x-rows--week" role="list">
+        {days.flatMap((d) => groups.filter((g) => g.day === d)).map((g) => (
+          <li>
+            <a href={g.page ? L(g.page) : L('contact')}>
+              <span class="x-plus" aria-hidden="true"></span>
+              <span class="x-rows__day">{g.day}</span>
+              <span class="x-rows__name">{g.name}<small>{g.audience}</small></span>
+              <span class="x-rows__meta">{g.time} · {g.place}<br />{g.frequency}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="x-section x-section--tint">
+    <div class="x-wrap">
+      <h2 class="x-h2">Events</h2>
+      <ul class="x-eventlist" role="list">
+        {events.map((e) => (
+          <li>
+            <DateCross date={e.date} time={e.time} />
+            <div>
+              <h3>{e.title}</h3>
+              <p class="x-event__meta">{e.time} · {e.location}</p>
+              <p>{e.summary}</p>
+              {e.signup && <a class="x-arrow" href={L(`signup/${e.signup}`)}>Sign up</a>}
+            </div>
+            <div class="x-eventlist__img">{e.image && <img {...img(e.image, '280px')} alt="" loading="lazy" />}</div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="x-section">
+    <div class="x-wrap">
+      <h2 class="x-h2">Sign-up sheets</h2>
+      <div class="x-sheets">
+        {signups.map((su) => {
+          const sum = slotsSummary(su.data.slots);
+          return (
+            <a class="x-sheet" href={L(`signup/${su.id}`)}>
+              <h3>{su.data.title}</h3>
+              <p>{su.data.intro}</p>
+              <div class="bs-meter"><span style={`--fill:${(sum.taken / sum.capacity) * 100}%`}></span></div>
+              <p class="x-sheet__left">{sum.open} places left</p>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Layout>

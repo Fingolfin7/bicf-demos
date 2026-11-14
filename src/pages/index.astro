@@ -1,0 +1,137 @@
+---
+/* The demo chooser. Not part of the final site. */
+import '@fontsource-variable/manrope';
+import { THEMES } from '../lib/themes';
+import { withBase } from '../lib/base';
+
+const details: Record<string, { idea: string; points: string[]; accent: string; ink: string }> = {
+  gathering: {
+    idea: 'Warm and photo-led, in the slate blue and navy that bicf.cz already uses.',
+    points: ['Big real photos with soft, rounded shapes and a turning “Every Sunday at 5 pm” stamp', 'The welcome, directions and group notes in the church’s own words', 'The calmest and most familiar of the four'],
+    accent: '#54699f', ink: '#252f4f',
+  },
+  crossroads: {
+    idea: 'Grows out of the logo BICF already has: a blue cross where four letters meet.',
+    points: ['The home page is split by the cross into B, I, C and F: Brno, International, Christian, Fellowship', 'Dates, facts and directions are set in cross-divided quarters', 'Crisp and confident. The most "brand" of the four'],
+    accent: '#54699f', ink: '#121418',
+  },
+  hall: {
+    idea: 'Feels like walking into the timber hall at Maják on a Sunday evening.',
+    points: ['Honey timber, cream and warm light, with string lights across the page', 'A timber “Every Sunday, 5 pm” sign, and photos of the hall itself', 'People first: big real photos of the church family'],
+    accent: '#c98a46', ink: '#2e1f14',
+  },
+  five: {
+    idea: 'BICF meets at five and loves to sing, so this one is lit like its own stage.',
+    points: ['Violet, magenta and amber, taken from the lighting in the church’s photos', 'A live countdown to Sunday at five', 'A "many voices" reel of the choirs and the band'],
+    accent: '#ffb547', ink: '#1a1230',
+  },
+};---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>BICF website: four design directions</title>
+    <meta name="description" content="Four demo designs for the new Brno International Christian Fellowship website." />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="intro">
+      <p class="intro__org">Brno International Christian Fellowship</p>
+      <h1>Four directions for the new website</h1>
+      <p class="intro__lead">Each demo is a complete, working design with the same content: home page, visiting info, weekly schedule, events, sign-up sheets, forms and reflections. Open one, click around, try it on your phone. Use the switch in the bottom-left corner to see the same page in another design.</p>
+    </header>
+
+    <main>
+      {THEMES.map((t) => {
+        const d = details[t.id];
+        return (
+          <article class="demo" style={`--accent:${d.accent};--ink:${d.ink}`}>
+            <a class="demo__shots" href={withBase(`/${t.id}/`)} aria-label={`Open the ${t.name} demo`}>
+              <img class="demo__desktop" src={withBase(`/media/previews/${t.id}-desktop.webp`)} alt="" width="1200" height="750" loading="lazy" />
+              <img class="demo__phone" src={withBase(`/media/previews/${t.id}-phone.webp`)} alt="" width="390" height="844" loading="lazy" />
+            </a>
+            <div class="demo__text">
+              <h2>{t.name}</h2>
+              <p class="demo__idea">{d.idea}</p>
+              <ul>{d.points.map((p) => <li>{p}</li>)}</ul>
+              <div class="demo__links">
+                <a class="demo__open" href={withBase(`/${t.id}/`)}>Open {t.name}</a>
+                <a href={withBase(`/${t.id}/signup/thanksgiving-potluck/`)}>Sign-up sheet</a>
+                <a href={withBase(`/${t.id}/contact/`)}>Form</a>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+
+      <section class="shared">
+        <h2>What all four share</h2>
+        <div class="shared__grid">
+          <div>
+            <h3>Editing without code</h3>
+            <p>Volunteers sign in at <a href={withBase('/admin/index.html')}>/admin</a> and fill in simple forms to add pages, events, photos, sign-up sheets and forms. Photos are resized automatically.</p>
+          </div>
+          <div>
+            <h3>Forms and sign-up sheets</h3>
+            <p>Forms are built in the editor, question by question. Sign-up sheets show how many places are left in each slot. In these demos, entries stay in your browser.</p>
+          </div>
+          <div>
+            <h3>Fast and private</h3>
+            <p>Plain pages with no tracking, no cookies and no outside fonts. They load quickly on a phone on a tram.</p>
+          </div>
+          <div>
+            <h3>Free to host</h3>
+            <p>The site is a folder of files, so free hosting such as Cloudflare Pages is enough. There’s no server or plugins to update.</p>
+          </div>
+        </div>
+        <p class="shared__note">The photos and logo are BICF’s own, from bicf.cz. Event details, group times and reflections are sample content to show the layout. They need checking before anything goes live.</p>
+      </section>
+    </main>
+
+    <style>
+      :root { color-scheme: light; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #f4f5f7; color: #16181d; font-family: 'Manrope Variable', system-ui, sans-serif; font-size: 1.0625rem; line-height: 1.6; }
+      a { color: inherit; }
+      img { display: block; max-width: 100%; height: auto; }
+      :focus-visible { outline: 3px solid #3b6cff; outline-offset: 3px; border-radius: 4px; }
+      .intro, main { max-width: 1240px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 48px); }
+      .intro { padding-block: clamp(48px, 8vw, 104px) clamp(32px, 5vw, 64px); }
+      .intro__org { margin: 0 0 16px; font-weight: 600; color: #5b6070; }
+      h1 { margin: 0 0 24px; font-size: clamp(2.4rem, 5.6vw, 4.6rem); line-height: 1; letter-spacing: -0.035em; font-weight: 750; max-width: 15ch; }
+      .intro__lead { margin: 0; max-width: 62ch; font-size: 1.15rem; color: #3d4250; }
+
+      .demo { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); align-items: center; padding-block: clamp(40px, 6vw, 72px); border-top: 1px solid #dde0e6; }
+      .demo:nth-of-type(even) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); }
+      .demo:nth-of-type(even) .demo__shots { order: 2; }
+      .demo__shots { position: relative; display: block; padding: 0 9% 7% 0; text-decoration: none; }
+      .demo__desktop { width: 100%; border-radius: 12px; box-shadow: 0 1px 2px rgb(0 0 0 / .06), 0 24px 60px -24px rgb(22 24 29 / .35); transition: transform .4s cubic-bezier(.2,.7,.2,1); }
+      .demo__phone { position: absolute; right: 0; bottom: 0; width: 24%; border-radius: 18px; border: 5px solid #16181d; box-shadow: 0 20px 40px -16px rgb(22 24 29 / .5); transition: transform .4s cubic-bezier(.2,.7,.2,1); }
+      .demo__shots:hover .demo__desktop { transform: translateY(-4px); }
+      .demo__shots:hover .demo__phone { transform: translateY(-10px) rotate(2deg); }
+      .demo h2 { margin: 0 0 10px; font-size: clamp(2rem, 3.4vw, 2.8rem); letter-spacing: -0.03em; line-height: 1; font-weight: 750; display: flex; align-items: center; gap: 14px; }
+      .demo h2::before { content: ''; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px var(--ink); flex: none; }
+      .demo__idea { font-size: 1.2rem; line-height: 1.45; margin: 0 0 18px; color: #2b2f3a; }
+      .demo ul { margin: 0 0 28px; padding-left: 1.1em; color: #4a4f5c; display: grid; gap: 6px; }
+      .demo__links { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+      .demo__links a:not(.demo__open) { font-weight: 600; color: #4a4f5c; text-underline-offset: 4px; }
+      .demo__open { background: var(--ink); color: #fff; text-decoration: none; font-weight: 700; padding: 13px 22px; border-radius: 999px; }
+      .demo__open:hover { box-shadow: 0 0 0 3px var(--accent); }
+      @media (max-width: 860px) {
+        .demo, .demo:nth-of-type(even) { grid-template-columns: 1fr; }
+        .demo:nth-of-type(even) .demo__shots { order: 0; }
+      }
+
+      .shared { border-top: 1px solid #dde0e6; padding-block: clamp(56px, 8vw, 96px); }
+      .shared h2 { margin: 0 0 32px; font-size: clamp(1.8rem, 3vw, 2.4rem); letter-spacing: -0.03em; }
+      .shared__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+      .shared h3 { margin: 0 0 8px; font-size: 1.1rem; }
+      .shared__grid p { margin: 0; color: #4a4f5c; font-size: 1rem; }
+      .shared__note { margin: 48px 0 0; padding: 18px 22px; background: #fff; border-radius: 12px; color: #4a4f5c; font-size: 0.98rem; max-width: 80ch; }
+      @media (max-width: 960px) { .shared__grid { grid-template-columns: 1fr 1fr; } }
+      @media (max-width: 560px) { .shared__grid { grid-template-columns: 1fr; } }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import { getSettings, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { FAQS } from '../../lib/faqs';
+import { LINES } from './lines';
+const s = await getSettings();
+const L = (p = '') => link('interchange', p);
+---
+<Layout title="Plan your route" description={`Visit BICF: every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at ${s.venue}, ${s.address}.`}>
+  <PageHead title="Plan your route to Maják" lead={`We meet every ${s.serviceDay} at ${s.serviceTime} at the ${s.venue}, ${s.address} in ${s.area}. The first visit can be a little tricky, so here’s the way.`} image="/media/stock/lesna.webp" alt="Parkland and apartment blocks in Brno-Lesná on a sunny day" line={LINES.sunday} />
+
+  <section class="i-section">
+    <div class="i-wrap i-body" style="padding-block:0">
+      <div>
+        <h2 class="i-h2" style="margin-bottom:36px">Your journey</h2>
+        <ol class="i-journey">
+          {s.directions.map((d, i) => (
+            <li>
+              <span class="i-journey__n" aria-hidden="true">{i + 1}</span>
+              <h3>{d.step}</h3>
+              <p>{d.detail}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <aside>
+        <div class="i-card" style="margin-top:0;background:var(--ink);color:#fff">
+          <h3>Want an escort?</h3>
+          <p style="color:#b8c1d9">Tell us when you’re coming and someone will meet you at Halasovo náměstí.</p>
+          <a class="i-btn i-btn--light" href={L('contact')}>Ask for a guide</a>
+        </div>
+        <div class="i-card">
+          <h3>{s.venue}</h3>
+          <p>{s.address}<br />{s.area}</p>
+          <a class="i-link" href={s.mapUrl} rel="noopener">Open in Mapy.cz</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="i-section i-section--panel">
+    <div class="i-wrap">
+      <h2 class="i-h2" style="margin-bottom:32px">Before you travel</h2>
+      <div class="i-faq">
+        {FAQS.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </div>
+  </section>
+</Layout>

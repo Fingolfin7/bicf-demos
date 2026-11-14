@@ -1,0 +1,34 @@
+---
+import Layout from './Layout.astro';
+import Chapter from './Chapter.astro';
+import { getSettings, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { FAQS } from '../../lib/faqs';
+const s = await getSettings();
+const L = (p = '') => link('stillwater', p);
+---
+<Layout title="Visit" description={`Visit BICF: every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at ${s.venue}, ${s.address}.`}>
+  <Chapter title="Your first Sunday" lead={`We gather every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at the ${s.venue}, ${s.address}, in ${s.area}.`} image="/media/stock/lesna.webp" alt="Trees and apartment buildings in Brno-Lesná" kicker={{ label: 'Visit' }} />
+
+  <div class="w-page">
+    <aside>
+      <div class="w-aside-note">
+        <h2>Would you like company?</h2>
+        <p>Tell us when you’re coming and someone will meet you at the tram stop and walk with you.</p>
+        <a class="w-btn" href={L('contact')}>Ask someone to meet me</a>
+      </div>
+    </aside>
+    <div>
+      <h2 class="w-h2">Finding Maják</h2>
+      <ol class="w-steps">
+        {s.directions.map((d) => <li><div><h3>{d.step}</h3><p>{d.detail}</p></div></li>)}
+      </ol>
+      <p style="margin-top:24px"><a class="w-link" href={s.mapUrl} rel="noopener">Open the address in Mapy.cz</a></p>
+
+      <h2 class="w-h2" style="margin-top:80px">Questions you might have</h2>
+      <div class="w-faq">
+        {FAQS.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </div>
+  </div>
+</Layout>

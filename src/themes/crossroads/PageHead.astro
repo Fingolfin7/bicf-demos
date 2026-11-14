@@ -1,0 +1,18 @@
+---
+import { img } from '../../lib/img';
+interface Props { title: string; lead?: string; image?: string; crumb?: { href: string; label: string } }
+const { title, lead, image, crumb } = Astro.props;
+---
+<section class:list={['x-pagehead', { 'x-pagehead--image': !!image }]}>
+  <div class="x-pagehead__text">
+    {crumb && <a class="x-crumb" href={crumb.href}>{crumb.label}</a>}
+    <h1>{title}</h1>
+    {lead && <p>{lead}</p>}
+    <slot />
+  </div>
+  {image && (
+    <div class="x-pagehead__img">
+      <img {...img(image, '(min-width: 900px) 50vw, 100vw')} alt="" fetchpriority="high" />
+    </div>
+  )}
+</section>
