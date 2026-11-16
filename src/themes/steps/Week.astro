@@ -1,0 +1,97 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import Icon from './Icon.astro';
+import { getGroups, getUpcomingEvents, getSignups, slotsSummary, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const groups = await getGroups();
+const events = await getUpcomingEvents();
+const signups = await getSignups();
+const L = (p = '') => link('steps', p);
+const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const days = DAYS.filter((d) => groups.some((g) => g.day === d));
+const lower = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
+---
+<Layout title="Groups and events" description="Weekly groups, upcoming events and sign-up sheets at BICF.">
+  <PageHead title="Groups and events" lead="Sunday is when the whole church is together. During the week we meet in smaller groups: at Maják, in homes, online, and over early-morning coffee in town." />
+
+  <section class="ns-wrap ns-section ns-section--flush" aria-labelledby="groups-title">
+    <div class="ns-head ns-head--row">
+      <h2 id="groups-title">Find a group</h2>
+      <div class="ns-chips" role="group" aria-label="Show groups on">
+        <button type="button" class="ns-chip" aria-pressed="true" data-day="">All days</button>
+        {days.map((d) => <button type="button" class="ns-chip" aria-pressed="false" data-day={d}>{d}</button>)}
+      </div>
+    </div>
+    <ul class="ns-groups" role="list" data-groups>
+      {groups.map((g) => (
+        <li class="ns-group" data-day={g.day}>
+          <p class="ns-group__when"><span>{g.day}</span> {g.time}</p>
+          <h3>{g.name}</h3>
+          <p>{g.description}</p>
+          <ul class="ns-group__facts" role="list">
+            <li><Icon name="clock" /> {g.frequency}</li>
+            <li><Icon name="pin" /> {g.place}</li>
+            <li><Icon name="people" /> {g.audience}</li>
+          </ul>
+          <div class="ns-group__links">
+            {g.page && <a class="ns-pill ns-pill--light ns-pill--small" href={L(g.page)}>Learn more</a>}
+            {g.contact && <a class="ns-textlink" href={L('contact')}>Contact {g.contact}</a>}
+          </div>
+        </li>
+      ))}
+    </ul>
+    <p class="ns-groups__none" hidden>No groups on that day.</p>
+  </section>
+
+  <section class="ns-section ns-section--grey" id="events" aria-labelledby="events-title">
+    <div class="ns-wrap">
+      <div class="ns-head"><h2 id="events-title">Coming up</h2><p>Everything outside the usual week, soonest first.</p></div>
+      <ul class="ns-cards" role="list">
+        {events.map((e) => (
+          <li>
+            <a class="ns-card ns-card--white" href={L(e.signup ? `signup/${e.signup}` : 'week')}>
+              {e.image && <img {...img(e.image, '(max-width: 860px) 100vw, 33vw')} alt="" loading="lazy" />}
+              <p class="ns-meta">{formatDate(e.date, 'weekday')} · {lower(e.time)}</p>
+              <h3>{e.title}</h3>
+              <p>{e.location}. {e.summary}</p>
+              {e.signup && <span class="ns-pill ns-pill--dark ns-pill--small">Sign up</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="ns-section ns-wrap" id="sheets" aria-labelledby="sheets-title">
+    <div class="ns-head"><h2 id="sheets-title">Sign-up sheets</h2><p>Bring a dish, pour the coffee, or save a place. Pick a slot and add your name.</p></div>
+    <div class="ns-sheets">
+      {signups.map((su) => {
+        const sum = slotsSummary(su.data.slots);
+        return (
+          <a class="ns-sheet" href={L(`signup/${su.id}`)}>
+            <h3>{su.data.title}</h3>
+            <p>{su.data.intro}</p>
+            <div class="bs-meter"><span style={`--fill:${(sum.taken / sum.capacity) * 100}%`}></span></div>
+            <p class="ns-sheet__left">{sum.open} places left <Icon name="arrow" /></p>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Day filter chips
+  const chips = document.querySelectorAll<HTMLButtonElement>('.ns-chip[data-day]');
+  const items = document.querySelectorAll<HTMLElement>('.ns-group');
+  const none = document.querySelector<HTMLElement>('.ns-groups__none');
+  chips.forEach((chip) => chip.addEventListener('click', () => {
+    const day = chip.dataset.day ?? '';
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+    let shown = 0;
+    items.forEach((it) => { const on = !day || it.dataset.day === day; it.hidden = !on; if (on) shown++; });
+    if (none) none.hidden = shown > 0;
+  }));
+</script>

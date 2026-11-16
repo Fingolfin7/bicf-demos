@@ -1,0 +1,144 @@
+---
+/* Next Step: clean, light and app-like. Every section answers
+   "what could I do next?". Made after the church shared
+   elevationchurch.org as a reference. */
+import '@fontsource-variable/dm-sans';
+import './steps.css';
+import BaseHead from '../../components/BaseHead.astro';
+import DemoSwitcher from '../../components/DemoSwitcher.astro';
+import Logo from '../../components/Logo.astro';
+import { getSettings, getNavPages, getUpcomingEvents, friendlyTime, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+
+interface Props { title?: string; description?: string; image?: string }
+const s = await getSettings();
+const { title, description = s.intro, image } = Astro.props;
+const joinIn = await getNavPages('join-in');
+const whoWeAre = await getNavPages('who-we-are');
+const notice = (await getUpcomingEvents()).find((e) => e.signup);
+const L = (p = '') => link('steps', p);
+const path = Astro.url.pathname;
+const nav = [
+  { href: L('visit'), label: 'Visit' },
+  { href: L('week'), label: 'Groups' },
+  { href: L('kids-and-teens'), label: 'Kids' },
+  { href: L('thoughts'), label: 'Going deeper' },
+  { href: L('new-to-bicf'), label: 'About' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title ? `${title} | ${s.shortName}` : `${s.name} | Welcome home`} description={description} themeColor="#ffffff" image={image} />
+  </head>
+  <body class="ns">
+    <a class="ns-skip" href="#main">Skip to content</a>
+    <header class="ns-header">
+      <button class="ns-burger" type="button" aria-expanded="false" aria-controls="ns-drawer" aria-label="Open the menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+      </button>
+      <a class="ns-brand" href={L()} aria-label={`${s.name}, home`}><Logo variant="horizontal" /></a>
+      <nav class="ns-nav" aria-label="Main">
+        <ul>{nav.map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>)}</ul>
+      </nav>
+      <a class="ns-pill ns-pill--dark ns-header__cta" href={L('visit')}>Plan a visit</a>
+    </header>
+
+    {notice && (
+      <div class="ns-notice" data-notice={notice.id}>
+        <p><strong>{notice.title}</strong> <span>{formatDate(notice.date, 'weekday')}. {notice.summary}</span></p>
+        <a class="ns-pill ns-pill--white ns-pill--small" href={L(`signup/${notice.signup}`)}>Sign up</a>
+        <button class="ns-notice__close" type="button" aria-label="Hide this notice">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </button>
+      </div>
+    )}
+
+    <div class="ns-drawer" id="ns-drawer" hidden>
+      <div class="ns-drawer__scrim" data-close></div>
+      <div class="ns-drawer__panel" role="dialog" aria-modal="true" aria-label="Menu">
+        <div class="ns-drawer__top">
+          <Logo variant="horizontal" />
+          <button class="ns-drawer__close" type="button" data-close aria-label="Close the menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+        </div>
+        <ul class="ns-drawer__main">
+          <li><a href={L()}>Home</a></li>
+          <li><a href={L('visit')}>Plan a visit</a></li>
+          <li><a href={L('week')}>Groups and events</a></li>
+          <li><a href={L('thoughts')}>Going deeper</a></li>
+          <li><a href={L('prayer-box')}>Prayer box</a></li>
+          <li><a href={L('contact')}>Contact</a></li>
+        </ul>
+        <p class="ns-drawer__head">Join in</p>
+        <ul class="ns-drawer__list">{joinIn.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}</ul>
+        <p class="ns-drawer__head">Who we are</p>
+        <ul class="ns-drawer__list">{whoWeAre.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}</ul>
+        <p class="ns-drawer__foot">{s.serviceDay}s at {friendlyTime(s.serviceTime)}<br />{s.venue}, {s.area}</p>
+      </div>
+    </div>
+
+    <main id="main"><slot /></main>
+
+    <footer class="ns-footer">
+      <div class="ns-footer__grid">
+        <div class="ns-footer__brand">
+          <Logo variant="horizontal" />
+          <p><strong>{s.serviceDay}s at {friendlyTime(s.serviceTime)}</strong><br />{s.venue}, {s.address}</p>
+          <a class="ns-pill ns-pill--light ns-pill--small" href={s.mapUrl} rel="noopener">Open in Mapy.cz</a>
+        </div>
+        <div>
+          <p class="ns-footer__head">Join in</p>
+          <ul>{joinIn.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}</ul>
+        </div>
+        <div>
+          <p class="ns-footer__head">Who we are</p>
+          <ul>{whoWeAre.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}</ul>
+        </div>
+        <div>
+          <p class="ns-footer__head">Get in touch</p>
+          <ul>
+            <li><a href={`mailto:${s.email}`}>{s.email}</a></li>
+            <li><a href={L('contact')}>Contact form</a></li>
+            <li><a href={L('prayer-box')}>Prayer box</a></li>
+            <li><a href={s.facebook} rel="noopener">Facebook</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="ns-footer__legal">© {new Date().getFullYear()} {s.name} · <a href={L('privacy')}>Privacy</a> · No cookies, no tracking</p>
+    </footer>
+    <DemoSwitcher current="steps" />
+
+    <script>
+      // Menu drawer
+      const burger = document.querySelector<HTMLButtonElement>('.ns-burger');
+      const drawer = document.getElementById('ns-drawer');
+      if (burger && drawer) {
+        const set = (open: boolean) => {
+          drawer.hidden = !open;
+          burger.setAttribute('aria-expanded', String(open));
+          document.body.classList.toggle('ns-locked', open);
+          if (open) drawer.querySelector<HTMLElement>('.ns-drawer__close')?.focus();
+          else burger.focus();
+        };
+        burger.addEventListener('click', () => set(true));
+        drawer.addEventListener('click', (e) => { if ((e.target as Element).closest('[data-close]')) set(false); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !drawer.hidden) set(false); });
+      }
+
+      // Notice bar: shown until the visitor closes it (remembered for this visit only).
+      const notice = document.querySelector<HTMLElement>('[data-notice]');
+      if (notice) {
+        const key = `ns-notice-${notice.dataset.notice}`;
+        let closed = false;
+        try { closed = sessionStorage.getItem(key) === '1'; } catch {}
+        notice.hidden = closed;
+        notice.querySelector('.ns-notice__close')?.addEventListener('click', () => {
+          notice.hidden = true;
+          try { sessionStorage.setItem(key, '1'); } catch {}
+        });
+      }
+    </script>
+  </body>
+</html>

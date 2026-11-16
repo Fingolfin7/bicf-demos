@@ -1,0 +1,77 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import { getGroups, getUpcomingEvents, getSignups, slotsSummary, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const groups = await getGroups();
+const events = await getUpcomingEvents();
+const signups = await getSignups();
+const L = (p = '') => link('headline', p);
+const lower = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
+---
+<Layout title="This week" description="Weekly groups, upcoming events and sign-up sheets at BICF.">
+  <PageHead title="This week" lead="Sunday is when the whole church is together. During the week we meet in smaller groups: at Maják, in homes, online, and over early-morning coffee in town." />
+
+  <section class="hl-section hl-section--flush">
+    <div class="hl-wrap">
+      <ul class="hl-rows" role="list">
+        {groups.map((g) => (
+          <li class="hl-row">
+            <p class="hl-row__day">{g.day}</p>
+            <p class="hl-row__time">{g.time}<span>{lower(g.frequency)}</span></p>
+            <div class="hl-row__main">
+              <h3>{g.page ? <a href={L(g.page)}>{g.name}</a> : g.name}</h3>
+              <p>{g.description}</p>
+              {g.contact && <p class="hl-row__contact">Contact: <a href={L('contact')}>{g.contact}</a></p>}
+            </div>
+            <p class="hl-row__where">{g.place}<span>{g.audience}</span></p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="hl-section hl-section--grey hl-center" aria-labelledby="events-title">
+    <h2 id="events-title" class="hl-display"><span class="hl-thin">Coming</span> up</h2>
+    <p class="hl-tracked">Everything outside the usual week, soonest first</p>
+    <ul class="hl-banners" role="list">
+      {events.map((e) => (
+        <li>
+          <a class="hl-banner" href={L(e.signup ? `signup/${e.signup}` : 'week')}>
+            {e.image && <img {...img(e.image, '(max-width: 1200px) 100vw, 1200px')} alt="" loading="lazy" />}
+            <span class="hl-banner__date">{formatDate(e.date, 'weekday')} · {e.time}</span>
+            <span class="hl-banner__body">
+              <span class="hl-banner__title">{e.title}</span>
+              <span class="hl-banner__text">{e.location}. {e.summary}</span>
+            </span>
+            <span class="hl-banner__cta">{e.signup ? 'Sign up' : 'Details'}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="hl-section" aria-labelledby="sheets-title">
+    <div class="hl-wrap">
+      <div class="hl-split-head">
+        <h2 id="sheets-title" class="hl-display hl-display--left"><span class="hl-thin">Sign-up</span> sheets</h2>
+        <p>Bring a dish, pour the coffee, or save a place. Pick a slot and add your name.</p>
+      </div>
+      <div class="hl-sheets">
+        {signups.map((su) => {
+          const sum = slotsSummary(su.data.slots);
+          return (
+            <a class="hl-sheet" href={L(`signup/${su.id}`)}>
+              <span class="hl-tracked">{sum.open} places left</span>
+              <h3>{su.data.title}</h3>
+              <p>{su.data.intro}</p>
+              <div class="bs-meter"><span style={`--fill:${(sum.taken / sum.capacity) * 100}%`}></span></div>
+              <span class="hl-btn hl-btn--small">Sign up</span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Layout>

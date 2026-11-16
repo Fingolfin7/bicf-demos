@@ -7,12 +7,12 @@ import { withBase } from '../lib/base';
 const details: Record<string, { idea: string; points: string[]; accent: string; ink: string }> = {
   gathering: {
     idea: 'Warm and photo-led, in the slate blue and navy that bicf.cz already uses.',
-    points: ['Big real photos with soft, rounded shapes and a turning “Every Sunday at 5 pm” stamp', 'The welcome, directions and group notes in the church’s own words', 'The calmest and most familiar of the four'],
+    points: ['Big real photos with soft, rounded shapes and a turning “Every Sunday at 5 pm” stamp', 'The welcome, directions and group notes in the church’s own words', 'The calmest and most familiar of the six'],
     accent: '#54699f', ink: '#252f4f',
   },
   crossroads: {
-    idea: 'Grows out of the logo BICF already has: a blue cross where four letters meet.',
-    points: ['The home page is split by the cross into B, I, C and F: Brno, International, Christian, Fellowship', 'Dates, facts and directions are set in cross-divided quarters', 'Crisp and confident. The most "brand" of the four'],
+    idea: 'Grows out of the BICF logo: a navy and blue cross where four letters meet.',
+    points: ['The home page is split by the cross into B, I, C and F: Brno, International, Christian, Fellowship', 'Dates, facts and directions are set in cross-divided quarters', 'Crisp and confident. The most "brand" of the six'],
     accent: '#54699f', ink: '#121418',
   },
   hall: {
@@ -25,6 +25,16 @@ const details: Record<string, { idea: string; points: string[]; accent: string; 
     points: ['Violet, magenta and amber, taken from the lighting in the church’s photos', 'A live countdown to Sunday at five', 'A "many voices" reel of the choirs and the band'],
     accent: '#ffb547', ink: '#1a1230',
   },
+  headline: {
+    idea: 'Modern and minimal, after transformchurch.us: black, white and the logo’s blue, and headlines you can read from across the room.',
+    points: ['Very large uppercase headlines that set a thin weight against a heavy one', 'Events as full-width photo banners, and the week as one clean timetable', 'Outline buttons, letter-spaced labels and a blue prayer band before the footer'],
+    accent: '#018cdd', ink: '#0b0d12',
+  },
+  steps: {
+    idea: 'Clean and app-like, after elevationchurch.org: every section answers “what’s my next step?”',
+    points: ['“Find your way in” tiles for Sundays, groups, kids and young adults', 'Photo cards with short taglines for every age, and a swipeable row of what’s coming up', 'The week as filter chips by day, and a dismissable notice bar for the next sign-up'],
+    accent: '#018cdd', ink: '#182a42',
+  },
 };---
 <!doctype html>
 <html lang="en">
@@ -32,14 +42,14 @@ const details: Record<string, { idea: string; points: string[]; accent: string; 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>BICF website: four design directions</title>
-    <meta name="description" content="Four demo designs for the new Brno International Christian Fellowship website." />
+    <title>BICF website: six design directions</title>
+    <meta name="description" content="Six demo designs for the new Brno International Christian Fellowship website." />
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
   </head>
   <body>
     <header class="intro">
       <p class="intro__org">Brno International Christian Fellowship</p>
-      <h1>Four directions for the new website</h1>
+      <h1>Six directions for the new website</h1>
       <p class="intro__lead">Each demo is a complete, working design with the same content: home page, visiting info, weekly schedule, events, sign-up sheets, forms and reflections. Open one, click around, try it on your phone. Use the switch in the bottom-left corner to see the same page in another design.</p>
     </header>
 
@@ -67,7 +77,7 @@ const details: Record<string, { idea: string; points: string[]; accent: string; 
       })}
 
       <section class="shared">
-        <h2>What all four share</h2>
+        <h2>What all six share</h2>
         <div class="shared__grid">
           <div>
             <h3>Editing without code</h3>
@@ -86,7 +96,7 @@ const details: Record<string, { idea: string; points: string[]; accent: string; 
             <p>The site is a folder of files, so free hosting such as Cloudflare Pages is enough. There’s no server or plugins to update.</p>
           </div>
         </div>
-        <p class="shared__note">The photos and logo are BICF’s own, from bicf.cz. The pages, weekly groups and articles use the text from the current site. The events and sign-up sheets are samples to show how those features work.</p>
+        <p class="shared__note">The photos are BICF’s own, from bicf.cz, and every design uses the new BICF logo. The pages, weekly groups and articles use the text from the current site. The events and sign-up sheets are samples to show how those features work.</p>
       </section>
     </main>
 

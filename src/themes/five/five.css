@@ -61,8 +61,7 @@ a { color: inherit; }
   padding: 22px var(--gutter);
 }
 .d-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-.d-brand__mark { width: 30px; height: 45px; flex: none; --logo-cross: #8d9ce0; --logo-ink: var(--moon); }
-.d-brand__name { font-size: 0.72rem; line-height: 1.25; color: var(--mist); border-left: 1px solid var(--hair); padding-left: 12px; }
+.d-brand__mark { height: 48px; width: auto; flex: none; --logo-cross: var(--moon); --logo-ink: var(--moon); --logo-bar: #2ea3f2; }
 .d-nav { display: flex; align-items: center; gap: 28px; }
 .d-nav ul { display: flex; gap: 26px; list-style: none; margin: 0; padding: 0; }
 .d-nav a:not(.d-btn) { text-decoration: none; font-size: 0.95rem; font-weight: 500; color: var(--mist); transition: color 0.2s; }
@@ -72,7 +71,7 @@ a { color: inherit; }
 
 @media (max-width: 900px) {
   .d-nav { display: none; }
-  .d-brand__name { display: none; }
+  .d-brand__mark { height: 42px; }
   .d-menu-btn {
     display: inline-flex; position: relative; z-index: 60;
     font: 600 0.95rem var(--sans); color: var(--moon); background: rgb(20 26 51 / 0.45); backdrop-filter: blur(10px);
@@ -217,7 +216,7 @@ a { color: inherit; }
 .d-footer { padding: clamp(72px, 10vw, 120px) var(--gutter) 90px; max-width: var(--wrap); margin-inline: auto; }
 .d-footer__sign { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 32px; align-items: end; padding-bottom: 56px; border-bottom: 1px solid var(--hair); }
 .d-footer__big { font-family: var(--serif); font-size: clamp(2.6rem, 6vw, 5rem); line-height: 1; margin: 0; }
-.d-footer__sign .bicf-logo { width: 54px; height: 81px; margin-bottom: 24px; --logo-cross: #8d9ce0; --logo-ink: var(--moon); }
+.d-footer__sign .bicf-logo { width: 62px; height: auto; margin-bottom: 24px; --logo-cross: var(--moon); --logo-ink: var(--moon); --logo-bar: #2ea3f2; }
 .d-footer__sign p:last-child { margin: 0; color: var(--mist); }
 .d-footer__cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; padding-block: 48px; }
 .d-footer__head { font-weight: 700; margin: 0 0 12px; }

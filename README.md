@@ -1,15 +1,17 @@
-# BICF website: four demo designs
+# BICF website: six demo designs
 
-Four complete, working design directions for the new Brno International Christian Fellowship website. They all share one content store and one editor, so whichever design the church picks, the foundation stays the same.
+Six complete, working design directions for the new Brno International Christian Fellowship website. They all share one content store and one editor, so whichever design the church picks, the foundation stays the same.
 
 | Demo | URL | Idea |
 | --- | --- | --- |
 | Gathering | `/gathering/` | Warm and photo-led, in the slate blue (#54699f), navy (#252f4f) and periwinkle (#a0beef) that bicf.cz uses. Rounded photos, a turning “Every Sunday” stamp and the welcome in the church's own words. First made in the earlier demo set, now rebuilt on this project's content, forms and sign-up sheets. |
-| Crossroads | `/crossroads/` | Built from the BICF logo. Its blue cross becomes the layout: it divides the home page into **B**rno, **I**nternational, **C**hristian and **F**ellowship, and sets dates and directions in quarters. |
+| Crossroads | `/crossroads/` | Built from the BICF logo, in its navy and blue. The cross becomes the layout: it divides the home page into **B**rno, **I**nternational, **C**hristian and **F**ellowship, and sets dates and directions in quarters. |
 | The Hall | `/hall/` | Warm and documentary, like walking into the timber hall at Maják. String lights, honey and cream, and a photo walk through a Sunday evening. |
 | Sunday at Five | `/five/` | Dark and musical, lit in the violet, magenta and amber of BICF's own stage photos. A live countdown to five o'clock, and a reel of the choirs and band. |
+| Headline | `/headline/` | Modern and minimal, made after the church pointed to transformchurch.us. Black, white and the logo's blue; very large uppercase headlines that set a thin weight against a heavy one; events as full-width photo banners; the week as one clean timetable; a blue prayer band before the footer. |
+| Next Step | `/steps/` | Clean and app-like, made after the church pointed to elevationchurch.org. Every section is a next step: “find the right way in” tiles, a swipeable row of events and sign-ups, photo cards with short taglines for every age, filter chips by day on the week page, and a notice bar for the next sign-up. |
 
-All four use BICF's real logo (redrawn as SVG in `src/components/Logo.astro`) and the church's own photos.
+All six use the new BICF logo (2026): a navy upright (#182a42) and a blue crossbar (#018cdd) dividing B, I, C and F. It is drawn as plain SVG shapes in `src/components/Logo.astro`, with the letters traced from Montserrat, so it needs no font. It comes as `variant="mark"`, `"horizontal"` (mark, rule and the four-line name) and `"stacked"`, and each design tints it with `--logo-ink`, `--logo-cross` and `--logo-bar`. The photos are the church's own.
 
 ## Live preview
 
@@ -28,7 +30,7 @@ npm run dev
 
 On Windows you can just double-click `start-dev.cmd` instead. It installs everything on the first run, starts the server and opens your browser. To stop the server, close that window.
 
-Open http://localhost:4321. The landing page links to all four demos. On every demo page, the **Design** switch in the bottom-left corner shows the same page in another design.
+Open http://localhost:4321. The landing page links to all six demos. On every demo page, the **Design** switch in the bottom-left corner shows the same page in another design.
 
 To build the production version:
 
@@ -114,4 +116,4 @@ Still **sample content**, there only to show the features: the events, the sign-
 
 The walking directions and the route map follow the map BICF shows visitors: from Okružní, up Majdalenky past the BILLA, to Dusíkova. Check which tram and bus lines stop there, and whether the car park on Dusíkova is free to use on Sundays.
 
-The photos and logo are BICF's own, taken from bicf.cz. Before launch, check that everyone is happy for these photos to be used, especially the ones with children.
+The photos are BICF's own, taken from bicf.cz, and the logo is the church's new 2026 logo. Before launch, check that everyone is happy for these photos to be used, especially the ones with children.

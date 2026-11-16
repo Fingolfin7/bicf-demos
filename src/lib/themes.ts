@@ -1,5 +1,5 @@
 /**
- * The four demo designs. Each one is a folder in src/themes with its own
+ * The six demo designs. Each one is a folder in src/themes with its own
  * layout, components and CSS, and they all read the same content.
  * In production you keep one theme and delete the others.
  */
@@ -25,6 +25,16 @@ export const THEMES = [
     id: 'five',
     name: 'Sunday at Five',
     pitch: 'Dark and musical, lit like BICF’s own stage. Violet, magenta and amber, with a live countdown to five o’clock on Sunday.',
+  },
+  {
+    id: 'headline',
+    name: 'Headline',
+    pitch: 'Modern and minimal: black, white and the logo’s blue, with very large uppercase headlines in a thin and a heavy weight.',
+  },
+  {
+    id: 'steps',
+    name: 'Next Step',
+    pitch: 'Clean and app-like, organised around next steps: ways in, places for every age, and how to get involved.',
   },
 ] as const;
 

@@ -1,0 +1,186 @@
+---
+import Layout from './Layout.astro';
+import FormEngine from '../../components/FormEngine.astro';
+import { getSettings, getGroups, getUpcomingEvents, getThoughts, getForm, formatDate, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+
+const s = await getSettings();
+const groups = (await getGroups()).filter((g) => g.day !== s.serviceDay);
+const events = await getUpcomingEvents(3);
+const thoughts = (await getThoughts()).slice(0, 3);
+const prayer = await getForm('prayer-request');
+const L = (p = '') => link('headline', p);
+const lower = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
+---
+<Layout>
+  <section class="hl-hero" aria-labelledby="hero-title">
+    <img class="hl-hero__bg" {...img('/media/bicf/congregation-singing.webp')} alt="" fetchpriority="high" />
+    <div class="hl-hero__inner">
+      <p class="hl-label hl-label--light">Brno International Christian Fellowship</p>
+      <h1 id="hero-title" class="hl-hero__title"><span class="hl-thin">From near</span> <span>and far</span></h1>
+      <div class="hl-hero__foot">
+        <div class="hl-actions">
+          <a class="hl-btn hl-btn--white" href={L('visit')}>Plan a visit</a>
+          <a class="hl-btn hl-btn--blue" href="#find">How to find us</a>
+        </div>
+        <p class="hl-hero__time">
+          <span>Service time</span>
+          <strong data-next-service data-time={s.serviceTime} data-label={friendlyTime(s.serviceTime)}>{s.serviceDay}s, {friendlyTime(s.serviceTime)}</strong>
+          <span>{s.venue}, {s.area}</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hl-section hl-section--grey hl-center" aria-labelledby="welcome-title">
+    <span class="hl-rule" aria-hidden="true"></span>
+    <h2 id="welcome-title" class="hl-display"><span class="hl-thin">You are</span> welcome here</h2>
+    <p class="hl-tracked">An English-speaking church in Brno</p>
+    <p class="hl-intro">{s.intro}</p>
+    <ul class="hl-points" role="list">
+      <li><h3>Come as you are</h3><p>We are an informal group, so wear whatever is comfortable.</p></li>
+      <li><h3>Take part as you like</h3><p>A Sunday has singing, news, prayer and a lesson from the Bible for daily life. Join in as much or as little as you want.</p></li>
+      <li><h3>Questions are welcome</h3><p>Don't feel like you need to agree or be a Christian to come. The goal isn't conformity.</p></li>
+    </ul>
+    <img class="hl-wide" {...img('/media/bicf/worship-joy.webp', '(max-width: 1200px) 100vw, 1200px')} alt="Three men singing and laughing together during a service" loading="lazy" />
+  </section>
+
+  <section class="hl-section hl-center" aria-labelledby="latest-title">
+    <h2 id="latest-title" class="hl-display"><span class="hl-thin">The</span> latest <span class="hl-thin">at BICF</span></h2>
+    <p class="hl-tracked hl-tracked--italic">Dinners, carols and days out. Come along</p>
+    <ul class="hl-banners" role="list">
+      {events.map((e) => (
+        <li>
+          <a class="hl-banner" href={L(e.signup ? `signup/${e.signup}` : 'week')}>
+            {e.image && <img {...img(e.image, '(max-width: 1200px) 100vw, 1200px')} alt="" loading="lazy" />}
+            <span class="hl-banner__date">{formatDate(e.date, 'weekday')} · {e.time}</span>
+            <span class="hl-banner__body">
+              <span class="hl-banner__title">{e.title}</span>
+              <span class="hl-banner__text">{e.summary}</span>
+            </span>
+            <span class="hl-banner__cta">{e.signup ? 'Sign up' : 'Details'}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a class="hl-btn" href={L('week')}>Everything this week</a>
+  </section>
+
+  <section class="hl-section hl-section--grey" aria-labelledby="week-title">
+    <div class="hl-wrap">
+      <div class="hl-split-head">
+        <h2 id="week-title" class="hl-display hl-display--left"><span class="hl-thin">During</span> the week</h2>
+        <p>Sunday is when the whole church is together. During the week we meet in smaller groups. Pick one that works for you and jump in!</p>
+      </div>
+      <ul class="hl-rows" role="list">
+        {groups.map((g) => (
+          <li class="hl-row">
+            <p class="hl-row__day">{g.day}</p>
+            <p class="hl-row__time">{g.time}<span>{lower(g.frequency)}</span></p>
+            <div class="hl-row__main">
+              <h3>{g.page ? <a href={L(g.page)}>{g.name}</a> : g.name}</h3>
+              <p>{g.description}</p>
+            </div>
+            <p class="hl-row__where">{g.place}<span>{g.audience}</span></p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="hl-section hl-center" aria-labelledby="ages-title">
+    <span class="hl-rule" aria-hidden="true"></span>
+    <p class="hl-tracked">We love our kids, and we care</p>
+    <h2 id="ages-title" class="hl-display"><span class="hl-thin">Every age</span> has a place</h2>
+    <div class="hl-ministries">
+      <a class="hl-ministry" href={L('kids-and-teens')}>
+        <img {...img('/media/bicf/kids-games.webp', '(max-width: 860px) 100vw, 50vw')} alt="Children playing a blindfold game on the grass" loading="lazy" />
+        <span class="hl-tracked">Ages: babies to teenagers</span>
+        <span class="hl-ministry__title"><u>Kids</u> and teens</span>
+        <span class="hl-btn">Learn more</span>
+      </a>
+      <a class="hl-ministry" href={L('young-adults')}>
+        <img {...img('/media/bicf/ya-dam.webp', '(max-width: 860px) 100vw, 50vw')} alt="Young adults on a wooden lookout above the Brno reservoir" loading="lazy" />
+        <span class="hl-tracked">Ages: 20 to 35</span>
+        <span class="hl-ministry__title"><u>Young</u> adults</span>
+        <span class="hl-btn">Learn more</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="hl-story" aria-labelledby="story-title">
+    <img {...img('/media/bicf/hall-bw.webp', '(max-width: 860px) 100vw, 50vw')} alt="The hall at Maják in black and white, full of people" loading="lazy" />
+    <div>
+      <p class="hl-tracked">Who we are</p>
+      <h2 id="story-title" class="hl-h2"><u>{s.tagline}</u></h2>
+      <p>{s.mission}</p>
+      <div class="hl-actions">
+        <a class="hl-btn" href={L('our-story')}>Our story</a>
+        <a class="hl-btn hl-btn--ghost" href={L('what-we-believe')}>What we believe</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="hl-find" id="find" aria-labelledby="find-title">
+    <div class="hl-find__box">
+      <p class="hl-tracked">{s.venue}, {s.address}</p>
+      <h2 id="find-title" class="hl-h2">Look for the <u>yellow</u> building</h2>
+      <p class="hl-find__lead">It's easy once you know it, but the first time can be a little tricky.</p>
+      <ol class="hl-steps">
+        {s.directions.map((d, i) => <li><span class="hl-steps__n">0{i + 1}</span><b>{d.step}</b><span>{d.detail}</span></li>)}
+      </ol>
+      <div class="hl-actions hl-actions--center">
+        <a class="hl-btn" href={L('visit')}>Plan your visit</a>
+        <a class="hl-btn hl-btn--ghost" href={s.mapUrl} rel="noopener">Open in Mapy.cz</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="hl-section" aria-labelledby="deeper-title">
+    <div class="hl-wrap">
+      <div class="hl-split-head">
+        <h2 id="deeper-title" class="hl-display hl-display--left"><span class="hl-thin">Going</span> deeper</h2>
+        <p>Short reflections from people in our church, for the days between Sundays. <a class="hl-link" href={L('thoughts')}>All reflections</a></p>
+      </div>
+      <ul class="hl-articles" role="list">
+        {thoughts.map((t) => (
+          <li>
+            <a class="hl-article" href={L(`thoughts/${t.id}`)}>
+              <span class="hl-tracked">{t.data.author} · {formatDate(t.data.date, 'short')}</span>
+              <h3>{t.data.title}</h3>
+              <p>{t.data.excerpt}</p>
+              <span class="hl-article__more">Read</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {prayer && (
+    <section class="hl-band" aria-label="Prayer request">
+      <div class="hl-band__inner"><FormEngine form={prayer} privacyHref={L('privacy')} /></div>
+    </section>
+  )}
+</Layout>
+
+<script>
+  import { pragueNow } from '../../lib/clock';
+  // Show the date of the coming service, in Brno time.
+  const el = document.querySelector<HTMLElement>('[data-next-service]');
+  if (el) {
+    const [h, m] = (el.dataset.time ?? '17:00').split(':').map(Number);
+    const label = el.dataset.label ?? '';
+    const now = pragueNow();
+    const start = h * 60 + m;
+    const nowMin = now.hour * 60 + now.minute;
+    if (now.day === 6 && nowMin < start + 90) {
+      el.textContent = nowMin < start ? `Today, ${label}` : 'Happening now';
+    } else {
+      const ahead = (6 - now.day + 7) % 7 || 7;
+      const date = new Date(Date.now() + ahead * 864e5).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: 'Europe/Prague' });
+      el.textContent = `${ahead === 1 ? 'Tomorrow' : 'Sunday'} ${date}, ${label}`;
+    }
+  }
+</script>

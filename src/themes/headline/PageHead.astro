@@ -1,0 +1,17 @@
+---
+/* Page title in two weights: the first word thin, the rest heavy. */
+import { img } from '../../lib/img';
+interface Props { title: string; lead?: string; image?: string; crumb?: { href: string; label: string } }
+const { title, lead, image, crumb } = Astro.props;
+const words = title.split(' ');
+const thin = words.length > 1 ? words[0] : '';
+const heavy = words.length > 1 ? words.slice(1).join(' ') : title;
+---
+<header class="hl-pagehead">
+  <span class="hl-rule" aria-hidden="true"></span>
+  {crumb && <a class="hl-crumb" href={crumb.href}>{crumb.label}</a>}
+  <h1 class="hl-display">{thin && <><span class="hl-thin">{thin}</span> </>}{heavy}</h1>
+  {lead && <p class="hl-pagehead__lead">{lead}</p>}
+  <slot />
+  {image && <img class="hl-pagehead__img" {...img(image, '(max-width: 1200px) 100vw, 1200px')} alt="" />}
+</header>

@@ -1,0 +1,58 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import Icon from './Icon.astro';
+import RouteMap from '../../components/RouteMap.astro';
+import { getSettings, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+import { FAQS } from '../../lib/faqs';
+const s = await getSettings();
+const L = (p = '') => link('steps', p);
+---
+<Layout title="Plan a visit" description={`Visit BICF: every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at ${s.venue}, ${s.address}.`} image="/media/bicf/hall-wide.webp">
+  <PageHead title="Your first Sunday" lead={`Come as you are: no dress code, and no Czech required. Here's everything you need to know before you come.`} image="/media/bicf/hall-wide.webp" />
+
+  <section class="ns-wrap ns-section ns-section--flush">
+    <ul class="ns-ways ns-ways--facts" role="list">
+      <li><div class="ns-way"><Icon name="clock" /><h3>When</h3><p>Every {s.serviceDay} at {friendlyTime(s.serviceTime)}. Stay for tea afterwards: that's where friendships start.</p></div></li>
+      <li><div class="ns-way"><Icon name="pin" /><h3>Where</h3><p>The {s.venue}, {s.address}, in {s.area}.</p></div></li>
+      <li><div class="ns-way"><Icon name="kids" /><h3>Kids</h3><p>A nursery, Toddlers Sunday School (ages 1 to 4) and a children's ministry (4 to 15).</p></div></li>
+      <li><div class="ns-way"><Icon name="people" /><h3>Language</h3><p>We gather in English, and you'll hear plenty of other languages afterwards.</p></div></li>
+    </ul>
+  </section>
+
+  <section class="ns-section ns-section--grey">
+    <div class="ns-wrap ns-find">
+      <div>
+        <p class="ns-eyebrow">{s.venue}, {s.address}</p>
+        <h2>Look for the yellow building</h2>
+        <p class="ns-lead">It's easy once you know it, but the first time can be a little tricky.</p>
+        <ol class="ns-steps">
+          {s.directions.map((d) => <li><strong>{d.step}</strong><span>{d.detail}</span></li>)}
+        </ol>
+        <a class="ns-pill ns-pill--dark" href={s.mapUrl} rel="noopener">Open in Mapy.cz</a>
+      </div>
+      <div class="ns-mapcard"><RouteMap /></div>
+    </div>
+  </section>
+
+  <section class="ns-section ns-wrap">
+    <div class="ns-feature">
+      <img {...img('/media/bicf/church-family.webp', '(max-width: 860px) 100vw, 50vw')} alt="A big group of the BICF family standing together in the hall" loading="lazy" />
+      <div class="ns-feature__text">
+        <p class="ns-eyebrow">We'll save you a seat</p>
+        <h2>Rather not walk in alone?</h2>
+        <p>Tell us when you're coming and someone will meet you at the stop and walk over with you.</p>
+        <div class="ns-actions"><a class="ns-pill ns-pill--dark" href={L('contact')}>Ask someone to meet me</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ns-section ns-section--top0 ns-wrap ns-wrap--narrow">
+    <div class="ns-head"><h2>Good questions</h2></div>
+    <div class="ns-faq">
+      {FAQS.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+    </div>
+  </section>
+</Layout>

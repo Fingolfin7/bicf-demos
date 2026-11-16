@@ -1,0 +1,48 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import RouteMap from '../../components/RouteMap.astro';
+import { getSettings, friendlyTime } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+import { FAQS } from '../../lib/faqs';
+const s = await getSettings();
+const L = (p = '') => link('headline', p);
+---
+<Layout title="Plan a visit" description={`Visit BICF: every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at ${s.venue}, ${s.address}.`} image="/media/bicf/hall-wide.webp">
+  <PageHead title="Your first Sunday" lead={`Every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at the ${s.venue} in ${s.area}. Come as you are: no dress code, and no Czech required.`} image="/media/bicf/hall-wide.webp" />
+
+  <section class="hl-section">
+    <div class="hl-wrap hl-directions">
+      <div>
+        <p class="hl-tracked">{s.venue}, {s.address}</p>
+        <h2 class="hl-h2">Look for the <u>yellow</u> building</h2>
+        <p class="hl-find__lead">It's easy once you know it, but the first time can be a little tricky.</p>
+        <ol class="hl-steps hl-steps--list">
+          {s.directions.map((d, i) => <li><span class="hl-steps__n">0{i + 1}</span><b>{d.step}</b><span>{d.detail}</span></li>)}
+        </ol>
+        <a class="hl-btn" href={s.mapUrl} rel="noopener">Open in Mapy.cz</a>
+      </div>
+      <div class="hl-mapcard"><RouteMap /></div>
+    </div>
+  </section>
+
+  <section class="hl-story hl-story--dark">
+    <img {...img('/media/bicf/church-family.webp', '(max-width: 860px) 100vw, 50vw')} alt="A big group of the BICF family standing together in the hall" loading="lazy" />
+    <div>
+      <p class="hl-tracked">We'll save you a seat</p>
+      <h2 class="hl-h2">Rather not walk in <u>alone?</u></h2>
+      <p>Tell us when you're coming and someone will meet you at the stop and walk over with you.</p>
+      <div class="hl-actions"><a class="hl-btn hl-btn--white" href={L('contact')}>Ask someone to meet me</a></div>
+    </div>
+  </section>
+
+  <section class="hl-section">
+    <div class="hl-wrap hl-wrap--narrow">
+      <h2 class="hl-display hl-display--left"><span class="hl-thin">Good</span> questions</h2>
+      <div class="hl-faq">
+        {FAQS.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      </div>
+    </div>
+  </section>
+</Layout>

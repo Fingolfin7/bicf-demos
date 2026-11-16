@@ -1,0 +1,26 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import { getThoughts, formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+const thoughts = await getThoughts();
+const L = (p = '') => link('headline', p);
+---
+<Layout title="Going deeper" description="Short reflections from the BICF community.">
+  <PageHead title="Going deeper" lead="Short reflections from people in our church, for the days between Sundays." />
+  <section class="hl-section hl-section--flush">
+    <ul class="hl-wrap hl-tiles" role="list">
+      {thoughts.map((t) => (
+        <li>
+          <a class="hl-tile" href={L(`thoughts/${t.id}`)}>
+            {t.data.image && <img {...img(t.data.image, '(max-width: 860px) 100vw, 33vw')} alt="" loading="lazy" />}
+            <span class="hl-tracked">{formatDate(t.data.date)} · {t.data.author}</span>
+            <h2>{t.data.title}</h2>
+            <p>{t.data.excerpt}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Layout>

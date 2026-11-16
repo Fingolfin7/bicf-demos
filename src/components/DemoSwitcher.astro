@@ -10,7 +10,7 @@ const path = Astro.url.pathname.slice(BASE.length).replace(/^\/[^/]+/, '');
 <details class="demo-switch">
   <summary>Design: {THEMES.find((t) => t.id === current)?.name}</summary>
   <div class="demo-switch__menu">
-    <p>Same content, four designs. Switch to see this page in another.</p>
+    <p>Same content, six designs. Switch to see this page in another.</p>
     <ul>
       {THEMES.map((t) => (
         <li><a href={withBase(`/${t.id}${path}`)} aria-current={t.id === current ? 'page' : undefined}>{t.name}</a></li>

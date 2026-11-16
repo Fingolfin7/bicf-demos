@@ -1,0 +1,225 @@
+---
+import Layout from './Layout.astro';
+import Icon from './Icon.astro';
+import RouteMap from '../../components/RouteMap.astro';
+import { getSettings, getGroups, getUpcomingEvents, getSignups, getThoughts, formatDate, friendlyTime, slotsSummary } from '../../lib/data';
+import { link } from '../../lib/themes';
+import { img } from '../../lib/img';
+
+const s = await getSettings();
+const groups = (await getGroups()).filter((g) => g.day !== s.serviceDay);
+const events = await getUpcomingEvents();
+const signups = await getSignups();
+const thoughts = (await getThoughts()).slice(0, 3);
+const L = (p = '') => link('steps', p);
+
+const ways = [
+  { icon: 'home', title: 'Sunday service', text: `Worship with us every ${s.serviceDay} at ${friendlyTime(s.serviceTime)} at the ${s.venue}.`, href: L('visit'), cta: 'Plan a visit' },
+  { icon: 'people', title: 'Weekly groups', text: `${groups.length} groups meet during the week, in homes, at Maják, online and in town.`, href: L('week'), cta: 'Find a group' },
+  { icon: 'kids', title: 'Kids and teens', text: 'A nursery, Sunday school from age 1, and Teens for Christ on Fridays.', href: L('kids-and-teens'), cta: 'See what’s on' },
+  { icon: 'prayer', title: 'Prayer box', text: 'Share what’s on your heart, and our prayer team will pray for you.', href: L('prayer-box'), cta: 'Send a request' },
+] as const;
+
+const connect = [
+  ...events.map((e) => ({ href: L(e.signup ? `signup/${e.signup}` : 'week'), image: e.image, title: e.title, sub: `${formatDate(e.date, 'weekday')} · ${e.location}` })),
+  ...signups.map((su) => {
+    const sum = slotsSummary(su.data.slots);
+    return { href: L(`signup/${su.id}`), image: su.data.image, title: su.data.title, sub: `Sign-up sheet · ${sum.open} places left` };
+  }),
+];
+
+const family = [
+  { href: L('kids-and-teens'), image: '/media/bicf/kids-games.webp', name: 'Kids and teens', tag: 'From the nursery to Teens for Christ.', big: true },
+  { href: L('young-adults'), image: '/media/bicf/ya-dam.webp', name: 'Young adults', tag: 'Ages 20 to 35. Study, outings, friendship.', big: true },
+  { href: L('worship-circle'), image: '/media/bicf/christmas-duet.webp', name: 'Worship circle', tag: 'A willing heart. A desire to worship.' },
+  { href: L('week'), image: '/media/bicf/ya-christmas-room.webp', name: 'Bible studies', tag: 'Men, women, Czech speakers and more.' },
+  { href: L('new-to-bicf'), image: '/media/bicf/hall-wide.webp', name: 'New to BICF?', tag: 'Who we are, and why we do what we do.' },
+];
+
+const involved = [
+  { href: `${L('week')}#sheets`, image: '/media/bicf/christmas-band.webp', title: 'Lend a hand', text: 'Pour the coffee, bring a dish or help at Christmas. Pick a slot on a sign-up sheet.' },
+  { href: L('worship-circle'), image: '/media/bicf/rehearsal-bw.webp', title: 'Sing and play', text: 'Singers and musicians prepare music together for Sundays and special events.' },
+  { href: L('contact'), image: '/media/bicf/hall-string-lights.webp', title: 'Get in touch', text: 'Ask a question, or have someone meet you at the stop before your first Sunday.' },
+];
+---
+<Layout>
+  <section class="ns-hero" aria-labelledby="hero-title">
+    <img {...img('/media/bicf/church-family.webp')} alt="Around thirty members of the church standing together in the hall" fetchpriority="high" />
+    <div class="ns-hero__text">
+      <h1 id="hero-title">From near and far, at home in Brno</h1>
+      <p>An English-speaking church for anyone and everyone. Join us {s.serviceDay}s at {friendlyTime(s.serviceTime)}.</p>
+      <div class="ns-actions">
+        <a class="ns-pill ns-pill--white" href={L('visit')}>Plan your visit</a>
+        <a class="ns-pill ns-pill--glass" href={L('new-to-bicf')}>Learn more</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="ns-section ns-wrap" aria-labelledby="sunday-title">
+    <div class="ns-feature">
+      <img {...img('/media/bicf/worship-leader.webp', '(max-width: 860px) 100vw, 50vw')} alt="A worship leader singing at the front of the hall" loading="lazy" />
+      <div class="ns-feature__text">
+        <p class="ns-eyebrow">This {s.serviceDay}</p>
+        <h2 id="sunday-title" data-next-service data-time={s.serviceTime} data-label={friendlyTime(s.serviceTime)}>{s.serviceDay} at {friendlyTime(s.serviceTime)}</h2>
+        <p>Singing, news, prayer and a lesson from the Bible for daily life. Kids have their own programme, and there's tea and coffee afterwards.</p>
+        <p class="ns-feature__where"><Icon name="pin" /> {s.venue}, {s.address}</p>
+        <div class="ns-actions">
+          <a class="ns-pill ns-pill--dark" href={L('visit')}>Plan your visit</a>
+          <a class="ns-pill ns-pill--light" href={L('sunday-service')}>About Sundays</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ns-section ns-wrap" aria-labelledby="ways-title">
+    <div class="ns-head ns-head--center">
+      <h2 id="ways-title">Find the right way in for you</h2>
+      <p>Many nationalities share one room here. Start wherever feels easiest.</p>
+    </div>
+    <ul class="ns-ways" role="list">
+      {ways.map((w) => (
+        <li>
+          <a class="ns-way" href={w.href}>
+            <Icon name={w.icon} />
+            <h3>{w.title}</h3>
+            <p>{w.text}</p>
+            <span class="ns-way__cta">{w.cta} <Icon name="chevron-right" /></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="ns-section" aria-labelledby="connect-title">
+    <div class="ns-wrap ns-head ns-head--center">
+      <h2 id="connect-title">Discover more ways to connect</h2>
+      <p>Dinners, carols and days out, and the sign-up sheets that help us get ready.</p>
+    </div>
+    <div class="ns-rail" data-rail>
+      <ul class="ns-rail__track" role="list" data-rail-track>
+        {connect.map((c) => (
+          <li>
+            <a class="ns-slide" href={c.href}>
+              {c.image && <img {...img(c.image, '(max-width: 700px) 85vw, 34rem')} alt="" loading="lazy" />}
+              <h3>{c.title}</h3>
+              <p>{c.sub}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="ns-rail__controls">
+        <button type="button" class="ns-round" data-rail-prev aria-label="Previous"><Icon name="chevron-left" /></button>
+        <button type="button" class="ns-round" data-rail-next aria-label="Next"><Icon name="chevron-right" /></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="ns-section ns-section--grey" aria-labelledby="family-title">
+    <div class="ns-wrap">
+      <div class="ns-head ns-head--center">
+        <h2 id="family-title">A place for you and your family</h2>
+        <p>We love our kids, and we care. There is something for every age, from babies to teenagers, and plenty for grown-ups too.</p>
+      </div>
+      <ul class="ns-family" role="list">
+        {family.map((f) => (
+          <li class:list={[{ 'ns-family__big': f.big }]}>
+            <a class="ns-photo-card" href={f.href}>
+              <img {...img(f.image, f.big ? '(max-width: 860px) 100vw, 50vw' : '(max-width: 860px) 100vw, 33vw')} alt="" loading="lazy" />
+              <span class="ns-photo-card__name">{f.name}</span>
+              <span class="ns-photo-card__tag">{f.tag}</span>
+              <span class="ns-pill ns-pill--white ns-pill--small">Learn more</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="ns-section ns-wrap" aria-labelledby="involved-title">
+    <div class="ns-head ns-head--center">
+      <h2 id="involved-title">How to get involved</h2>
+      <p>Church is better when everyone brings something.</p>
+    </div>
+    <ul class="ns-involved" role="list">
+      {involved.map((i) => (
+        <li>
+          <a class="ns-dark-card" href={i.href}>
+            <img {...img(i.image, '(max-width: 860px) 100vw, 33vw')} alt="" loading="lazy" />
+            <h3>{i.title}</h3>
+            <p>{i.text}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="ns-section ns-section--grey" id="find" aria-labelledby="find-title">
+    <div class="ns-wrap ns-find">
+      <div>
+        <p class="ns-eyebrow">{s.venue}, {s.address}</p>
+        <h2 id="find-title">Look for the yellow building</h2>
+        <p class="ns-lead">It's easy once you know it, but the first time can be a little tricky.</p>
+        <ol class="ns-steps">
+          {s.directions.map((d) => <li><strong>{d.step}</strong><span>{d.detail}</span></li>)}
+        </ol>
+        <div class="ns-actions">
+          <a class="ns-pill ns-pill--dark" href={L('visit')}>Plan your visit</a>
+          <a class="ns-pill ns-pill--light" href={s.mapUrl} rel="noopener">Open in Mapy.cz</a>
+        </div>
+      </div>
+      <div class="ns-mapcard"><RouteMap /></div>
+    </div>
+  </section>
+
+  <section class="ns-section ns-wrap" aria-labelledby="deeper-title">
+    <div class="ns-head ns-head--row">
+      <div>
+        <h2 id="deeper-title">Going deeper</h2>
+        <p>Short reflections from people in our church, for the days between Sundays.</p>
+      </div>
+      <a class="ns-pill ns-pill--light" href={L('thoughts')}>All reflections</a>
+    </div>
+    <ul class="ns-cards" role="list">
+      {thoughts.map((t) => (
+        <li>
+          <a class="ns-card" href={L(`thoughts/${t.id}`)}>
+            {t.data.image && <img {...img(t.data.image, '(max-width: 860px) 100vw, 33vw')} alt="" loading="lazy" />}
+            <p class="ns-meta">{t.data.author} · {formatDate(t.data.date, 'short')}</p>
+            <h3>{t.data.title}</h3>
+            <p>{t.data.excerpt}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Layout>
+
+<script>
+  import { pragueNow } from '../../lib/clock';
+  // "Sunday 22 November at 5 pm", in Brno time.
+  const el = document.querySelector<HTMLElement>('[data-next-service]');
+  if (el) {
+    const [h, m] = (el.dataset.time ?? '17:00').split(':').map(Number);
+    const label = el.dataset.label ?? '';
+    const now = pragueNow();
+    const start = h * 60 + m;
+    const nowMin = now.hour * 60 + now.minute;
+    if (now.day === 6 && nowMin < start + 90) {
+      el.textContent = nowMin < start ? `Today at ${label}` : 'Happening now';
+    } else {
+      const ahead = (6 - now.day + 7) % 7 || 7;
+      const date = new Date(Date.now() + ahead * 864e5).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: 'Europe/Prague' });
+      el.textContent = `${ahead === 1 ? 'Tomorrow' : 'Sunday'} ${date} at ${label}`;
+    }
+  }
+
+  // The "ways to connect" row: arrow buttons scroll one card at a time.
+  document.querySelectorAll<HTMLElement>('[data-rail]').forEach((rail) => {
+    const track = rail.querySelector<HTMLElement>('[data-rail-track]');
+    if (!track) return;
+    const step = () => (track.querySelector('li')?.getBoundingClientRect().width ?? 300) + 24;
+    const smooth = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    rail.querySelector('[data-rail-prev]')?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: smooth }));
+    rail.querySelector('[data-rail-next]')?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: smooth }));
+  });
+</script>

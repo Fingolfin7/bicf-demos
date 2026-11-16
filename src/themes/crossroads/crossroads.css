@@ -1,7 +1,7 @@
 /* =========================================================
    CROSSROADS
-   Built from the BICF logo: a slate-blue cross where four
-   letters meet. The cross becomes the structure of the site.
+   Built from the BICF logo: a navy upright and a blue crossbar
+   where four letters meet. The cross becomes the structure of the site.
    It divides the hero into B, I, C and F, splits facts into
    quarters, frames dates, and marks lists. "Paths that cross
    in Brno", taken literally.
@@ -14,9 +14,9 @@
   --white: #ffffff;
   --ink: #121418;
   --ink-soft: #4a4f5a;
-  --blue: #54699f;           /* the logo */
-  --blue-deep: #3a4c7d;
-  --blue-tint: #e6e9f2;
+  --blue: #0a77c0;           /* the logo's crossbar (#018cdd), a touch deeper so white text on it reads well */
+  --blue-deep: #182a42;      /* the logo's navy upright */
+  --blue-tint: #e2eff9;
   --line: rgb(18 20 24 / 0.14);
 
   --sans: 'Archivo Variable', 'Arial', 'Helvetica Neue', sans-serif;
@@ -49,7 +49,7 @@ a { color: inherit; }
 .x-plus {
   display: inline-block; flex: none; width: 16px; height: 22px;
   background:
-    linear-gradient(var(--blue), var(--blue)) 50% 0 / 3px 100% no-repeat,
+    linear-gradient(var(--blue-deep), var(--blue-deep)) 50% 0 / 3px 100% no-repeat,
     linear-gradient(var(--blue), var(--blue)) 0 38% / 100% 3px no-repeat;
   transition: transform .3s;
 }
@@ -86,8 +86,7 @@ a { color: inherit; }
   display: flex; align-items: center; gap: 28px; padding: 12px var(--gutter); border-bottom: 1px solid var(--line);
 }
 .x-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
-.x-brand__logo { width: 30px; height: 45px; flex: none; --logo-ink: var(--ink); }
-.x-brand__name { font-size: 0.82rem; line-height: 1.2; font-weight: 600; }
+.x-brand__logo { height: 48px; width: auto; flex: none; }
 .x-nav { margin-left: auto; }
 .x-nav ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
 .x-nav a { display: block; padding: 10px 14px; text-decoration: none; font-weight: 600; position: relative; }
@@ -106,7 +105,7 @@ a { color: inherit; }
   .x-menu-btn__icon { width: 14px; height: 18px; background: linear-gradient(currentColor, currentColor) 50% 0 / 2.5px 100% no-repeat, linear-gradient(currentColor, currentColor) 0 38% / 100% 2.5px no-repeat; transition: transform .3s; }
   .x-menu-btn[aria-expanded='true'] .x-menu-btn__icon { transform: rotate(45deg); }
 }
-@media (max-width: 480px) { .x-brand__name { display: none; } }
+@media (max-width: 480px) { .x-brand__logo { height: 42px; } }
 .x-menu { position: fixed; inset: 0; z-index: 25; background: var(--paper); padding: 96px var(--gutter) 48px; overflow-y: auto; }
 .x-menu__main { list-style: none; margin: 0 0 32px; padding: 0; border-top: 6px solid var(--blue); }
 .x-menu__main a { display: block; padding: 12px 0; border-bottom: 1px solid var(--line); text-decoration: none; font-size: clamp(2rem, 9vw, 3rem); font-weight: 800; font-stretch: 78%; line-height: 1.1; }
@@ -279,10 +278,10 @@ a { color: inherit; }
 .x-footer__q { background: var(--ink); color: #fff; padding: clamp(32px, 5vw, 72px) var(--gutter); }
 .x-footer__q--1, .x-footer__q--3 { padding-left: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter))); }
 .x-footer__q--3 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.x-footer__logo { width: 64px; height: 96px; --logo-ink: #fff; --logo-cross: #8b9bd0; margin-bottom: 20px; }
+.x-footer__logo { height: 76px; width: auto; max-width: 100%; --logo-ink: #fff; --logo-cross: #fff; --logo-bar: #3fa9f0; margin-bottom: 28px; }
 .x-footer__tag { font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1; font-weight: 800; font-stretch: 78%; text-transform: uppercase; margin: 0; }
 .x-footer__big { font-size: clamp(3rem, 6vw, 5rem); font-weight: 850; font-stretch: 75%; line-height: .9; margin: 0 0 16px; }
-.x-footer .x-label { color: #a9b6dd; }
+.x-footer .x-label { color: #8cc8f2; }
 .x-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .x-footer a { text-decoration: none; color: rgb(255 255 255 / .85); }
 .x-footer a:hover { color: #fff; text-decoration: underline; }

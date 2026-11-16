@@ -35,8 +35,7 @@ const nav = [
     <a class="g-skip" href="#main">Skip to content</a>
     <header class="g-top">
       <a class="g-brand" href={L()} aria-label={`${s.name}, home`}>
-        <Logo />
-        <span>Brno International<br />Christian Fellowship</span>
+        <Logo variant="horizontal" />
       </a>
       <nav class="g-nav" aria-label="Main">
         <ul>
@@ -61,8 +60,8 @@ const nav = [
       <p class="g-foot-big">See you on <span>{s.serviceDay}.</span></p>
       <div class="g-foot-grid">
         <div>
-          <Logo />
-          <p><strong>{s.name}</strong><br />An English-speaking church in Brno.</p>
+          <Logo variant="horizontal" />
+          <p>An English-speaking church in Brno.</p>
           <p><strong>{s.serviceDay}s at {friendlyTime(s.serviceTime)}</strong><br />{s.venue}, {s.address}<br /><a href={s.mapUrl} rel="noopener">Open in Mapy.cz</a></p>
         </div>
         <div>

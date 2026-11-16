@@ -33,8 +33,7 @@ const nav = [
     <a class="h-skip" href="#main">Skip to content</a>
     <header class="h-header">
       <a class="h-brand" href={L()} aria-label={`${s.name}, home`}>
-        <Logo class="h-brand__logo" />
-        <span class="h-brand__name">Brno International<br />Christian Fellowship</span>
+        <Logo class="h-brand__logo" variant="horizontal" />
       </a>
       <nav class="h-nav" aria-label="Main">
         <ul>
@@ -71,7 +70,7 @@ const nav = [
       <StringLights swags={5} class="h-footer__lights" />
       <div class="h-wrap h-footer__grid">
         <div class="h-footer__welcome">
-          <Logo class="h-footer__logo" />
+          <Logo class="h-footer__logo" variant="horizontal" />
           <p class="h-footer__big">See you on {s.serviceDay} at {friendlyTime(s.serviceTime)}.</p>
           <p>{s.venue}, {s.address}<br /><a href={s.mapUrl} rel="noopener">Open in Mapy.cz</a></p>
         </div>

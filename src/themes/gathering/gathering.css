@@ -18,7 +18,8 @@
   --body: 'Hanken Grotesk Variable', system-ui, sans-serif;
   --pad: clamp(1.25rem, 5vw, 4.5rem);
   --r: clamp(1.25rem, 2.5vw, 2rem);
-  --logo-cross: var(--slate);
+  --logo-ink: var(--navy);
+  --logo-cross: var(--navy);
 
   margin: 0;
   background: var(--paper);
@@ -81,7 +82,7 @@
 /* ---------- header ---------- */
 .ga .g-top { display: flex; align-items: center; gap: 1.5rem; padding: 1rem var(--pad); position: relative; z-index: 10; }
 .ga .g-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; font: 400 1rem/1.15 var(--display); margin-right: auto; color: var(--navy); }
-.ga .g-brand .bicf-logo { width: 30px; height: auto; flex: none; color: var(--navy); }
+.ga .g-brand .bicf-logo { height: 50px; width: auto; flex: none; }
 .ga .g-nav ul { display: flex; gap: 1.6rem; list-style: none; margin: 0; padding: 0; font-size: 0.97rem; font-weight: 500; }
 .ga .g-nav a { text-decoration: none; }
 .ga .g-nav a:hover, .ga .g-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--slate); text-decoration-thickness: 3px; }
@@ -104,7 +105,7 @@
 .ga .g-foot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.5rem 3rem; }
 .ga .g-foot-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
 .ga .g-foot strong { color: #fff; }
-.ga .g-foot .bicf-logo { width: 34px; height: auto; color: #fff; margin-bottom: 1rem; --logo-cross: var(--peri); }
+.ga .g-foot .bicf-logo { height: 64px; width: auto; margin-bottom: 1.25rem; --logo-ink: #fff; --logo-cross: #fff; --logo-bar: var(--peri); }
 .ga .g-foot-small { margin: 2.5rem 0 0; font-size: 0.85rem; }
 
 /* ---------- home: hero ---------- */

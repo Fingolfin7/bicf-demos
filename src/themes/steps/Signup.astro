@@ -1,0 +1,18 @@
+---
+import Layout from './Layout.astro';
+import PageHead from './PageHead.astro';
+import SignupEngine from '../../components/SignupEngine.astro';
+import { formatDate } from '../../lib/data';
+import { link } from '../../lib/themes';
+const { signup } = Astro.props;
+const d = signup.data;
+const L = (p = '') => link('steps', p);
+---
+<Layout title={d.title} description={d.intro} image={d.image}>
+  <PageHead title={d.title} lead={d.intro} image={d.image} crumb={{ href: L('week'), label: 'Groups and events' }}>
+    <p class="ns-chip">{formatDate(d.date, 'weekday')}</p>
+  </PageHead>
+  <div class="ns-wrap ns-wrap--narrow ns-signup">
+    <SignupEngine id={signup.id} slots={d.slots} closes={d.closes} privacyHref={L('privacy')} />
+  </div>
+</Layout>
