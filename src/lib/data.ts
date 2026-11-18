@@ -34,16 +34,43 @@ export async function getEvents() {
 }
 
 export async function getPages() {
-  return (await getCollection('pages')).sort((a, b) => a.data.order - b.data.order);
+  return (await getCollection('pages')).sort((a, b) => a.data.title.localeCompare(b.data.title));
 }
 
-export async function getNavPages(section: 'join-in' | 'who-we-are') {
-  return (await getPages()).filter((p) => p.data.section === section);
+export type Section = 'join-in' | 'who-we-are';
+
+async function getMenus() {
+  const entry = await getEntry('menus', 'main');
+  if (!entry) throw new Error('src/content/menus.json is missing');
+  return entry.data;
 }
 
-/** Pages an editor has switched on for the top bar's More drop-down. */
+/** The pages in a menu list, in the editor's order. Ids of deleted pages are skipped. */
+async function pagesIn(ids: string[]) {
+  const all = await getPages();
+  return [...new Set(ids)].flatMap((id) => {
+    const page = all.find((p) => p.id === id);
+    if (!page) console.warn(`Menus: there is no page called "${id}", so it is left out.`);
+    return page ? [page] : [];
+  });
+}
+
+export async function getNavPages(section: Section) {
+  const m = await getMenus();
+  return pagesIn(section === 'join-in' ? m.joinIn : m.whoWeAre);
+}
+
+/** The Join in / Who we are list a page belongs to, if any. */
+export async function getSectionOf(id: string): Promise<Section | undefined> {
+  const m = await getMenus();
+  if (m.joinIn.includes(id)) return 'join-in';
+  if (m.whoWeAre.includes(id)) return 'who-we-are';
+  return undefined;
+}
+
+/** The pages in the top bar's More drop-down, in the editor's order. */
 export async function getMorePages() {
-  return (await getPages()).filter((p) => p.data.more);
+  return pagesIn((await getMenus()).more);
 }
 
 export async function getThoughts() {

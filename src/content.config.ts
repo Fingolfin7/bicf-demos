@@ -28,14 +28,21 @@ const settings = defineCollection({
   }),
 });
 
+/** Which pages appear in which menu, in order. Each list holds page ids (file names). */
+const menus = defineCollection({
+  loader: file('src/content/menus.json', { parser: (text) => ({ main: JSON.parse(text) }) }),
+  schema: z.object({
+    more: z.array(z.string()).default([]),
+    joinIn: z.array(z.string()).default([]),
+    whoWeAre: z.array(z.string()).default([]),
+  }),
+});
+
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
   schema: z.object({
     title: z.string(),
     summary: z.string(),
-    section: z.enum(['join-in', 'who-we-are', 'none']).default('none'),
-    order: z.number().default(50),
-    more: z.boolean().default(false),
     image: z.string().optional(),
     form: z.string().optional(),
   }),
@@ -129,4 +136,4 @@ const thoughts = defineCollection({
   }),
 });
 
-export const collections = { settings, pages, events, groups, signups, forms, thoughts };
+export const collections = { settings, menus, pages, events, groups, signups, forms, thoughts };

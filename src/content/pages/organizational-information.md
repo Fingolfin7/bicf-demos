@@ -1,9 +1,6 @@
 ---
 title: "Organizational information"
 summary: "Who runs BICF, and how we look after your personal data."
-section: "who-we-are"
-order: 3
-more: true
 ---
 
 Brno International Christian Fellowship, z. s. is a non-profit organisation (IČ: 06243185) and operates the website www.bicf.cz. If you are a member, take part in our events, subscribe to our newsletter or visit the website, you are giving us your personal information. We are responsible for its protection and security.

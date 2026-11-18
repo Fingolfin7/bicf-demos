@@ -1,8 +1,6 @@
 ---
 title: "What we believe"
 summary: "We believe in Jesus Christ."
-section: "who-we-are"
-order: 1
 image: "/media/bicf/carol-guitar.webp"
 ---
 

@@ -48,27 +48,17 @@ collections:
   - name: pages
     label: Pages
     label_singular: Page
-    description: Ordinary pages such as "What we believe" or "Kids and teens". Add a page here and it appears on the site.
+    description: Ordinary pages such as "What we believe" or "Kids and teens". Add a page here and it appears on the site. To put it in a menu, add it under Menus.
     folder: src/content/pages
     extension: md
     format: frontmatter
     create: true
     slug: "{{title}}"
-    sortable_fields: [title, order]
+    sortable_fields: [title]
     summary: "{{title}}"
     fields:
       - { label: Title, name: title, widget: string }
       - { label: Short summary, name: summary, widget: text, hint: "One or two sentences. Shown under the title and in search results." }
-      - label: Show in the menu under
-        name: section
-        widget: select
-        default: none
-        options:
-          - { label: "Join in", value: join-in }
-          - { label: "Who we are", value: who-we-are }
-          - { label: "Not in the menu", value: none }
-      - { label: Order in the menu, name: order, widget: number, value_type: int, default: 50, hint: "Lower numbers come first." }
-      - { label: Show in the top bar under More, name: more, widget: boolean, default: false, required: false, hint: "Adds this page to the More drop-down at the end of the top menu bar. Order in the menu sets its place in the list." }
       - { label: Main photo, name: image, widget: image, required: false }
       - label: Form at the bottom of the page
         name: form
@@ -79,6 +69,51 @@ collections:
         display_fields: [title]
         required: false
       - { label: Page text, name: body, widget: markdown }
+
+  # ---------------------------------------------------------------- menus
+  - name: menus
+    label: Menus
+    description: Which pages appear in the menus, and in what order. Add a page to a list with its Add button, and move it up or down to change its place. The order here is the order on the site.
+    files:
+      - name: main
+        label: Menus
+        file: src/content/menus.json
+        format: json
+        fields:
+          - label: More (drop-down at the end of the top bar)
+            name: more
+            widget: list
+            hint: The drop-down hides itself when this list is empty.
+            field:
+              label: Page
+              name: page
+              widget: relation
+              collection: pages
+              value_field: "{{slug}}"
+              search_fields: [title]
+              display_fields: [title]
+          - label: Join in (footer and full menu)
+            name: joinIn
+            widget: list
+            field:
+              label: Page
+              name: page
+              widget: relation
+              collection: pages
+              value_field: "{{slug}}"
+              search_fields: [title]
+              display_fields: [title]
+          - label: Who we are (footer and full menu)
+            name: whoWeAre
+            widget: list
+            field:
+              label: Page
+              name: page
+              widget: relation
+              collection: pages
+              value_field: "{{slug}}"
+              search_fields: [title]
+              display_fields: [title]
 
   # --------------------------------------------------------------- events
   - name: events

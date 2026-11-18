@@ -1,8 +1,6 @@
 ---
 title: "New to BICF?"
 summary: "Welcome! A little about who we are and why we do the things we do."
-section: "join-in"
-order: 0
 image: "/media/bicf/worship-joy.webp"
 ---
 

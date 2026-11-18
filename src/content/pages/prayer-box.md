@@ -1,8 +1,6 @@
 ---
 title: "Prayer box"
 summary: "“Then you will call upon me and come and pray to me, and I will hear you.” (Jeremiah 29:12)"
-section: "none"
-order: 90
 image: "/media/bicf/hall-string-lights.webp"
 form: "prayer-request"
 ---

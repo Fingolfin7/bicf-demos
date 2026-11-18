@@ -1,8 +1,6 @@
 ---
 title: "Sunday service"
 summary: "Every Sunday at 5pm at the Maják Center, Dusíkova 5, Brno-Lesná."
-section: "join-in"
-order: 1
 image: "/media/bicf/worship-leader.webp"
 ---
 

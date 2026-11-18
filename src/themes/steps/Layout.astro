@@ -29,7 +29,8 @@ const nav = [
 ];
 // On phones the top bar folds into the drawer. Add the More pages it doesn't already list.
 const drawerListed = ['', 'visit', 'week', 'thoughts', 'prayer-box', 'contact'];
-const moreExtra = more.filter((p) => p.data.section === 'none' && !drawerListed.includes(p.id));
+const inLists = new Set([...joinIn, ...whoWeAre].map((p) => p.id));
+const moreExtra = more.filter((p) => !inLists.has(p.id) && !drawerListed.includes(p.id));
 ---
 <!doctype html>
 <html lang="en">

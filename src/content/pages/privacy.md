@@ -1,8 +1,6 @@
 ---
 title: Privacy
 summary: What we collect, why, and how long we keep it. In short, as little as possible.
-section: none
-order: 99
 ---
 
 This website does not use cookies, analytics or any tracking. Fonts and images are served from our own site, so visiting it tells no one else that you were here.

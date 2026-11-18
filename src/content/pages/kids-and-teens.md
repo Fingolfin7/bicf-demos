@@ -1,8 +1,6 @@
 ---
 title: "Kids and teens"
 summary: "We love our kids, and we care. There is something for every age, from babies to teenagers."
-section: "join-in"
-order: 3
 image: "/media/bicf/kids-games.webp"
 ---
 

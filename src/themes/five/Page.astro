@@ -2,13 +2,14 @@
 import Layout from './Layout.astro';
 import PageHero from './PageHero.astro';
 import FormEngine from '../../components/FormEngine.astro';
-import { getSettings, getForm, getNavPages, render, friendlyTime } from '../../lib/data';
+import { getSettings, getForm, getNavPages, getSectionOf, render, friendlyTime } from '../../lib/data';
 import { link } from '../../lib/themes';
 const { page } = Astro.props;
 const { Content } = await render(page);
 const form = await getForm(page.data.form);
 const s = await getSettings();
-const siblings = page.data.section === 'none' ? [] : await getNavPages(page.data.section);
+const section = await getSectionOf(page.id);
+const siblings = section ? await getNavPages(section) : [];
 const L = (p = '') => link('five', p);
 ---
 <Layout title={page.data.title} description={page.data.summary} image={page.data.image}>
@@ -28,7 +29,7 @@ const L = (p = '') => link('five', p);
           </div>
           {siblings.length > 1 && (
             <nav class="d-card" aria-label="In this section">
-              <h2>{page.data.section === 'join-in' ? 'Join in' : 'Who we are'}</h2>
+              <h2>{section === 'join-in' ? 'Join in' : 'Who we are'}</h2>
               <ul>
                 {siblings.map((p) => <li><a href={L(p.id)} aria-current={p.id === page.id ? 'page' : undefined}>{p.data.title}</a></li>)}
               </ul>

@@ -54,6 +54,7 @@ The project folder is a git repository because Sveltia CMS requires one for loca
 src/
   content/            All the words and settings. This is what the CMS edits.
     settings.json     Service time, address, email, directions
+    menus.json        Which pages are in the More, Join in and Who we are menus, in order
     pages/            Ordinary pages (Markdown)
     events/           One-off events (Markdown). Past events hide themselves.
     groups/           Weekly schedule (YAML)
@@ -74,7 +75,12 @@ public/
   media/uploads/      Where photos uploaded through the CMS go
 ```
 
-**Menus.** Each design's top bar has a short fixed list of links, written in its `Layout.astro`, and a **More** drop-down at the end that editors control. In the CMS, a page's **Show in the top bar under More** switch adds it to the drop-down in all six designs, and **Order in the menu** sets its place (lower numbers first). The drop-down hides itself when no page is switched on. On phones, where the top bar folds into the menu, those pages are listed there too. Separately, **Show in the menu under** puts a page in the *Join in* or *Who we are* lists in the footer and the full menu. The drop-down is `src/components/MoreMenu.astro`.
+**Menus.** Each design's top bar has a short fixed list of links, written in its `Layout.astro`, and a **More** drop-down at the end that editors control. Editors manage three lists on the CMS's **Menus** screen (`src/content/menus.json`):
+
+- **More**: the drop-down at the end of the top bar. It hides itself when the list is empty.
+- **Join in** and **Who we are**: the lists in the footer and the full menu. A page in one of them also gets an "In this section" panel linking its neighbours.
+
+Editors add a page to a list by picking it, and move it up or down to set its place, so the order on screen is the order on the site. A new page isn't in any menu until it's added there. On phones, where the top bar folds into the menu, the More pages are listed in the menu too. If a page is deleted, the build skips it in the menus and prints a warning. The drop-down is `src/components/MoreMenu.astro`.
 
 **Choosing one design** means deleting the other `src/themes/*` and `src/pages/*` folders, then moving the chosen design's routes to the site root. The content and CMS don't change.
 

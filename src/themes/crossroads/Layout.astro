@@ -23,7 +23,8 @@ const nav = [
   { href: L('contact'), label: 'Contact' },
 ];
 // On phones the top bar folds into the menu. Add the More pages it doesn't already list.
-const moreExtra = more.filter((p) => p.data.section === 'none' && !nav.some((n) => n.href === L(p.id)));
+const inLists = new Set([...joinIn, ...whoWeAre].map((p) => p.id));
+const moreExtra = more.filter((p) => !inLists.has(p.id) && !nav.some((n) => n.href === L(p.id)));
 ---
 <!doctype html>
 <html lang="en">
