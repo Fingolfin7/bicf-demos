@@ -61,7 +61,8 @@ src/
     forms/            Forms built question by question (YAML)
     thoughts/         "Going deeper" reflections (Markdown)
   content.config.ts   Schema: what fields each content type has
-  components/         Shared: FormEngine, SignupEngine, Logo, RouteMap, DemoSwitcher
+  cms/config.yml      The CMS's collections and fields (served at /admin/config.yml)
+  components/         Shared: FormEngine, SignupEngine, Logo, MoreMenu, RouteMap, DemoSwitcher
   lib/                Data access, dates, the Sunday countdown, image helper
   themes/<name>/      Each design: layout, page templates and one CSS file
   pages/<name>/       Routes for each design (thin files that call the theme)
@@ -72,6 +73,8 @@ public/
   media/bicf/         BICF's own photos, from bicf.cz (WebP, with -sm versions)
   media/uploads/      Where photos uploaded through the CMS go
 ```
+
+**Menus.** Each design's top bar has a short fixed list of links, written in its `Layout.astro`, and a **More** drop-down at the end that editors control. In the CMS, a page's **Show in the top bar under More** switch adds it to the drop-down in all six designs, and **Order in the menu** sets its place (lower numbers first). The drop-down hides itself when no page is switched on. On phones, where the top bar folds into the menu, those pages are listed there too. Separately, **Show in the menu under** puts a page in the *Join in* or *Who we are* lists in the footer and the full menu. The drop-down is `src/components/MoreMenu.astro`.
 
 **Choosing one design** means deleting the other `src/themes/*` and `src/pages/*` folders, then moving the chosen design's routes to the site root. The content and CMS don't change.
 

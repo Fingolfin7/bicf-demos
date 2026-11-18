@@ -41,6 +41,11 @@ export async function getNavPages(section: 'join-in' | 'who-we-are') {
   return (await getPages()).filter((p) => p.data.section === section);
 }
 
+/** Pages an editor has switched on for the top bar's More drop-down. */
+export async function getMorePages() {
+  return (await getPages()).filter((p) => p.data.more);
+}
+
 export async function getThoughts() {
   return (await getCollection('thoughts')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 }

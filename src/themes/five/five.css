@@ -64,9 +64,10 @@ a { color: inherit; }
 .d-brand__mark { height: 48px; width: auto; flex: none; --logo-cross: var(--moon); --logo-ink: var(--moon); --logo-bar: #2ea3f2; }
 .d-nav { display: flex; align-items: center; gap: 28px; }
 .d-nav ul { display: flex; gap: 26px; list-style: none; margin: 0; padding: 0; }
-.d-nav a:not(.d-btn) { text-decoration: none; font-size: 0.95rem; font-weight: 500; color: var(--mist); transition: color 0.2s; }
-.d-nav a:not(.d-btn):hover, .d-nav a[aria-current] { color: var(--moon); }
-.d-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--sun); text-underline-offset: 6px; }
+.d-nav { --more-bg: var(--indigo); --more-ink: var(--moon); --more-hover: rgb(247 242 251 / 0.09); --more-radius: var(--radius); --more-gap: 14px; --more-border: 1px solid var(--hair); --more-shadow: 0 24px 60px rgb(0 0 0 / 0.45); }
+.d-nav > ul > li > a, .d-nav .more summary { text-decoration: none; font-size: 0.95rem; font-weight: 500; color: var(--mist); transition: color 0.2s; }
+.d-nav > ul > li > a:hover, .d-nav > ul > li > a[aria-current], .d-nav .more summary:hover, .d-nav .more__details[open] > summary, .d-nav .more summary[data-current] { color: var(--moon); }
+.d-nav > ul > li > a[aria-current], .d-nav .more summary[data-current] { text-decoration: underline; text-decoration-color: var(--sun); text-underline-offset: 6px; }
 .d-menu-btn { display: none; }
 
 @media (max-width: 900px) {

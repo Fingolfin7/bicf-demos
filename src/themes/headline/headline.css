@@ -87,9 +87,11 @@
 .hl-brand { display: block; margin-right: auto; text-decoration: none; }
 .hl-brand .bicf-logo { height: 50px; width: auto; }
 .hl-nav ul { display: flex; gap: 26px; list-style: none; margin: 0; padding: 0; }
-.hl-nav a { text-decoration: none; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #4a4a4a; transition: color .2s; }
-.hl-nav a:hover { color: var(--ink); }
-.hl-nav a[aria-current] { color: var(--blue-text); }
+.hl-nav { --more-ink: var(--ink); --more-hover: var(--grey); --more-radius: 0px; --more-gap: 12px; --more-border: 1px solid var(--ink); --more-shadow: none; }
+.hl-nav .more__list { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+.hl-nav > ul > li > a, .hl-nav .more summary { text-decoration: none; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #4a4a4a; transition: color .2s; }
+.hl-nav > ul > li > a:hover, .hl-nav .more summary:hover, .hl-nav .more__details[open] > summary { color: var(--ink); }
+.hl-nav > ul > li > a[aria-current], .hl-nav .more summary[data-current] { color: var(--blue-text); }
 .hl-menu-btn { display: none; }
 @media (max-width: 1080px) {
   .hl-nav { display: none; }

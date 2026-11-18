@@ -3,6 +3,7 @@ title: "Our story"
 summary: "Paths that cross in Brno."
 section: "who-we-are"
 order: 2
+more: true
 image: "/media/bicf/hall-bw.webp"
 ---
 

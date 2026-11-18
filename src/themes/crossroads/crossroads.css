@@ -89,9 +89,12 @@ a { color: inherit; }
 .x-brand__logo { height: 48px; width: auto; flex: none; }
 .x-nav { margin-left: auto; }
 .x-nav ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
-.x-nav a { display: block; padding: 10px 14px; text-decoration: none; font-weight: 600; position: relative; }
-.x-nav a::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 3px; background: var(--blue); transform: scaleX(0); transform-origin: left; transition: transform .25s; }
-.x-nav a:hover::after, .x-nav a[aria-current]::after { transform: scaleX(1); }
+.x-nav > ul > li > a, .x-nav .more summary { display: block; padding: 10px 14px; text-decoration: none; font-weight: 600; position: relative; }
+.x-nav .more summary { display: flex; }
+.x-nav > ul > li > a::after, .x-nav .more summary::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 3px; background: var(--blue); transform: scaleX(0); transform-origin: left; transition: transform .25s; }
+.x-nav > ul > li > a:hover::after, .x-nav > ul > li > a[aria-current]::after, .x-nav .more summary:hover::after, .x-nav .more summary[data-current]::after { transform: scaleX(1); }
+.x-nav { --more-ink: var(--ink); --more-hover: var(--blue-tint); --more-radius: 4px; --more-gap: 6px; --more-border: 1px solid var(--line); --more-shadow: 0 14px 34px rgb(24 42 66 / 0.14); }
+.x-nav .more__list { font-weight: 600; }
 .x-when { text-decoration: none; background: var(--blue); color: #fff; font-weight: 700; padding: 10px 16px; white-space: nowrap; }
 .x-when span { font-weight: 500; opacity: .85; }
 .x-when:hover { background: var(--blue-deep); }

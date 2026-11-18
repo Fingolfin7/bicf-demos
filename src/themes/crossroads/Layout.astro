@@ -4,7 +4,8 @@ import './crossroads.css';
 import BaseHead from '../../components/BaseHead.astro';
 import DemoSwitcher from '../../components/DemoSwitcher.astro';
 import Logo from '../../components/Logo.astro';
-import { getSettings, getNavPages, friendlyTime } from '../../lib/data';
+import MoreMenu from '../../components/MoreMenu.astro';
+import { getSettings, getNavPages, friendlyTime, getMorePages } from '../../lib/data';
 import { link } from '../../lib/themes';
 
 interface Props { title?: string; description?: string; image?: string }
@@ -12,6 +13,7 @@ const s = await getSettings();
 const { title, description = s.intro, image } = Astro.props;
 const joinIn = await getNavPages('join-in');
 const whoWeAre = await getNavPages('who-we-are');
+const more = await getMorePages();
 const L = (p = '') => link('crossroads', p);
 const path = Astro.url.pathname;
 const nav = [
@@ -20,6 +22,8 @@ const nav = [
   { href: L('thoughts'), label: 'Going deeper' },
   { href: L('contact'), label: 'Contact' },
 ];
+// On phones the top bar folds into the menu. Add the More pages it doesn't already list.
+const moreExtra = more.filter((p) => p.data.section === 'none' && !nav.some((n) => n.href === L(p.id)));
 ---
 <!doctype html>
 <html lang="en">
@@ -35,6 +39,7 @@ const nav = [
       <nav class="x-nav" aria-label="Main">
         <ul>
           {nav.map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>)}
+          <MoreMenu pages={more} theme="crossroads" />
         </ul>
       </nav>
       <a class="x-when" href={L('visit')}><span>{s.serviceDay}s</span> {s.serviceTime}</a>
@@ -45,6 +50,7 @@ const nav = [
       <ul class="x-menu__main">
         <li><a href={L()}>Home</a></li>
         {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+        {moreExtra.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}
       </ul>
       <div class="x-menu__cols">
         <div>

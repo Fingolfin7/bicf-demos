@@ -3,6 +3,7 @@ title: "Young adults"
 summary: "20 to 35 years old? Join us!"
 section: "join-in"
 order: 4
+more: true
 image: "/media/bicf/ya-dam.webp"
 ---
 

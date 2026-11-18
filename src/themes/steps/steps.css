@@ -77,9 +77,11 @@
 .ns-brand { display: block; margin-right: auto; }
 .ns-brand .bicf-logo { height: 46px; width: auto; }
 .ns-nav ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
-.ns-nav a { display: block; padding: 9px 14px; border-radius: 999px; text-decoration: none; font-weight: 500; }
-.ns-nav a:hover { background: var(--grey); }
-.ns-nav a[aria-current] { background: var(--grey-2); font-weight: 700; }
+.ns-nav { --more-ink: var(--ink); --more-hover: var(--grey); --more-radius: 18px; --more-gap: 8px; --more-border: 1px solid var(--line); --more-shadow: 0 18px 44px rgb(0 0 0 / 0.12); }
+.ns-nav > ul > li > a, .ns-nav .more summary { display: block; padding: 9px 14px; border-radius: 999px; text-decoration: none; font-weight: 500; }
+.ns-nav .more summary { display: flex; }
+.ns-nav > ul > li > a:hover, .ns-nav .more summary:hover, .ns-nav .more__details[open] > summary { background: var(--grey); }
+.ns-nav > ul > li > a[aria-current], .ns-nav .more summary[data-current] { background: var(--grey-2); font-weight: 700; }
 @media (max-width: 960px) { .ns-nav { display: none; } }
 @media (max-width: 520px) { .ns-brand .bicf-logo { height: 40px; } .ns-header { gap: 10px; } .ns-header__cta { padding: 10px 14px; font-size: 0.88rem; } }
 @media (max-width: 380px) { .ns-header__cta { display: none; } }

@@ -7,7 +7,8 @@ import './gathering.css';
 import BaseHead from '../../components/BaseHead.astro';
 import DemoSwitcher from '../../components/DemoSwitcher.astro';
 import Logo from '../../components/Logo.astro';
-import { getSettings, getNavPages, friendlyTime } from '../../lib/data';
+import MoreMenu from '../../components/MoreMenu.astro';
+import { getSettings, getNavPages, friendlyTime, getMorePages } from '../../lib/data';
 import { link } from '../../lib/themes';
 
 interface Props { title?: string; description?: string; image?: string }
@@ -15,6 +16,7 @@ const s = await getSettings();
 const { title, description = s.intro, image } = Astro.props;
 const joinIn = await getNavPages('join-in');
 const whoWeAre = await getNavPages('who-we-are');
+const more = await getMorePages();
 const L = (p = '') => link('gathering', p);
 const path = Astro.url.pathname;
 const nav = [
@@ -25,6 +27,8 @@ const nav = [
   { href: L('thoughts'), label: 'Going deeper' },
   { href: L('prayer-box'), label: 'Prayer box' },
 ];
+// On phones the top bar folds into the menu. Add the More pages it doesn't already list.
+const moreExtra = more.filter((p) => !nav.some((n) => n.href === L(p.id)) && p.id !== 'our-story' && p.id !== 'contact');
 ---
 <!doctype html>
 <html lang="en">
@@ -40,6 +44,7 @@ const nav = [
       <nav class="g-nav" aria-label="Main">
         <ul>
           {nav.slice(1).map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>)}
+          <MoreMenu pages={more} theme="gathering" />
         </ul>
       </nav>
       <a class="g-btn g-btn--small g-top-cta" href={L('visit')}>New here?</a>
@@ -49,6 +54,7 @@ const nav = [
           <a href={L()}>Home</a>
           {nav.map((n) => <a href={n.href}>{n.label}</a>)}
           <a href={L('our-story')}>Our story</a>
+          {moreExtra.map((p) => <a href={L(p.id)}>{p.data.title}</a>)}
           <a href={L('contact')}>Contact</a>
         </div>
       </details>

@@ -68,6 +68,7 @@ collections:
           - { label: "Who we are", value: who-we-are }
           - { label: "Not in the menu", value: none }
       - { label: Order in the menu, name: order, widget: number, value_type: int, default: 50, hint: "Lower numbers come first." }
+      - { label: Show in the top bar under More, name: more, widget: boolean, default: false, required: false, hint: "Adds this page to the More drop-down at the end of the top menu bar. Order in the menu sets its place in the list." }
       - { label: Main photo, name: image, widget: image, required: false }
       - label: Form at the bottom of the page
         name: form

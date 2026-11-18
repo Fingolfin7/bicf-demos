@@ -35,6 +35,7 @@ const pages = defineCollection({
     summary: z.string(),
     section: z.enum(['join-in', 'who-we-are', 'none']).default('none'),
     order: z.number().default(50),
+    more: z.boolean().default(false),
     image: z.string().optional(),
     form: z.string().optional(),
   }),

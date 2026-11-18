@@ -3,6 +3,7 @@ title: "Worship circle sessions"
 summary: "“Sing to the Lord a new song; sing to the Lord, all the earth.” (Psalm 96:1)"
 section: "join-in"
 order: 5
+more: true
 image: "/media/bicf/christmas-duet.webp"
 ---
 

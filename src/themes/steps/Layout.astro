@@ -7,7 +7,8 @@ import './steps.css';
 import BaseHead from '../../components/BaseHead.astro';
 import DemoSwitcher from '../../components/DemoSwitcher.astro';
 import Logo from '../../components/Logo.astro';
-import { getSettings, getNavPages, getUpcomingEvents, friendlyTime, formatDate } from '../../lib/data';
+import MoreMenu from '../../components/MoreMenu.astro';
+import { getSettings, getNavPages, getUpcomingEvents, friendlyTime, formatDate, getMorePages } from '../../lib/data';
 import { link } from '../../lib/themes';
 
 interface Props { title?: string; description?: string; image?: string }
@@ -15,6 +16,7 @@ const s = await getSettings();
 const { title, description = s.intro, image } = Astro.props;
 const joinIn = await getNavPages('join-in');
 const whoWeAre = await getNavPages('who-we-are');
+const more = await getMorePages();
 const notice = (await getUpcomingEvents()).find((e) => e.signup);
 const L = (p = '') => link('steps', p);
 const path = Astro.url.pathname;
@@ -25,6 +27,9 @@ const nav = [
   { href: L('thoughts'), label: 'Going deeper' },
   { href: L('new-to-bicf'), label: 'About' },
 ];
+// On phones the top bar folds into the drawer. Add the More pages it doesn't already list.
+const drawerListed = ['', 'visit', 'week', 'thoughts', 'prayer-box', 'contact'];
+const moreExtra = more.filter((p) => p.data.section === 'none' && !drawerListed.includes(p.id));
 ---
 <!doctype html>
 <html lang="en">
@@ -39,7 +44,7 @@ const nav = [
       </button>
       <a class="ns-brand" href={L()} aria-label={`${s.name}, home`}><Logo variant="horizontal" /></a>
       <nav class="ns-nav" aria-label="Main">
-        <ul>{nav.map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>)}</ul>
+        <ul>{nav.map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>)}<MoreMenu pages={more} theme="steps" /></ul>
       </nav>
       <a class="ns-pill ns-pill--dark ns-header__cta" href={L('visit')}>Plan a visit</a>
     </header>
@@ -70,6 +75,7 @@ const nav = [
           <li><a href={L('thoughts')}>Going deeper</a></li>
           <li><a href={L('prayer-box')}>Prayer box</a></li>
           <li><a href={L('contact')}>Contact</a></li>
+          {moreExtra.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}
         </ul>
         <p class="ns-drawer__head">Join in</p>
         <ul class="ns-drawer__list">{joinIn.map((p) => <li><a href={L(p.id)}>{p.data.title}</a></li>)}</ul>
