@@ -15,7 +15,7 @@ All six use the new BICF logo (2026): a navy upright (#182a42) and a blue crossb
 
 ## Live preview
 
-**https://fingolfin7.github.io/bicf-demos/** (GitHub Pages). Every push to `main` rebuilds it automatically through `.github/workflows/pages.yml`, which takes about two minutes. The pages are marked `noindex`, so search engines leave them alone. Forms and sign-up sheets work there in demo mode, so entries stay in each visitor's own browser. The CMS link opens the editor's sign-in page, but editing needs the church's own GitHub setup (see below).
+**https://fingolfin7.github.io/bicf-demos/** (GitHub Pages). Every push to `main` rebuilds it automatically through `.github/workflows/pages.yml`, which takes about two minutes. The pages are marked `noindex`, so search engines leave them alone. Forms and sign-up sheets work there in demo mode, so entries stay in each visitor's own browser. The editor at `/bicf-demos/admin/` works there too. Choose **Sign In with Token** and paste a fine-grained GitHub token with read and write access to this repository's contents. Every save is a commit to `main`, so the preview rebuilds with the change about two minutes later. The **Sign In with GitHub** button needs the authenticator described under Hosting plan.
 
 To build for a sub-folder yourself, set `BASE_PATH=/bicf-demos` and `SITE_URL=https://fingolfin7.github.io`.
 

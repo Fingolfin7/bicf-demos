@@ -7,8 +7,12 @@
 
 backend:
   name: github
-  repo: bicf-church/website        # TODO: the church's GitHub repository
+  # The demo repository for now. Change to the church's own repository
+  # when it exists.
+  repo: Fingolfin7/bicf-demos
   branch: main
+  # Until the authenticator below is set up, sign in on the live preview
+  # with "Sign In with Token" and a fine-grained GitHub token (see README).
   # Editors sign in with GitHub through the free Sveltia CMS Authenticator
   # on Cloudflare Workers. Uncomment once it is deployed (see README).
   # base_url: https://sveltia-cms-auth.YOUR-ACCOUNT.workers.dev
