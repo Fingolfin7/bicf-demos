@@ -4,7 +4,7 @@ import { z } from 'astro/zod';
 
 /*
  * Every collection here is edited through the CMS at /admin.
- * The field names match public/admin/config.yml one-to-one, so when you
+ * The field names match src/cms/config.yml one-to-one, so when you
  * add a field in one place, add it in the other.
  */
 

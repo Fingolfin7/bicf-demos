@@ -102,7 +102,7 @@ Recommended: **Cloudflare Pages** (free plan), connected to the church's GitHub 
 
 - **Form submissions** are validated and show the thank-you message, but nothing is sent. Production needs a small Cloudflare Pages Function (about 50 lines) that emails the `sendTo` address. If the form's `storeEntries` is on, it also saves the entry to D1. Prayer requests are emailed only and never stored.
 - **Sign-up counts** are remembered in your own browser only. In production the same function reads and writes the counts in D1, so everyone sees the same numbers. The `taken` numbers in the YAML files are sample data.
-- **Editor sign-in** is set up for local use. Going live needs the GitHub repository and the free authenticator deployed, then `base_url` filled in `public/admin/config.yml`.
+- **Editor sign-in** is set up for local use. Going live needs the GitHub repository and the free authenticator deployed, then `base_url` filled in `src/cms/config.yml`.
 
 ### Handover and maintenance
 

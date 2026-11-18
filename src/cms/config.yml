@@ -3,6 +3,10 @@
 #  Every collection below maps to a folder in src/content. Editors fill
 #  in forms; the CMS saves Markdown/YAML files; the site rebuilds itself.
 #  Field names must match src/content.config.ts.
+#
+#  Served at /admin/config.yml by src/pages/admin/config.yml.ts, which
+#  fills in %SITE% (the site's address, including any sub-folder such
+#  as /bicf-demos/) and %BASE% (just the sub-folder, or nothing).
 # =====================================================================
 
 backend:
@@ -17,9 +21,9 @@ backend:
   # on Cloudflare Workers. Uncomment once it is deployed (see README).
   # base_url: https://sveltia-cms-auth.YOUR-ACCOUNT.workers.dev
 
-site_url: https://www.bicf.cz
-display_url: https://www.bicf.cz
-logo_url: /favicon.svg
+site_url: %SITE%
+display_url: %SITE%
+logo_url: %BASE%/favicon.svg
 
 # Uploaded photos and files go here. Photos are converted to WebP and
 # shrunk on upload, so volunteers can drop in phone photos as they are.

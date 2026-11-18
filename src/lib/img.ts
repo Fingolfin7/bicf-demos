@@ -1,7 +1,7 @@
 /**
  * Responsive image attributes. Bundled photos ship with a small "-sm"
  * version; images uploaded through the CMS are resized on upload
- * (see media_libraries in public/admin/config.yml) and used as-is.
+ * (see media_libraries in src/cms/config.yml) and used as-is.
  */
 import { withBase } from './base';
 
