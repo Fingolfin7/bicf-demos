@@ -7,8 +7,6 @@ form: ''
 
 # The Road Not Taken
 
-Play Audio
-
 By [Robert Frost](https://www.poetryfoundation.org/poets/robert-frost)
 
 Two roads diverged in a yellow wood,
